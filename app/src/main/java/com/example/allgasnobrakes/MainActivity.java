@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG, "Data has not been added.");
                                 }
                             });
+
                 }
             }
         });
