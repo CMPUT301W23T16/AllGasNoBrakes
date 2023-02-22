@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "991096482440",
+    "project_id": "allgasnobrakes301",
+    "storage_bucket": "allgasnobrakes301.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991096482440:android:afdfa1d8d8c450a8828d3d",
+        "android_client_info": {
+          "package_name": "com.example.allgasnobrakes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991096482440-7pkviukefp9cf5blcpq8v91omjhdq96d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF44-1pb4IyJAvVo9Me6TKZBpD5vtkwVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991096482440-7pkviukefp9cf5blcpq8v91omjhdq96d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
