@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/sort_order"
+        android:layout_width="127dp"
+        android:layout_height="58dp"
+        android:background="@color/purple_500"
+        android:text="@string/sort_text"
+        app:layout_constraintBottom_toTopOf="@+id/player_score"
+        app:layout_constraintEnd_toStartOf="@+id/total_codes"
+        app:layout_constraintHorizontal_bias="0.342"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <TextView
+        android:id="@+id/total_codes"
+        android:layout_width="138dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="119dp"
+        android:background="@color/purple_200"
+        android:includeFontPadding="false"
+        android:padding="5dp"
+        android:text="@string/total_codes"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/player_score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sort_order"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <TextView
+        android:id="@+id/player_score"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:text="@string/player_score"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/codes_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.80" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/codes_list"
+        android:layout_width="0dp"
+        android:layout_height="400dp"
+        android:layout_marginBottom="70dp"
+        android:background="@color/purple_200"
+        android:contextClickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

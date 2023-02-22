@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AllGasNoBrakes</string>
+    <string name="player_score">Score</string>
+    <string name="total_codes">Total</string>
+    <string name="sort_text">Sort</string>
+</resources>
+
