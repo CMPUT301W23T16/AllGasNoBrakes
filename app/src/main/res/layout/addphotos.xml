@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/current_image"
+        android:layout_width="386dp"
+        android:layout_height="382dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/strt" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current_image" />
+
+    <ImageView
+        android:id="@+id/third_image"
+        android:layout_width="120dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/second_image"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:srcCompat="@android:drawable/editbox_dropdown_dark_frame" />
+
+    <ImageView
+        android:id="@+id/first_image"
+        android:layout_width="120dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:srcCompat="@drawable/coffin_complete" />
+
+    <ImageView
+        android:id="@+id/second_image"
+        android:layout_width="120dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintStart_toEndOf="@+id/first_image"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:srcCompat="@drawable/Bagley" />
+
+    <Button
+        android:id="@+id/add_photos_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:text="ADD PHOTOS"
+        android:textColor="@color/black"
+        android:backgroundTint="#9A9696"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/second_image" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
