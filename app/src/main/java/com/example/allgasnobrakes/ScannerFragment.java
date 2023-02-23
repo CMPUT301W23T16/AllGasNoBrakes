@@ -20,7 +20,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Handles operations with code scanner
- * @author zhaoyu4
+ * @author zhaoyu4 zhaoyu5
  * @version 1.0
  */
 public class ScannerFragment extends Fragment {
