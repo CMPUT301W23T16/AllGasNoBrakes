@@ -1,63 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:fontFamily="sans-serif"
-        android:text="All Gas No Brakes"
-        android:textColor="@color/black"
-
-        android:textSize="35dp"
-        android:textStyle="normal" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/firstnamelayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:hint="First name">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/firstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/lastnamelayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/firstnamelayout"
-        android:layout_marginTop="20dp"
-        android:hint="Last name">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/lastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1" />
-    </com.google.android.material.textfield.TextInputLayout>
+    android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/registerbutton"
-        android:layout_width="250dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lastnamelayout"
-        android:layout_marginTop="50sp"
-        android:text="Register" />
+        android:id="@+id/camera_button"
+        android:layout_width="127dp"
+        android:layout_height="58dp"
+        android:background="@color/purple_500"
+        android:text="@string/camera_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profile_button"
+        app:layout_constraintStart_toEndOf="@+id/home_button" />
 
+    <Button
+        android:id="@+id/home_button"
+        android:layout_width="127dp"
+        android:layout_height="58dp"
+        android:background="@color/purple_500"
+        android:text="@string/home_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/profile_button"
+        android:layout_width="127dp"
+        android:layout_height="58dp"
+        android:background="@color/purple_500"
+        android:text="@string/profile_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="409dp"
+        android:layout_height="672dp"
+        app:layout_constraintBottom_toTopOf="@+id/camera_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
