@@ -51,13 +51,15 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                t.setText(result.getText());
+                                t.setText(result.hashCode());
                             }
                         });
                     }
                 });
+
             }
         });
+
 
     }
 }
