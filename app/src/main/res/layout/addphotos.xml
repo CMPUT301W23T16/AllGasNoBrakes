@@ -54,7 +54,7 @@
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toEndOf="@+id/first_image"
         app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:srcCompat="@drawable/Bagley" />
+        app:srcCompat="@drawable/bagley" />
 
     <Button
         android:id="@+id/add_photos_button"
