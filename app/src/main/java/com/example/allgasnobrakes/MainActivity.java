@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
                 mCodeScanner.setAutoFocusMode(AutoFocusMode.CONTINUOUS);
                 TextView t = findViewById(R.id.tv_textView);
-                t.setText(sha256hex);
                 mCodeScanner.setDecodeCallback(new DecodeCallback() {
                     @Override
                     public void onDecoded(@NonNull final Result result) {
