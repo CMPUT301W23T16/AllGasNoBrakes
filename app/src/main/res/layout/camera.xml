@@ -6,33 +6,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
 
-<Button
-    android:id="@+id/camera_button"
-    android:layout_width="127dp"
-    android:layout_height="58dp"
-    android:background="@color/purple_500"
-    android:text="@string/camera_text"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/profile_button"
-    app:layout_constraintStart_toEndOf="@+id/home_button" />
 
-<Button
-    android:id="@+id/home_button"
-    android:layout_width="127dp"
-    android:layout_height="58dp"
-    android:background="@color/purple_500"
-    android:text="@string/home_text"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
-
-<Button
-    android:id="@+id/profile_button"
-    android:layout_width="127dp"
-    android:layout_height="58dp"
-    android:background="@color/purple_500"
-    android:text="@string/profile_text"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scanner_view"
@@ -47,13 +21,12 @@ android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_textView"
-        android:layout_width="85dp"
-        android:layout_height="43dp"
+        android:layout_width="131dp"
+        android:layout_height="91dp"
         android:layout_below="@+id/scanner_view"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/camera_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scanner_view" />
