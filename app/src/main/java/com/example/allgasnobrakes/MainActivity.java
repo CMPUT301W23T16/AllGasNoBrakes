@@ -22,18 +22,47 @@ import com.google.zxing.Result;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class MainActivity extends AppCompatActivity {
-    EditText firstName;
-    EditText lastName;
-    Button registerButton;
+    private final int CAMERA_PERMISSION_CODE = 101;
+    private Button homeButton;
+    private Button cameraButton;
     final String TAG = "Sample";
     FirebaseFirestore db;
     private int CAMERA_PERMISSION_CODE = 101;
     private CodeScanner mCodeScanner;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
+
+        homeButton = findViewById(R.id.home_button);
+        cameraButton = findViewById(R.id.camera_button);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container, QRListFragment.class, null)
+                    .commit();
+        }
+
+        homeButton.setOnClickListener(v -> {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_container, QRListFragment.class, null)
+                    .commit();
+        });
+
+        cameraButton.setOnClickListener(v -> {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_container, ScannerFragment.class, null)
+                    .commit();
+
+        });
+
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
         Button camera = findViewById(R.id.camera_button);
 
@@ -64,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
@@ -77,5 +104,6 @@ public class MainActivity extends AppCompatActivity {
             hexString.append(hex);
         }
         return hexString.toString();
+
     }
 }
