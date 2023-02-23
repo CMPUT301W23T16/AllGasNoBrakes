@@ -13,9 +13,7 @@ import androidx.fragment.app.Fragment;
  * @version 1.0
  */
 public class QRListFragment extends Fragment {
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.homepage, null);
+    public QRListFragment() {
+        super(R.layout.homepage);
     }
 }
