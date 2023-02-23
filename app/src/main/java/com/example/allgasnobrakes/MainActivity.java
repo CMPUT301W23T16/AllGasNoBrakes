@@ -2,9 +2,7 @@ package com.example.allgasnobrakes;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -17,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private Button cameraButton;
     final String TAG = "Sample";
     FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container, ScannerFragment.class, null)
                     .commit();
+
         });
+
+
     }
 }
