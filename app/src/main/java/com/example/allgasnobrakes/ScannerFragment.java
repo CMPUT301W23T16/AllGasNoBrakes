@@ -38,6 +38,7 @@ public class ScannerFragment extends Fragment {
         mCodeScanner = new CodeScanner(activity, scannerView);
         mCodeScanner.startPreview();
         TextView t = root.findViewById(R.id.tv_textView);
+        TextView l = root.findViewById(R.id.tv2_textView);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -46,6 +47,24 @@ public class ScannerFragment extends Fragment {
                     public void run() {
                         String sha256hex = DigestUtils.sha256Hex(result.getText());
                         t.setText(sha256hex);
+                        char starting = sha256hex.charAt(0);
+                        String current = "";
+                        int total = 0;
+                        for (int i = 1; i < sha256hex.length(); i++){
+                            if (starting != sha256hex.charAt(i)){
+                                starting = sha256hex.charAt(i);
+                                if (current.length() != 0){
+                                    String hex = String.format("%c",current.charAt(0));
+                                    int integer = Integer.parseInt(hex, 16);
+                                    total += Math.pow(integer,current.length());
+                                }
+                                current = "";
+                            }
+                            else{
+                                current = current + starting;
+                            }
+                        }
+                        l.setText(Integer.toString(total));
                     }
                 });
             }

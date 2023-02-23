@@ -9,11 +9,15 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private final int CAMERA_PERMISSION_CODE = 101;
     private Button homeButton;
     private Button cameraButton;
+    private ArrayList<HashedQR> player_Qr;
     final String TAG = "Sample";
+    private
     FirebaseFirestore db;
 
 

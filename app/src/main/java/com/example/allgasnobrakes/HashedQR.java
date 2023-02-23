@@ -22,6 +22,7 @@ public class HashedQR {
     }
 
     public String getHashedQR() {
+
         return hashedQR;
     }
 
