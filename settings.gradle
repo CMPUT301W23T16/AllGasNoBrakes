@@ -6,6 +6,5 @@ pluginManagement {
     }
 }
 
-
 rootProject.name = "AllGasNoBrakes"
 include ':app'

@@ -42,5 +42,4 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
     implementation 'commons-codec:commons-codec:1.11'
-
 }
