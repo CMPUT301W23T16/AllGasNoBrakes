@@ -6,5 +6,9 @@
     <string name="home_text">Home</string>
     <string name="profile_text">Profile</string>
     <string name="camera_text">Camera</string>
+    <string name="username_text">Username</string>
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="register_button_text">Register</string>
 </resources>
 
