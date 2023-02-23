@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">AllGasNoBrakes</string>
+    <string name="player_score">Score</string>
+    <string name="total_codes">Total</string>
+    <string name="sort_text">Sort</string>
+    <string name="home_text">Home</string>
+    <string name="profile_text">Profile</string>
+    <string name="camera_text">Camera</string>
 </resources>
+
