@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -15,7 +16,9 @@ public class MainActivity extends AppCompatActivity {
     private final int CAMERA_PERMISSION_CODE = 101;
     private Button homeButton;
     private Button cameraButton;
-    private ArrayList<HashedQR> player_Qr;
+    private RecyclerView QRList;
+    private RecyclerView.Adapter QrAdapter;
+    protected ArrayList<HashedQR> player_Qr;
     final String TAG = "Sample";
     private
     FirebaseFirestore db;
@@ -25,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        player_Qr = new ArrayList<>();
+        player_Qr.add(new HashedQR("asdasd", 12));
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
 
         homeButton = findViewById(R.id.home_button);
         cameraButton = findViewById(R.id.camera_button);
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
@@ -50,9 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container, ScannerFragment.class, null)
                     .commit();
-
         });
-
 
     }
 }

@@ -2,6 +2,7 @@ package com.example.allgasnobrakes;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,15 @@ import androidx.fragment.app.Fragment;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
 import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.HashMap;
 
 /**
  * Handles operations with code scanner
@@ -25,6 +32,8 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
+    int total = 0;
+    String sha256hex;
     public ScannerFragment() {
         super(R.layout.scanner);
     }
@@ -45,11 +54,10 @@ public class ScannerFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String sha256hex = DigestUtils.sha256Hex(result.getText());
+                        sha256hex = DigestUtils.sha256Hex(result.getText());
                         t.setText(sha256hex);
                         char starting = sha256hex.charAt(0);
                         String current = "";
-                        int total = 0;
                         for (int i = 1; i < sha256hex.length(); i++){
                             if (starting != sha256hex.charAt(i)){
                                 starting = sha256hex.charAt(i);
@@ -64,9 +72,39 @@ public class ScannerFragment extends Fragment {
                                 current = current + starting;
                             }
                         }
-                        l.setText(Integer.toString(total));
+                        String totalstring = Integer.toString(total);
+                        l.setText(totalstring);
+                        FirebaseFirestore db;
+                        final String TAG = "Sample";
+                        db = FirebaseFirestore.getInstance();
+                        final CollectionReference collectionReference = db.collection("Users").document("6waduhek9").collection("QR");
+                        HashMap<String, String> data = new HashMap<>();
+                        if (totalstring.length()>0 && sha256hex.length()>0) {
+                            data.put("Score", totalstring);
+
+                            collectionReference
+                                    .document(sha256hex)
+                                    .set(data)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+// These are a method which gets executed when the task is succeeded
+                                            Log.d(TAG, "Data has been added successfully!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+// These are a method which gets executed if there’s any problem
+                                            Log.d(TAG, "Data could not be added!" + e.toString());
+                                        }
+                                    });
+
+                        }
+
                     }
                 });
+
             }
         });
         scannerView.setOnClickListener(new View.OnClickListener() {
