@@ -42,8 +42,10 @@ public class QRListFragment extends Fragment  {
         View root = inflater.inflate(R.layout.homepage, container, false);
         FirebaseFirestore db;
         db = FirebaseFirestore.getInstance();
+        final String username = requireArguments().getString("Username");
+        Log.d("user", username);
         final Activity activity = getActivity();
-        final CollectionReference collectionReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
+        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR");
 
 
         player_Qr = new ArrayList<>();
