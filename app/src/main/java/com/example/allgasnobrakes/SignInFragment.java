@@ -1,93 +1,54 @@
 package com.example.allgasnobrakes;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-
-/**
- * Handles sign in operations
- * @author zhaoyu4
- * @version 1.0
- */
 public class SignInFragment extends Fragment {
-    private Button registerButton;
-    private EditText usernameEditText;
-    private EditText emailEditText;
-    private EditText passwordEdittext;
-
     private FirebaseFirestore db;
     private Leaderboard viewModel;
+    private TextView username;
+    private Button rollOutButton;
 
     public SignInFragment() {
-        super(R.layout.register);
+        super(R.layout.sign_in);
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(requireActivity()).get(Leaderboard.class);
-        View view = inflater.inflate(R.layout.register, container, false);
+        View view = inflater.inflate(R.layout.sign_in, container, false);
+        String lastUser = requireArguments().getString("LastUser");
 
-        registerButton = view.findViewById(R.id.registerbutton);
-        usernameEditText = view.findViewById(R.id.username_edittext);
-        emailEditText = view.findViewById(R.id.email_edittext);
-        passwordEdittext = view.findViewById(R.id.password_edittext);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference cloudID = db.document(lastUser);
 
-        db = FirebaseFirestore.getInstance();
+        username = view.findViewById(R.id.name_textview);
+        username.setText(cloudID.getId());
 
-        registerButton.setOnClickListener(v -> {
-            final CollectionReference collectionReference = db.collection("Users");
-            final String username = usernameEditText.getText().toString();
-            final String email = emailEditText.getText().toString();
-            final String password = passwordEdittext.getText().toString();
-
-            HashMap<String, String> data = new HashMap<>();
-
-            if (username.length() > 0 && email.length() > 0 && password.length() > 0) {
-                data.put("Email", email);
-                data.put("Password", password);
-                PlayerProfile playerProfile = new PlayerProfile(username, email, password);
+        rollOutButton = view.findViewById(R.id.roll_out_button);
+        rollOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String playerName = cloudID.getId();
+                String email = cloudID.get().getResult().getString("Email");
+                String password = cloudID.get().getResult().getString("Password");
+                PlayerProfile playerProfile = new PlayerProfile(playerName, email, password);
                 viewModel.selectPlayer(playerProfile);
             }
-
-            collectionReference
-                    .document(username)
-                    .set(data)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // These are a method which gets executed when the task is succeeded
-                            Log.d("User", "Data has been added successfully!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // These are a method which gets executed if there’s any problem
-                            Log.d("User", "Data could not be added!" + e);
-                        }
-                    });
         });
-
         return view;
     }
 }

@@ -2,13 +2,20 @@ package com.example.allgasnobrakes;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
+import android.provider.Settings;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private PlayerProfile currentUser;
@@ -27,10 +34,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            fm.beginTransaction()
-                    .setReorderingAllowed(true)
-                    .replace(R.id.fragment_container, SignInFragment.class, null)
-                    .commit();
+            Bundle bundle = new Bundle();
+            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference cloudID = db.collection("DeviceID").document(id);
+
+            //https://firebase.google.com/docs/firestore/query-data/get-data
+            cloudID.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        Bundle bundle = new Bundle();
+
+                        if (document.exists()) {
+                            Log.d("User", "DocumentSnapshot data: " + document.getData());
+                            bundle.putString("LastUser", document.get("LastUser").toString()); // TODO: add error checking
+                            fm.beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(R.id.fragment_container, SignInFragment.class, bundle)
+                                    .commit();
+                        } else {
+                            Log.d("User", "No such document");
+                            bundle.putString("deviceID", id);
+                            fm.beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(R.id.fragment_container, RegisterFragment.class, bundle)
+                                    .commit();
+                        }
+
+                    } else {
+                        Log.d("User", "get failed with ", task.getException());
+                    }
+                }
+            });
         }
 
         viewModel.getSelectedPlayer().observe(this, item -> {
