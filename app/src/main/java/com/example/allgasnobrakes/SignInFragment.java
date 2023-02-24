@@ -1,5 +1,6 @@
 package com.example.allgasnobrakes;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,6 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * Handles sign in operations
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class SignInFragment extends Fragment {
     private Button registerButton;
     private EditText usernameEditText;
@@ -26,6 +34,7 @@ public class SignInFragment extends Fragment {
     private EditText passwordEdittext;
 
     private FirebaseFirestore db;
+    private Leaderboard viewModel;
 
     public SignInFragment() {
         super(R.layout.register);
@@ -35,6 +44,7 @@ public class SignInFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(requireActivity()).get(Leaderboard.class);
         View view = inflater.inflate(R.layout.register, container, false);
 
         registerButton = view.findViewById(R.id.registerbutton);
@@ -43,9 +53,9 @@ public class SignInFragment extends Fragment {
         passwordEdittext = view.findViewById(R.id.password_edittext);
 
         db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Users");
 
         registerButton.setOnClickListener(v -> {
+            final CollectionReference collectionReference = db.collection("Users");
             final String username = usernameEditText.getText().toString();
             final String email = emailEditText.getText().toString();
             final String password = passwordEdittext.getText().toString();
@@ -55,6 +65,8 @@ public class SignInFragment extends Fragment {
             if (username.length() > 0 && email.length() > 0 && password.length() > 0) {
                 data.put("Email", email);
                 data.put("Password", password);
+                PlayerProfile playerProfile = new PlayerProfile(username, email, password);
+                viewModel.selectPlayer(playerProfile);
             }
 
             collectionReference
@@ -71,10 +83,11 @@ public class SignInFragment extends Fragment {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             // These are a method which gets executed if there’s any problem
-                            Log.d("User", "Data could not be added!" + e.toString());
+                            Log.d("User", "Data could not be added!" + e);
                         }
                     });
         });
+
         return view;
     }
 }

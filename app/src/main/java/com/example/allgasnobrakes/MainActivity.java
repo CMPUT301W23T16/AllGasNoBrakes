@@ -3,51 +3,39 @@ package com.example.allgasnobrakes;
 import android.Manifest;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
-    private Button homeButton;
-    private Button cameraButton;
+    private PlayerProfile currentUser;
+    private final FragmentManager fm = getSupportFragmentManager();
     private final int CAMERA_PERMISSION_CODE = 101;
-    final String TAG = "Sample";
-    FirebaseFirestore db;
-
+    private Leaderboard viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(Leaderboard.class);
 
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
                 CAMERA_PERMISSION_CODE);
 
         setContentView(R.layout.activity_main);
 
-//        homeButton = findViewById(R.id.home_button);
-//        cameraButton = findViewById(R.id.camera_button);
-
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            fm.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container, SignInFragment.class, null)
                     .commit();
         }
 
-//        homeButton.setOnClickListener(v -> {
-//            getSupportFragmentManager().beginTransaction()
-//                    .setReorderingAllowed(true)
-//                    .replace(R.id.fragment_container, QRListFragment.class, null)
-//                    .commit();
-//        });
-//
-//        cameraButton.setOnClickListener(v -> {
-//            getSupportFragmentManager().beginTransaction()
-//                    .setReorderingAllowed(true)
-//                    .replace(R.id.fragment_container, ScannerFragment.class, null)
-//                    .commit();
-//        });
+        viewModel.getSelectedPlayer().observe(this, item -> {
+            setContentView(R.layout.split_fragment);
+            currentUser = item;
+        });
     }
 }

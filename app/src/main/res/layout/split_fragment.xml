@@ -24,7 +24,7 @@
         app:layout_constraintGuide_percent="0.9" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/manu_bar_container"
+        android:id="@+id/menu_bar_container"
         android:name="com.example.allgasnobrakes.MenuBarFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
