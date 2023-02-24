@@ -8,8 +8,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,11 +21,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private PlayerProfile currentUser;
     private final FragmentManager fm = getSupportFragmentManager();
     private final int CAMERA_PERMISSION_CODE = 101;
+
     private Leaderboard viewModel;
+    private RecyclerView QRList;
+    private RecyclerView.Adapter QrAdapter;
+    protected ArrayList<HashedQR> player_Qr;
+    private
+    FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
