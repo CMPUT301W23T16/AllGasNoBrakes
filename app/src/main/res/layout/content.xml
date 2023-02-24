@@ -4,24 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/Hash"
-        android:layout_width="293dp"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp"
-        android:paddingTop="10dp"
-        android:text="hash"
-        android:textSize="30sp" />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/Hash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:textSize="30sp"
+            android:text="Hash" />
 
-    <TextView
-        android:id="@+id/Score"
+    </LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="score"
-        android:paddingHorizontal="10dp"
-        android:paddingTop="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/Score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:textSize="25sp"
+            android:hint="Score" />
 
-        android:textSize="30sp" />
-
+    </LinearLayout>
 </LinearLayout>
