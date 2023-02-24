@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
             fm.beginTransaction()
                     .setReorderingAllowed(true)
+                    .replace(R.id.split_container, QRListFragment.class, bundle)
                     .replace(R.id.menu_bar_container, MenuBarFragment.class, bundle)
                     .commit();
         });

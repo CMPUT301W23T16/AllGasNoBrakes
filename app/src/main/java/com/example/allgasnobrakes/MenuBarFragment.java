@@ -38,7 +38,7 @@ public class MenuBarFragment extends Fragment {
         homeButton.setOnClickListener(v ->
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.split_container, QRListFragment.class, null)
+                        .replace(R.id.split_container, QRListFragment.class, requireArguments())
                         .commit()
         );
 

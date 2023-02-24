@@ -43,7 +43,7 @@ public class QRListFragment extends Fragment  {
         FirebaseFirestore db;
         db = FirebaseFirestore.getInstance();
         final Activity activity = getActivity();
-        final CollectionReference collectionReference = db.collection("Users").document("6waduhek9").collection("QR");
+        final CollectionReference collectionReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
 
 
         player_Qr = new ArrayList<>();
