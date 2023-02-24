@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 public class MenuBarFragment extends Fragment {
     private Button homeButton;
     private Button cameraButton;
+    private Button profileButton;
 
     public MenuBarFragment() {
         super(R.layout.menu_bar);
@@ -32,20 +33,28 @@ public class MenuBarFragment extends Fragment {
 
         homeButton = view.findViewById(R.id.home_button);
         cameraButton = view.findViewById(R.id.camera_button);
+        profileButton = view.findViewById(R.id.profile_button);
 
-        homeButton.setOnClickListener(v -> {
-        parent.beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.split_container, QRListFragment.class, null)
-                .commit();
-        });
+        homeButton.setOnClickListener(v ->
+                parent.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.split_container, QRListFragment.class, null)
+                        .commit()
+        );
 
-        cameraButton.setOnClickListener(v -> {
-        parent.beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.split_container, ScannerFragment.class, null)
-                .commit();
-        });
+        cameraButton.setOnClickListener(v ->
+                parent.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.split_container, ScannerFragment.class, null)
+                        .commit()
+        );
+
+        profileButton.setOnClickListener(v ->
+                parent.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.split_container, ProfileFragment.class, null)
+                        .commit()
+        );
         return view;
     }
 }
