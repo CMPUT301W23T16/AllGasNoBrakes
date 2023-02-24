@@ -52,7 +52,7 @@ public class MenuBarFragment extends Fragment {
         profileButton.setOnClickListener(v ->
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.split_container, ProfileFragment.class, null)
+                        .replace(R.id.split_container, ProfileFragment.class, requireArguments())
                         .commit()
         );
         return view;

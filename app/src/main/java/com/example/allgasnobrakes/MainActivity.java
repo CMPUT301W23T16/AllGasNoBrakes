@@ -74,6 +74,15 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getSelectedPlayer().observe(this, item -> {
             setContentView(R.layout.split_fragment);
             currentUser = item;
+
+            Bundle bundle = new Bundle();
+            bundle.putString("Username", currentUser.getUsername());
+            bundle.putString("Email", currentUser.getEmail());
+
+            fm.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.menu_bar_container, MenuBarFragment.class, bundle)
+                    .commit();
         });
     }
 }
