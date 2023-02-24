@@ -47,7 +47,7 @@ public class ScannerFragment extends Fragment {
         mCodeScanner = new CodeScanner(activity, scannerView);
         mCodeScanner.startPreview();
         TextView t = root.findViewById(R.id.tv_textView);
-        TextView l = root.findViewById(R.id.tv2_textView);
+
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -73,7 +73,7 @@ public class ScannerFragment extends Fragment {
                             }
                         }
                         String totalstring = Integer.toString(total);
-                        l.setText(totalstring);
+
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
