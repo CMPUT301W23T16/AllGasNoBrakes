@@ -77,7 +77,7 @@ public class ScannerFragment extends Fragment {
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
-                        final CollectionReference collectionReference = db.collection("Users").document("6waduhek9").collection("QR");
+                        final CollectionReference collectionReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
                         HashMap<String, String> data = new HashMap<>();
                         if (totalstring.length()>0 && sha256hex.length()>0) {
                             data.put("Score", totalstring);

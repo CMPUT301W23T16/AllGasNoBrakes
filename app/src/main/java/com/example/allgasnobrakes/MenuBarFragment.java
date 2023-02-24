@@ -45,7 +45,7 @@ public class MenuBarFragment extends Fragment {
         cameraButton.setOnClickListener(v ->
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.split_container, ScannerFragment.class, null)
+                        .replace(R.id.split_container, ScannerFragment.class, requireArguments())
                         .commit()
         );
 
