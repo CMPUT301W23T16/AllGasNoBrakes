@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 
 /**
- * Handles sign in operations
+ * Handles first-time user (registration) operations
  * @author zhaoyu4
  * @version 1.0
  */

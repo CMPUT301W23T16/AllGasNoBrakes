@@ -1,6 +1,7 @@
 package com.example.allgasnobrakes;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Map;
+
+/**
+ * Handles returning user (sign in) operations
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class SignInFragment extends Fragment {
     private FirebaseFirestore db;
     private Leaderboard viewModel;
@@ -42,11 +53,29 @@ public class SignInFragment extends Fragment {
         rollOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String playerName = cloudID.getId();
-                String email = cloudID.get().getResult().getString("Email");
-                String password = cloudID.get().getResult().getString("Password");
-                PlayerProfile playerProfile = new PlayerProfile(playerName, email, password);
-                viewModel.selectPlayer(playerProfile);
+                //https://firebase.google.com/docs/firestore/query-data/get-data
+                cloudID.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+
+                            if (document.exists()) {
+                                Log.d("User", "DocumentSnapshot data: " + document.getData());
+                                String playerName = cloudID.getId();
+                                String email = (String) document.getData().get("Email");
+                                String password = (String) document.getData().get("Password");
+                                PlayerProfile playerProfile = new PlayerProfile(playerName, email, password);
+                                viewModel.selectPlayer(playerProfile);
+                            } else {
+                                Log.d("User", "No such document");
+                            }
+
+                        } else {
+                            Log.d("User", "get failed with ", task.getException());
+                        }
+                    }
+                });
             }
         });
         return view;
