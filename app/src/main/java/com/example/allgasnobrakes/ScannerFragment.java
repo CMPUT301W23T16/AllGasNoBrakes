@@ -64,7 +64,12 @@ public class ScannerFragment extends Fragment {
                                 if (current.length() != 0){
                                     String hex = String.format("%c",current.charAt(0));
                                     int integer = Integer.parseInt(hex, 16);
-                                    total += Math.pow(integer,current.length());
+                                    if (integer == 0){
+                                        total += Math.pow(20,current.length());
+                                    }else{
+                                        total += Math.pow(integer,current.length());
+                                    }
+
                                 }
                                 current = "";
                             }
