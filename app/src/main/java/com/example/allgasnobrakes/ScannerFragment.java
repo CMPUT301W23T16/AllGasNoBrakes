@@ -73,7 +73,7 @@ public class ScannerFragment extends Fragment {
                             }
                         }
                         String totalstring = Integer.toString(total);
-
+                        NameGenerator name = new NameGenerator(sha256hex);
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
@@ -81,6 +81,7 @@ public class ScannerFragment extends Fragment {
                         HashMap<String, String> data = new HashMap<>();
                         if (totalstring.length()>0 && sha256hex.length()>0) {
                             data.put("Score", totalstring);
+                            data.put("Name", name.Generate());
 
                             collectionReference
                                     .document(sha256hex)

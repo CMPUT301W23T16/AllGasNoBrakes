@@ -8,14 +8,14 @@ package com.example.allgasnobrakes;
 public class HashedQR {
     private String hashedQR;
     private int score;
-//    private String name;
+    private String name;
 //    private String[][] face;
 //    private final double[] geolocation= new double[2];
 //    String name, String[][] face, int lat, int lon
-    public HashedQR(String hashedQR, int score) {
+    public HashedQR(String hashedQR, int score, String name) {
         this.hashedQR = hashedQR;
         this.score = score;
-//        this.name = name;
+        this.name = name;
 //        this.face = face;
 //        geolocation[0] = lat;
 //        geolocation[1] = lon;
@@ -30,9 +30,9 @@ public class HashedQR {
         return score;
     }
 
-//    public String getName() {
-//        return name;
-//    }
+    public String getName() {
+        return name;
+    }
 //
 //    public String[][] getFace() {
 //        return face;
@@ -42,17 +42,17 @@ public class HashedQR {
 //        return geolocation;
 //    }
 //
-//    public void setHashedQR(String hashedQR) {
-//        this.hashedQR = hashedQR;
-//    }
-//
-//    public void setScore(int score) {
-//        this.score = score;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
+    public void setHashedQR(String hashedQR) {
+        this.hashedQR = hashedQR;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 //
 //    public void setFace(String[][] face) {
 //        this.face = face;

@@ -65,7 +65,8 @@ public class QRListFragment extends Fragment  {
                     Log.d(TAG, String.valueOf(doc.getData().get("Score")));
                     String hash = doc.getId();
                     String Score = (String) doc.getData().get("Score");
-                    player_Qr.add(new HashedQR(hash, Integer.parseInt(Score))); // Adding the cities and provinces from FireStore
+                    String name = (String) doc.getData().get("Name");
+                    player_Qr.add(new HashedQR(hash, Integer.parseInt(Score), name)); // Adding the cities and provinces from FireStore
                 }
                 QrAdapter.notifyDataSetChanged();
             }
