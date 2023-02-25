@@ -6,11 +6,22 @@
     <string name="home_text">Home</string>
     <string name="profile_text">Profile</string>
     <string name="camera_text">Camera</string>
-    <string name="username_text">Username</string>
-    <string name="email_text">Email</string>
-    <string name="password_text">Password</string>
-    <string name="register_button_text">Register</string>
-    <string name="welcome_message_text">WELCOME BACK</string>
-    <string name="roll_out_message_text">ROLL OUT</string>
+    <string name="username_string">Username</string>
+    <string name="player_name">Player\'s Name</string>
+    <string name="player_email">Player\'s Email</string>
+    <string name="edit_button">Edit</string>
+    <string name="contact_info_header">Contact Information</string>
+    <string name="player_search_hint">Player Search</string>
+    <string name="password_header">New Password</string>
+    <string name="email_header">New Email</string>
+    <string name="username_prompt">Username</string>
+    <string name="username_header">Change Username</string>
+    <string name="name_prompt">Name</string>
+    <string name="player_name_prompt">Change Name</string>
+    <string name="edit_profile_header">Editing User Profile</string>
+    <string name="email_prompt">Email</string>
+    <string name="password_prompt">Password</string>
+    <string name="search_text">Search</string>
+    <string name="save_changes_txt">Save</string>
+    <string name="cancel_changes_txt">Cancel</string>
 </resources>
-
