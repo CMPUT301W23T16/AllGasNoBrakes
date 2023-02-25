@@ -77,14 +77,16 @@ public class ScannerFragment extends Fragment {
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
-                        final CollectionReference collectionReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
-                        HashMap<String, String> data = new HashMap<>();
-                        if (totalstring.length()>0 && sha256hex.length()>0) {
-                            data.put("Score", totalstring);
+                        final CollectionReference playerReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
+                        final CollectionReference collectionReference = db.collection("QR");
+                        HashMap<String, Number> QRData = new HashMap<>();
+
+                        if (total>0 && sha256hex.length()>0) {
+                            QRData.put("Score", total);
 
                             collectionReference
                                     .document(sha256hex)
-                                    .set(data)
+                                    .set(QRData)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -99,6 +101,25 @@ public class ScannerFragment extends Fragment {
                                             Log.d(TAG, "Data could not be added!" + e.toString());
                                         }
                                     });
+
+                            playerReference
+                                    .document(sha256hex)
+                                    .set(new HashMap<String, String>(){{put("QRReference", collectionReference.document(sha256hex).getPath());}})
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // These are a method which gets executed when the task is succeeded
+                                            Log.d(TAG, "Data has been added successfully!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // These are a method which gets executed if there’s any problem
+                                            Log.d(TAG, "Data could not be added!" + e.toString());
+                                        }
+                                    });
+
 
                         }
 

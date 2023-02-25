@@ -7,12 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -23,8 +28,8 @@ import java.util.ArrayList;
 
 /**
  * Handles operations with QR code list
- * @author zhaoyu4
- * @version 1.0
+ * @author zhaoyu4 zhaoyu5
+ * @version 2.0
  */
 
 public class QRListFragment extends Fragment  {
@@ -62,12 +67,33 @@ public class QRListFragment extends Fragment  {
                 player_Qr.clear();
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
-                    Log.d(TAG, String.valueOf(doc.getData().get("Score")));
-                    String hash = doc.getId();
-                    String Score = (String) doc.getData().get("Score");
-                    player_Qr.add(new HashedQR(hash, Integer.parseInt(Score))); // Adding the cities and provinces from FireStore
+                    // Log.d(TAG, String.valueOf(doc.getData().get("Score")));
+                    String QRReference = (String) doc.get("QRReference");
+                    if (QRReference != null) {
+                        DocumentReference documentReference = db.document(QRReference);
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+
+                                    if (document.exists()) {
+                                        Log.d("User", "DocumentSnapshot data: " + document.getData());
+                                        String hash = document.getId();
+                                        Number score = (Number) document.get("Score");
+                                        player_Qr.add(new HashedQR(hash, score.intValue()));
+                                        QrAdapter.notifyDataSetChanged();
+                                    } else {
+                                        Log.d("User", "No such document");
+                                    }
+
+                                } else {
+                                    Log.d("User", "get failed with ", task.getException());
+                                }
+                            }
+                        });
+                    }
                 }
-                QrAdapter.notifyDataSetChanged();
             }
         });
 
