@@ -1,80 +1,102 @@
 package com.example.allgasnobrakes;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import android.Manifest;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    EditText firstName;
-    EditText lastName;
-    Button registerButton;
-    final String TAG = "Sample";
+    private PlayerProfile currentUser;
+    private final FragmentManager fm = getSupportFragmentManager();
+    private final int CAMERA_PERMISSION_CODE = 101;
+
+    private Leaderboard viewModel;
+    private RecyclerView QRList;
+    private RecyclerView.Adapter QrAdapter;
+    protected ArrayList<HashedQR> player_Qr;
+    private
     FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(Leaderboard.class);
+
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
+                CAMERA_PERMISSION_CODE);
+
         setContentView(R.layout.activity_main);
 
-        db = FirebaseFirestore.getInstance();
-        registerButton = findViewById(R.id.registerbutton);
-        firstName = findViewById(R.id.firstName);
-        lastName = findViewById(R.id.lastName);
+        if (savedInstanceState == null) {
+            Bundle bundle = new Bundle();
+            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String First = firstName.getText().toString();
-                String Last = lastName.getText().toString();
-                Map<String, String> user = new HashMap<>();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference cloudID = db.collection("DeviceID").document(id);
 
-                if (firstName.length()>0 && lastName.length()>0) {
-                    user.put("First Name", First);
-                    user.put("Last Name", Last);
+            //https://firebase.google.com/docs/firestore/query-data/get-data
+            cloudID.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        Bundle bundle = new Bundle();
 
+                        if (document.exists()) {
+                            Log.d("User", "DocumentSnapshot data: " + document.getData());
+                            bundle.putString("LastUser", document.get("LastUser").toString()); // TODO: add error checking
+                            fm.beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(R.id.fragment_container, SignInFragment.class, bundle)
+                                    .commit();
+                        } else {
+                            Log.d("User", "No such document");
+                            bundle.putString("deviceID", id);
+                            fm.beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(R.id.fragment_container, RegisterFragment.class, bundle)
+                                    .commit();
+                        }
 
-                    db.collection("user")
-                            .add(user)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "Data has been added successfully!");
-                                }
-                            })
-
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "Data has not been added.");
-                                }
-                            });
+                    } else {
+                        Log.d("User", "get failed with ", task.getException());
+                    }
                 }
-            }
+            });
+        }
+
+        viewModel.getSelectedPlayer().observe(this, item -> {
+            setContentView(R.layout.split_fragment);
+            currentUser = item;
+
+            Bundle bundle = new Bundle();
+            bundle.putString("Username", currentUser.getUsername());
+            bundle.putString("Email", currentUser.getEmail());
+
+            fm.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.split_container, QRListFragment.class, bundle)
+                    .replace(R.id.menu_bar_container, MenuBarFragment.class, bundle)
+                    .commit();
         });
-
     }
-
 }
