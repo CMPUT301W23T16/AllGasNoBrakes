@@ -78,17 +78,17 @@ public class QRListFragment extends Fragment  {
                                     DocumentSnapshot document = task.getResult();
 
                                     if (document.exists()) {
-                                        Log.d("User", "DocumentSnapshot data: " + document.getData());
+                                        Log.d("QR", "DocumentSnapshot data: " + document.getData());
                                         String hash = document.getId();
                                         Number score = (Number) document.get("Score");
                                         player_Qr.add(new HashedQR(hash, score.intValue()));
                                         QrAdapter.notifyDataSetChanged();
                                     } else {
-                                        Log.d("User", "No such document");
+                                        Log.d("QR", "No such document");
                                     }
 
                                 } else {
-                                    Log.d("User", "get failed with ", task.getException());
+                                    Log.d("QR", "get failed with ", task.getException());
                                 }
                             }
                         });
@@ -96,8 +96,6 @@ public class QRListFragment extends Fragment  {
                 }
             }
         });
-
-
         return root;
     }
 

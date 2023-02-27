@@ -28,7 +28,7 @@ import java.util.HashMap;
 /**
  * Handles operations with code scanner
  * @author zhaoyu4 zhaoyu5
- * @version 1.0
+ * @version 2.0
  */
 public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
@@ -119,13 +119,10 @@ public class ScannerFragment extends Fragment {
                                             Log.d(TAG, "Data could not be added!" + e.toString());
                                         }
                                     });
-
-
                         }
 
                     }
                 });
-
             }
         });
         scannerView.setOnClickListener(new View.OnClickListener() {

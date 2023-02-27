@@ -80,14 +80,14 @@ public class RegisterFragment extends Fragment {
                         @Override
                         public void onSuccess(Void aVoid) {
                             // These are a method which gets executed when the task is succeeded
-                            Log.d("User", "Data has been added successfully!");
+                            Log.d("Device", "Data has been added successfully!");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             // These are a method which gets executed if there’s any problem
-                            Log.d("User", "Data could not be added!" + e);
+                            Log.d("Device", "Data could not be added!" + e);
                         }
                     });
 
