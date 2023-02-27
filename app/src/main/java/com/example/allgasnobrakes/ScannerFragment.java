@@ -64,7 +64,11 @@ public class ScannerFragment extends Fragment {
                                 if (current.length() != 0){
                                     String hex = String.format("%c",current.charAt(0));
                                     int integer = Integer.parseInt(hex, 16);
-                                    total += Math.pow(integer,current.length());
+                                    if (integer == 0){
+                                        total += Math.pow(20,current.length());
+                                    }else{
+                                        total += Math.pow(integer,current.length());
+                                    }
                                 }
                                 current = "";
                             }
@@ -72,17 +76,18 @@ public class ScannerFragment extends Fragment {
                                 current = current + starting;
                             }
                         }
-                        String totalstring = Integer.toString(total);
 
+                        NameGenerator name = new NameGenerator(sha256hex);
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
                         final CollectionReference playerReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
                         final CollectionReference collectionReference = db.collection("QR");
-                        HashMap<String, Number> QRData = new HashMap<>();
+                        HashMap<String, Object> QRData = new HashMap<>();
 
                         if (total>0 && sha256hex.length()>0) {
-                            QRData.put("Score", total);
+                            QRData.put("Score", (Number) total);
+                            QRData.put("Name", (String) name.Generate());
 
                             collectionReference
                                     .document(sha256hex)

@@ -79,7 +79,7 @@ public class QRListFragment extends Fragment  {
 
                                     if (document.exists()) {
                                         Log.d("QR", "DocumentSnapshot data: " + document.getData());
-                                        String hash = document.getId();
+                                        String hash = (String) document.get("Name");
                                         Number score = (Number) document.get("Score");
                                         player_Qr.add(new HashedQR(hash, score.intValue()));
                                         QrAdapter.notifyDataSetChanged();
