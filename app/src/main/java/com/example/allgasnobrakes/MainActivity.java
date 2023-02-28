@@ -29,12 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private final int CAMERA_PERMISSION_CODE = 101;
 
     private Leaderboard viewModel;
-    private RecyclerView QRList;
-    private RecyclerView.Adapter QrAdapter;
-    protected ArrayList<HashedQR> player_Qr;
-    private
-    FirebaseFirestore db;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
