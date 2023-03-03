@@ -15,16 +15,16 @@ public class ProfileFragment extends Fragment {
     private TextView email;
 
     public ProfileFragment() {
-        super(R.layout.player_profile);
+        super(R.layout.profile);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.player_profile, container, false);
+        View view = inflater.inflate(R.layout.profile, container, false);
 
-        username = view.findViewById(R.id.username_textview);
-        email = view.findViewById(R.id.email_textview);
+        username = view.findViewById(R.id.username_text);
+        email = view.findViewById(R.id.email_text);
 
         username.setText(requireArguments().getString("Username"));
         email.setText(requireArguments().getString("Email"));
