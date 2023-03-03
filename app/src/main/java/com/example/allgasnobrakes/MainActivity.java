@@ -4,6 +4,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,5 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.menu_bar_container, MenuBarFragment.class, bundle)
                     .commit();
         });
+
     }
+
 }

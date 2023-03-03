@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -70,6 +73,14 @@ public class QRListFragment extends Fragment  {
                 QrAdapter.notifyDataSetChanged();
             }
         });
+
+
+        TextView totalCount = root.findViewById(R.id.total_codes);
+        QRCounter qrCounter = new QRCounter();
+        qrCounter.updateCounter(username, totalCount);
+
+        TextView Score = root.findViewById(R.id.player_score);
+        qrCounter.scoreCounter(username, Score);
 
 
         return root;

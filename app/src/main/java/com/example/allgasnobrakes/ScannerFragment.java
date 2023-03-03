@@ -82,6 +82,7 @@ public class ScannerFragment extends Fragment {
                         if (totalstring.length()>0 && sha256hex.length()>0) {
                             data.put("Score", totalstring);
 
+
                             collectionReference
                                     .document(sha256hex)
                                     .set(data)
@@ -113,6 +114,8 @@ public class ScannerFragment extends Fragment {
                 mCodeScanner.startPreview();
             }
         });
+
+
         return root;
     }
 }
