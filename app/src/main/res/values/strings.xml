@@ -18,7 +18,7 @@
     <string name="player_name">Player\'s Name</string>
     <string name="player_email">Player\'s Email</string>
     <string name="edit_button">Edit</string>
-    <string name="contact_info_header">Contact Information</string>
+    <string name="contact_info_header">Player Information</string>
     <string name="player_search_hint">Player Search</string>
     <string name="password_header">New Password</string>
     <string name="email_header">New Email</string>
@@ -32,5 +32,6 @@
     <string name="search_text">Search</string>
     <string name="save_changes_txt">Save</string>
     <string name="cancel_changes_txt">Cancel</string>
+    <string name="username_holder">Username</string>
 </resources>
 
