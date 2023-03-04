@@ -33,7 +33,7 @@ import java.util.HashMap;
  * @author zhaoyu4 and theresag
  * @version 1.1
  */
-//Notes for later: 
+
 public class RegisterFragment extends Fragment {
     private Button registerButton;
     private EditText usernameEditText;

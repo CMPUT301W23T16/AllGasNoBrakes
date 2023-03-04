@@ -4,20 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/agnb_back_pattern"
     android:padding="10dp"
     tools:context=".MainActivity">
+    <!--https://stackoverflow.com/questions/15304481/setting-background-for-a-fragment
+        Read the start of Usama Sarwar's question (on Stackoverflow) of changing the background of a fragment.
+        Then I added android:background to this file and teh drawable showed up as an option.
+        Works perfectly fine.
+     -->
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:fontFamily="sans-serif"
+        android:fontFamily="monospace"
         android:text="All Gas No Brakes"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
 
         android:textSize="35sp"
-        android:textStyle="normal" />
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username_edittext_layout"
@@ -75,6 +81,9 @@
         android:layout_below="@+id/password_edittext_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:text="@string/register_button_text" />
+        android:backgroundTint="@color/button_color"
+        android:fontFamily="monospace"
+        android:text="@string/register_button_text"
+        android:textStyle="bold" />
 
 </RelativeLayout>
