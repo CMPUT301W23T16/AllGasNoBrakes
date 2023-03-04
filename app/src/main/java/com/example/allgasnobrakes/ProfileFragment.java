@@ -26,8 +26,9 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.username_textview);
         email = view.findViewById(R.id.email_textview);
 
-        username.setText(requireArguments().getString("Username"));
-        email.setText(requireArguments().getString("Email"));
+        PlayerProfile currentUser = (PlayerProfile) requireArguments().getSerializable("User");
+        username.setText(currentUser.getUsername());
+        email.setText(currentUser.getEmail());
 
         return view;
     }

@@ -6,8 +6,8 @@ package com.example.allgasnobrakes;
  * @version 1.0
  */
 public class HashedQR {
-    private String hashedQR;
-    private int score;
+    private final String hashedQR;
+    private final int score;
 //    private String name;
 //    private String[][] face;
 //    private final double[] geolocation= new double[2];

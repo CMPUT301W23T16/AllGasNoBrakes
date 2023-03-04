@@ -47,6 +47,7 @@ public class ScannerFragment extends Fragment {
         mCodeScanner = new CodeScanner(activity, scannerView);
         mCodeScanner.startPreview();
         TextView t = root.findViewById(R.id.tv_textView);
+        PlayerProfile playerProfile = (PlayerProfile) requireArguments().getSerializable("User");
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -81,7 +82,7 @@ public class ScannerFragment extends Fragment {
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
-                        final CollectionReference playerReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
+                        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QR");
                         final CollectionReference collectionReference = db.collection("QR");
                         HashMap<String, Object> QRData = new HashMap<>();
 
@@ -125,7 +126,6 @@ public class ScannerFragment extends Fragment {
                                         }
                                     });
                         }
-
                     }
                 });
             }

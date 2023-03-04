@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
                         Bundle bundle = new Bundle();
 
                         if (document.exists()) {
-                            Log.d("User", "DocumentSnapshot data: " + document.getData());
+                            Log.d("Log In", "DocumentSnapshot data: " + document.getData());
                             bundle.putString("LastUser", document.get("LastUser").toString()); // TODO: add error checking
                             fm.beginTransaction()
                                     .setReorderingAllowed(true)
                                     .replace(R.id.fragment_container, SignInFragment.class, bundle)
                                     .commit();
                         } else {
-                            Log.d("User", "No such document");
+                            Log.d("Log In", "No such document");
                             bundle.putString("deviceID", id);
                             fm.beginTransaction()
                                     .setReorderingAllowed(true)
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     } else {
-                        Log.d("User", "get failed with ", task.getException());
+                        Log.d("Log In", "get failed with ", task.getException());
                     }
                 }
             });
@@ -82,8 +82,7 @@ public class MainActivity extends AppCompatActivity {
             currentUser = item;
 
             Bundle bundle = new Bundle();
-            bundle.putString("Username", currentUser.getUsername());
-            bundle.putString("Email", currentUser.getEmail());
+            bundle.putSerializable("User", currentUser);
 
             fm.beginTransaction()
                     .setReorderingAllowed(true)
