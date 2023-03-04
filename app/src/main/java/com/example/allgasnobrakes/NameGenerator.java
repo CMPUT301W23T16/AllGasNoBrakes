@@ -1,13 +1,13 @@
 package com.example.allgasnobrakes;
 
-
 public class NameGenerator {
     private String hashedQR;
 
     public NameGenerator(String hashedQR) {
         this.hashedQR = hashedQR;
     }
-     public String Generate(){
+
+    public String Generate(){
         String[] bit1 = {"Frigid ","Freezing ","Cold ","Chilly ", "Brisk ","Cool ","Mild ","Warm ","Hot ", "Scorching ","Roasting ", "Blazing ", "Toasty ", "Sweltering ","Scalding ","Steaming "};
         String[] bit2 = {"Flo","Glo","Plo","Klo", "Tlo","Rlo","Qlo","Wlo","Slo", "Hlo","Blo", "Dlo", "Clo", "Mlo","Nlo","Vlo"};
         String[] bit3 = {"Fo","Go","Po","Ko", "To","Ro","Qo","Wo","So", "Ho","Bo", "Do", "Co", "Mo","No","Vo"};
@@ -21,9 +21,5 @@ public class NameGenerator {
         name += bit5[Integer.parseInt(String.format("%c",hashedQR.charAt(4)), 16)];
         name += bit6[Integer.parseInt(String.format("%c",hashedQR.charAt(5)), 16)];
         return name;
-     }
-
-
-
-
+    }
 }

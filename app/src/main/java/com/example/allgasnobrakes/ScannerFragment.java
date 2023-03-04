@@ -28,7 +28,7 @@ import java.util.HashMap;
 /**
  * Handles operations with code scanner
  * @author zhaoyu4 zhaoyu5
- * @version 1.0
+ * @version 2.0
  */
 public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
@@ -47,6 +47,7 @@ public class ScannerFragment extends Fragment {
         mCodeScanner = new CodeScanner(activity, scannerView);
         mCodeScanner.startPreview();
         TextView t = root.findViewById(R.id.tv_textView);
+        PlayerProfile playerProfile = (PlayerProfile) requireArguments().getSerializable("User");
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -69,7 +70,6 @@ public class ScannerFragment extends Fragment {
                                     }else{
                                         total += Math.pow(integer,current.length());
                                     }
-
                                 }
                                 current = "";
                             }
@@ -77,20 +77,22 @@ public class ScannerFragment extends Fragment {
                                 current = current + starting;
                             }
                         }
-                        String totalstring = Integer.toString(total);
+
                         NameGenerator name = new NameGenerator(sha256hex);
                         FirebaseFirestore db;
                         final String TAG = "Sample";
                         db = FirebaseFirestore.getInstance();
-                        final CollectionReference collectionReference = db.collection("Users").document(requireArguments().getString("Username")).collection("QR");
-                        HashMap<String, String> data = new HashMap<>();
-                        if (totalstring.length()>0 && sha256hex.length()>0) {
-                            data.put("Score", totalstring);
-                            data.put("Name", name.Generate());
+                        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QR");
+                        final CollectionReference collectionReference = db.collection("QR");
+                        HashMap<String, Object> QRData = new HashMap<>();
+
+                        if (total>0 && sha256hex.length()>0) {
+                            QRData.put("Score", (Number) total);
+                            QRData.put("Name", (String) name.Generate());
 
                             collectionReference
                                     .document(sha256hex)
-                                    .set(data)
+                                    .set(QRData)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -106,11 +108,26 @@ public class ScannerFragment extends Fragment {
                                         }
                                     });
 
+                            playerReference
+                                    .document(sha256hex)
+                                    .set(new HashMap<String, String>(){{put("QRReference", collectionReference.document(sha256hex).getPath());}})
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // These are a method which gets executed when the task is succeeded
+                                            Log.d(TAG, "Data has been added successfully!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // These are a method which gets executed if there’s any problem
+                                            Log.d(TAG, "Data could not be added!" + e.toString());
+                                        }
+                                    });
                         }
-
                     }
                 });
-
             }
         });
         scannerView.setOnClickListener(new View.OnClickListener() {
