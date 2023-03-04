@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -90,31 +91,35 @@ public class PlayerProfile implements Serializable {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 QRList.clear();
+
+                ArrayList<String> QRS = new ArrayList<>();
                 for(QueryDocumentSnapshot QRRef: queryDocumentSnapshots) {
-                    DocumentReference hashedQR = db.document((String) QRRef.get("QRReference"));
-                    hashedQR.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot QR = task.getResult();
+                    DocumentReference hashedQR = db.document(QRRef.getString("QRReference"));
+                    QRS.add(hashedQR.getId());
+                }
 
-                                if (QR.exists()) {
-                                    Log.d("RQR", "DocumentSnapshot data: " + QR.getData());
-                                    String QRHash = QR.getId();
-                                    String QRName = (String) QR.get("Name");
-                                    Number QRScore = (Number) QR.get("Score");
-                                    QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
-                                    QRList.sort(new HashedQR().reversed());
-                                    QrAdapter.notifyDataSetChanged();
-                                } else {
-                                    Log.d("RQR", "No such document");
+                for (String i: QRS) {Log.d("Test", i);}
+
+                if (! QRS.isEmpty()) {
+                    db.collection("QR")
+                            .whereIn("Hash", QRS)
+                            .orderBy("Score", Query.Direction.DESCENDING)
+                            .orderBy("Name", Query.Direction.ASCENDING)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (value != null) {
+                                        for (QueryDocumentSnapshot QR: value) {
+                                            String QRHash = QR.getId();
+                                            String QRName = (String) QR.get("Name");
+                                            Number QRScore = (Number) QR.get("Score");
+                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
+                                            // QRList.sort(new HashedQR().reversed());
+                                            QrAdapter.notifyDataSetChanged();
+                                        }
+                                    }
                                 }
-
-                            } else {
-                                Log.d("RQR", "get failed with ", task.getException());
-                            }
-                        }
-                    });
+                            });
                 }
             }
         });

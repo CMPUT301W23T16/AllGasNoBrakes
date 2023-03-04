@@ -87,8 +87,9 @@ public class ScannerFragment extends Fragment {
                         HashMap<String, Object> QRData = new HashMap<>();
 
                         if (total>0 && sha256hex.length()>0) {
-                            QRData.put("Score", (Number) total);
-                            QRData.put("Name", (String) name.Generate());
+                            QRData.put("Score", total);
+                            QRData.put("Name", name.Generate());
+                            QRData.put("Hash", sha256hex);
 
                             collectionReference
                                     .document(sha256hex)
@@ -110,7 +111,9 @@ public class ScannerFragment extends Fragment {
 
                             playerReference
                                     .document(sha256hex)
-                                    .set(new HashMap<String, String>(){{put("QRReference", collectionReference.document(sha256hex).getPath());}})
+                                    .set(new HashMap<String, Object>(){
+                                        {put("QRReference", collectionReference.document(sha256hex).getPath());}
+                                    })
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
