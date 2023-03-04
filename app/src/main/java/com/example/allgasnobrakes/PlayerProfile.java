@@ -9,18 +9,22 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Contains player profile information
@@ -79,13 +83,13 @@ public class PlayerProfile implements Serializable {
 
     public void retrieveQR(RecyclerView.Adapter QrAdapter) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR");
+        final CollectionReference collectionReference = db.collection("Users")
+                .document(username).collection("QR");
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 QRList.clear();
-
                 for(QueryDocumentSnapshot QRRef: queryDocumentSnapshots) {
                     DocumentReference hashedQR = db.document((String) QRRef.get("QRReference"));
                     hashedQR.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -96,10 +100,11 @@ public class PlayerProfile implements Serializable {
 
                                 if (QR.exists()) {
                                     Log.d("RQR", "DocumentSnapshot data: " + QR.getData());
-                                    String QRHash = (String) QR.getId();
+                                    String QRHash = QR.getId();
                                     String QRName = (String) QR.get("Name");
                                     Number QRScore = (Number) QR.get("Score");
                                     QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
+                                    QRList.sort(new HashedQR().reversed());
                                     QrAdapter.notifyDataSetChanged();
                                 } else {
                                     Log.d("RQR", "No such document");
