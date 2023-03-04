@@ -3,6 +3,8 @@
     <string name="player_score">Score</string>
     <string name="total_codes">Total</string>
     <string name="sort_text">Sort</string>
+    <string name="highest_score_text">Highest Score</string>
+    <string name="lowest_score_text">Lowest Score</string>
     <string name="home_text">Home</string>
     <string name="profile_text">Profile</string>
     <string name="camera_text">Camera</string>
