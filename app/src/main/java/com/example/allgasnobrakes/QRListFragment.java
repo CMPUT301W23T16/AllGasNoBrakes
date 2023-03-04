@@ -73,9 +73,9 @@ public class QRListFragment extends Fragment  {
         });
     }
 
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
-//    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
+    }
 }
