@@ -5,17 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/current_image"
-        android:layout_width="386dp"
-        android:layout_height="382dp"
-        android:layout_marginTop="16dp"
+    <com.budiyev.android.codescanner.CodeScannerView
+        android:id="@+id/photo_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:autoFocusButtonColor="@color/white"
+        app:autoFocusButtonVisible="true"
+        app:flashButtonColor="@color/white"
+        app:flashButtonVisible="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/strt" />
-
+        app:layout_constraintTop_toTopOf="@+id/divider"
+        app:maskColor="#6C000000" />
     <View
         android:id="@+id/divider"
         android:layout_width="409dp"
@@ -24,7 +25,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current_image" />
+        app:layout_constraintTop_toBottomOf="@+id/photo_scanner" />
 
     <ImageView
         android:id="@+id/third_image"
@@ -34,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/second_image"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/photo_scanner"
         app:srcCompat="@android:drawable/editbox_dropdown_dark_frame" />
 
     <ImageView
@@ -44,7 +45,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/photo_scanner"
         app:srcCompat="@drawable/coffin_complete" />
 
     <ImageView
@@ -53,7 +54,7 @@
         android:layout_height="130dp"
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toEndOf="@+id/first_image"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/photo_scanner"
         app:srcCompat="@drawable/bagley" />
 
     <Button
