@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("User", currentUser);
+            bundle.putString("SortOrder", "Highest Score");
 
             fm.beginTransaction()
                     .setReorderingAllowed(true)

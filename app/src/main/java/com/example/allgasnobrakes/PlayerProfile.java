@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Contains player profile information
  * @author zhaoyu4
- * @version 1.1
+ * @version 2.0
  */
 public class PlayerProfile implements Serializable {
     private String username;
@@ -96,9 +96,10 @@ public class PlayerProfile implements Serializable {
 
                                 if (QR.exists()) {
                                     Log.d("RQR", "DocumentSnapshot data: " + QR.getData());
+                                    String QRHash = (String) QR.getId();
                                     String QRName = (String) QR.get("Name");
                                     Number QRScore = (Number) QR.get("Score");
-                                    QRList.add(new HashedQR(QRName, QRScore.intValue()));
+                                    QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
                                     QrAdapter.notifyDataSetChanged();
                                 } else {
                                     Log.d("RQR", "No such document");
