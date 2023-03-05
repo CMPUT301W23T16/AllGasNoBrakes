@@ -9,18 +9,23 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Contains player profile information
@@ -79,37 +84,42 @@ public class PlayerProfile implements Serializable {
 
     public void retrieveQR(RecyclerView.Adapter QrAdapter) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR");
+        final CollectionReference collectionReference = db.collection("Users")
+                .document(username).collection("QR");
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 QRList.clear();
 
+                ArrayList<String> QRS = new ArrayList<>();
                 for(QueryDocumentSnapshot QRRef: queryDocumentSnapshots) {
-                    DocumentReference hashedQR = db.document((String) QRRef.get("QRReference"));
-                    hashedQR.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot QR = task.getResult();
+                    DocumentReference hashedQR = db.document(QRRef.getString("QRReference"));
+                    QRS.add(hashedQR.getId());
+                }
 
-                                if (QR.exists()) {
-                                    Log.d("RQR", "DocumentSnapshot data: " + QR.getData());
-                                    String QRHash = (String) QR.getId();
-                                    String QRName = (String) QR.get("Name");
-                                    Number QRScore = (Number) QR.get("Score");
-                                    QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
-                                    QrAdapter.notifyDataSetChanged();
-                                } else {
-                                    Log.d("RQR", "No such document");
+                for (String i: QRS) {Log.d("Test", i);}
+
+                if (! QRS.isEmpty()) {
+                    db.collection("QR")
+                            .whereIn("Hash", QRS)
+                            .orderBy("Score", Query.Direction.DESCENDING)
+                            .orderBy("Name", Query.Direction.ASCENDING)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (value != null) {
+                                        for (QueryDocumentSnapshot QR: value) {
+                                            String QRHash = QR.getId();
+                                            String QRName = (String) QR.get("Name");
+                                            Number QRScore = (Number) QR.get("Score");
+                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
+                                            // QRList.sort(new HashedQR().reversed());
+                                            QrAdapter.notifyDataSetChanged();
+                                        }
+                                    }
                                 }
-
-                            } else {
-                                Log.d("RQR", "get failed with ", task.getException());
-                            }
-                        }
-                    });
+                            });
                 }
             }
         });

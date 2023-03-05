@@ -1,5 +1,6 @@
 package com.example.allgasnobrakes;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Comparator;
  * @author zhaoyu4
  * @version 2.0
  */
-public class HashedQR implements Comparator<HashedQR> {
+public class HashedQR implements Comparator<HashedQR>, Serializable {
     private final String hashedQR;
     private final int score;
     private String name;
