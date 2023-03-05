@@ -63,19 +63,3 @@ public class QRCounter {
                 });
 
     }
-
-//    public int getCounter() {
-//        return counter;
-//    }
-}
-
-
-
-//    /**
-//     * Testing, fatih
-//     */
-//    QRCounter qrCounter = new QRCounter();
-//        qrCounter.updateCounter("hi");
-//
-//                TextView totalCount = root.findViewById(R.id.total_codes);
-//                totalCount.setText(String.valueOf(qrCounter.getCounter()));
