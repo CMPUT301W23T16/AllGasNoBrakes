@@ -97,8 +97,6 @@ public class PlayerProfile implements Serializable {
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                QRList.clear();
-
                 ArrayList<String> QRS = new ArrayList<>();
 
                 // We get the hashed value for each of QRs that the player has...
@@ -119,6 +117,7 @@ public class PlayerProfile implements Serializable {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                     if (value != null) {
+                                        QRList.clear();
                                         for (QueryDocumentSnapshot QR: value) {
                                             String QRHash = QR.getId();
                                             String QRName = (String) QR.get("Name");

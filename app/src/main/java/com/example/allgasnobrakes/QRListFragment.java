@@ -9,6 +9,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +27,8 @@ public class QRListFragment extends Fragment  {
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
-    final String TAG = "Sample";
+
+    PlayerProfile user;
 
     public QRListFragment() {
         super(R.layout.homepage);
@@ -39,8 +41,7 @@ public class QRListFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        final PlayerProfile user = (PlayerProfile) requireArguments().getSerializable("User");
+        user = (PlayerProfile) requireArguments().getSerializable("User");
         Log.d("Current User", user.getUsername());
         final Activity activity = getActivity();
 
@@ -131,5 +132,6 @@ public class QRListFragment extends Fragment  {
     public void onPause() {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
+        requireArguments().putSerializable("User", user);
     }
 }
