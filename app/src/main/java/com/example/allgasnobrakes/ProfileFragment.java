@@ -23,6 +23,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
+
 /**
  * Displays fragment for user's profile
  * - allows user to search for other players
@@ -31,6 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 
 public class ProfileFragment extends Fragment {
+
+    private PlayerProfile user;
     private TextView username;
     private TextView email;
     private Button editing;
@@ -91,7 +95,7 @@ public class ProfileFragment extends Fragment {
                                 //Make bundle of the friend profile
                                 Bundle friend_bundle = new Bundle();
                                 friend_bundle.putString("Username", document.getId());
-                                friend_bundle.putString("Email", document.get("Email").toString());
+                                friend_bundle.putString("Email", (String) document.get("Email"));
 
                                 //Show the profile, so maybe open a fragment of the other player's profile??
                                 other.beginTransaction()
@@ -120,6 +124,16 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+
         return view;
+    }
+
+    //Use onPause() to save info between fragments
+    @Override
+    public void onPause() {
+        super.onPause();
+        //Saving the user
+        requireArguments().putSerializable("User", (Serializable) user);
+
     }
 }
