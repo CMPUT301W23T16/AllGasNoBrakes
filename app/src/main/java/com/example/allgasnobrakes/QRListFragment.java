@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Collections;
-
 /**
  * Handles operations with QR code list
  * @author zhaoyu4 zhaoyu5

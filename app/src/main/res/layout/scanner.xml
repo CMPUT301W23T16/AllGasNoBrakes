@@ -29,4 +29,25 @@
         android:layout_marginBottom="20dp"
         android:textColor="@color/black" />
 
+    <EditText
+        android:id="@+id/comment"
+        android:layout_width="301dp"
+        android:layout_height="67dp"
+        android:layout_below="@+id/tv_textView"
+        android:layout_marginTop="51dp"
+        android:ems="10"
+        android:hint="Comment"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_textView"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="69dp"
+        android:layout_toEndOf="@+id/comment"
+        android:text="Confirm"
+        android:textSize="10dp" />
+
 </RelativeLayout>
