@@ -36,7 +36,6 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.score = 0;
         this.name = "name";
     }
-
     public HashedQR(String hashedQR, int score, String name) {
         this.hashedQR = hashedQR;
         this.score = score;
