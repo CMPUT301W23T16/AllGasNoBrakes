@@ -40,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        /*
+        We check if there has been a previous log in on the device. If the is, we log in the last
+        user on the device, and ask for confirmation. If there isn't one, we prompt the new user
+        to register
+         */
         if (savedInstanceState == null) {
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -77,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        /*
+        We have received player information, load into the homepage
+         */
         viewModel.getSelectedPlayer().observe(this, item -> {
             setContentView(R.layout.split_fragment);
             currentUser = item;

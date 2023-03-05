@@ -82,6 +82,11 @@ public class PlayerProfile implements Serializable {
         this.QRList = QRList;
     }
 
+    /**
+     * Retrieves the collection of HashedQR that a player has collected and stores it locally. Also
+     * notifies the view that displays this information to update itself with the latest data.
+     * @param QrAdapter - the view to be updated
+     */
     public void retrieveQR(RecyclerView.Adapter QrAdapter) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Users")
@@ -93,6 +98,8 @@ public class PlayerProfile implements Serializable {
                 QRList.clear();
 
                 ArrayList<String> QRS = new ArrayList<>();
+
+                // We get the hashed value for each of QRs that the player has...
                 for(QueryDocumentSnapshot QRRef: queryDocumentSnapshots) {
                     DocumentReference hashedQR = db.document(QRRef.getString("QRReference"));
                     QRS.add(hashedQR.getId());
@@ -100,6 +107,7 @@ public class PlayerProfile implements Serializable {
 
                 for (String i: QRS) {Log.d("Test", i);}
 
+                // Then in the QR database, we retrieve the details of those QRs and store the data locally
                 if (! QRS.isEmpty()) {
                     db.collection("QR")
                             .whereIn("Hash", QRS)
@@ -115,7 +123,7 @@ public class PlayerProfile implements Serializable {
                                             Number QRScore = (Number) QR.get("Score");
                                             QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
                                             // QRList.sort(new HashedQR().reversed());
-                                            QrAdapter.notifyDataSetChanged();
+                                            QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
                                     }
                                 }
