@@ -9,8 +9,11 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Collections;
 
@@ -34,9 +37,6 @@ public class QRListFragment extends Fragment  {
     /**
      * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
      * resort in ascending order
-     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -78,6 +78,52 @@ public class QRListFragment extends Fragment  {
                 }
             }
         });
+
+        // https://www.geeksforgeeks.org/swipe-to-delete-and-undo-in-android-recyclerview/
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // this method is called when we swipe our item to right direction.
+                // on below line we are getting the item at a particular position.
+                HashedQR deletedQR = user.getQRList().get(viewHolder.getAdapterPosition());
+
+                // below line is to get the position
+                // of the item at that position.
+                int position = viewHolder.getAdapterPosition();
+
+                // this method is called when item is swiped.
+                // below line is to remove item from our array list.
+                user.getQRList().remove(viewHolder.getAdapterPosition());
+
+                // Then we remove it from the cloud database
+                user.deleteQR(deletedQR.getHashedQR());
+
+                // below line is to notify our item is removed from adapter.
+                QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+                // below line is to display our snackbar with action.
+                Snackbar.make(QRList, deletedQR.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // adding on click listener to our action of snack bar.
+                        // below line is to add our item to array list with a position.
+                        user.getQRList().add(position, deletedQR);
+
+                        // Add it back to cloud database
+                        user.addQR(deletedQR.getHashedQR());
+
+                        // below line is to notify item is
+                        // added to our adapter class.
+                        QrAdapter.notifyItemInserted(position);
+                    }
+                }).show();
+            }
+        }).attachToRecyclerView(QRList);
     }
 
     /**

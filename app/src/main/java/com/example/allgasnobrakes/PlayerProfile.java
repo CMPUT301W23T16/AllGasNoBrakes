@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Contains player profile information
@@ -132,5 +134,34 @@ public class PlayerProfile implements Serializable {
             }
         });
         Log.d("Test", "Called");
+    }
+
+    public void deleteQR(String hash) {
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(username).collection("QR")
+                .document(hash).delete();
+    }
+
+    public void addQR(String hash) {
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(username).collection("QR")
+                .document(hash)
+                .set(new HashMap<String, Object>(){
+                    {put("QRReference", "QR/" + hash);}
+                })
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // These are a method which gets executed when the task is succeeded
+                        Log.d("Add QR", "Data has been added successfully!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // These are a method which gets executed if there’s any problem
+                        Log.d("Add QR", "Data could not be added!" + e.toString());
+                    }
+                });
     }
 }
