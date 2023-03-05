@@ -31,10 +31,8 @@ public class FriendFragment extends Fragment {
         friend_user = view.findViewById(R.id.username_textview);
         friend_email = view.findViewById(R.id.email_textview);
 
-        //Sets the text for the username and email
-        PlayerProfile currentUser = (PlayerProfile) requireArguments().getSerializable("User");
-        friend_user.setText(currentUser.getUsername());
-        friend_email.setText(currentUser.getEmail());
+        friend_user.setText(requireArguments().getString("Username"));
+        friend_email.setText(requireArguments().getString("Email"));
 
         return view;
     }
