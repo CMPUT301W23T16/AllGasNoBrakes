@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
-
 /**
  * Handles operations with QR code list
  * @author zhaoyu4 zhaoyu5

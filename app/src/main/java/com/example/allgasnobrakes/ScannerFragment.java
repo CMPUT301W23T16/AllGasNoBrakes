@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
     int total = 0;
     String sha256hex;
+    String com;
     public ScannerFragment() {
         super(R.layout.scanner);
     }
@@ -48,7 +51,41 @@ public class ScannerFragment extends Fragment {
         mCodeScanner.startPreview();
         TextView t = root.findViewById(R.id.tv_textView);
         PlayerProfile playerProfile = (PlayerProfile) requireArguments().getSerializable("User");
+        FirebaseFirestore db;
+        final String TAG = "Sample";
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QR");
+        final CollectionReference collectionReference = db.collection("QR");
+        Button confirm = root.findViewById(R.id.confirm_button);
+        EditText comment = root.findViewById(R.id.comment);
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sha256hex != null){
+                    HashMap<String, Object> QRData = new HashMap<>();
+                    QRData.put("QRReference", collectionReference.document(sha256hex).getPath());
+                    QRData.put("Comment", comment.getText().toString());
+                    playerReference
+                            .document(sha256hex)
+                            .set(QRData)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // These are a method which gets executed when the task is succeeded
+                                    Log.d(TAG, "Data has been added successfully!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // These are a method which gets executed if there’s any problem
+                                    Log.d(TAG, "Data could not be added!" + e.toString());
+                                }
+                            });
+                }
 
+            }
+        });
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -79,11 +116,6 @@ public class ScannerFragment extends Fragment {
                         }
 
                         NameGenerator name = new NameGenerator(sha256hex);
-                        FirebaseFirestore db;
-                        final String TAG = "Sample";
-                        db = FirebaseFirestore.getInstance();
-                        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QR");
-                        final CollectionReference collectionReference = db.collection("QR");
                         HashMap<String, Object> QRData = new HashMap<>();
 
                         if (total>0 && sha256hex.length()>0) {
