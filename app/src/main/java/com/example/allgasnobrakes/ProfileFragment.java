@@ -103,7 +103,6 @@ public class ProfileFragment extends Fragment {
                                 other.beginTransaction()
                                         .setReorderingAllowed(true)
                                         .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)  //Rework this later
-                                        .replace(R.id.menu_bar_container, MenuBarFragment.class, friend_bundle)
                                         .commit();
 
                             } else {  //if username does not exist
