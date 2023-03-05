@@ -31,6 +31,13 @@ public class QRListFragment extends Fragment  {
         super(R.layout.homepage);
     }
 
+    /**
+     * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
+     * resort in ascending order
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -73,6 +80,9 @@ public class QRListFragment extends Fragment  {
         });
     }
 
+    /**
+     * Overridden to keep sorting order persistent across fragment transactions
+     */
     @Override
     public void onPause() {
         super.onPause();

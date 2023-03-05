@@ -16,7 +16,12 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
 //    private final double[] geolocation= new double[2];
 //    String name, String[][] face, int lat, int lon
 
-
+    /**
+     * Sort QR code by increasing score first, then alphabetically by name
+     * @param o1 - the first HashedQR object to be compared.
+     * @param o2 - the second HashedQR object to be compared.
+     * @return - a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+     */
     @Override
     public int compare(HashedQR o1, HashedQR o2) {
         if (o1.score == o2.getScore()) {
