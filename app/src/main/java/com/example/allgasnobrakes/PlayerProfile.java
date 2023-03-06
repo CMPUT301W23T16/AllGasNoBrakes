@@ -40,10 +40,9 @@ public class PlayerProfile implements Serializable {
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
 
-    public PlayerProfile() {
-        this.username = "username";
-        this.email = "email";
-        this.password = "password";
+    public PlayerProfile(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 
     public PlayerProfile(String username, String email, String password) {
