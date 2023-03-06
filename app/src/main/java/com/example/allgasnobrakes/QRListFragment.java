@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -22,7 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
  * @version 3.0
  */
 
-public class QRListFragment extends Fragment  {
+public class QRListFragment extends DialogFragment {
 
     private Button currentSortOrder;
     private RecyclerView QRList;
