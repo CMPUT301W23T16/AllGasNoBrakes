@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 /**
  * Displays fragment for user's profile
  * - allows user to search for other players
- * @author zhaoyu4 and theresag
+ * @author zhaoyu4, zhaoyu5, and theresag
  * @version 2.0
  */
 
@@ -38,6 +39,7 @@ public class ProfileFragment extends Fragment {
     //For searching for other players
     private EditText search_friend;
     private Button searching;
+    private FragmentContainerView searchedplayer;
 
     //Needs firestore to search for players
     private FirebaseFirestore db;
@@ -55,7 +57,7 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.username_text);
         email = view.findViewById(R.id.email_text);
         editing = view.findViewById(R.id.edit_btn);
-
+        searchedplayer = view.findViewById(R.id.friend_fragment);
         //For searching for other players
         search_friend = view.findViewById(R.id.search_friends);
         searching = view.findViewById(R.id.search_btn);
@@ -75,6 +77,7 @@ public class ProfileFragment extends Fragment {
                 .replace(R.id.friend_fragment, FriendFragment.class, requireArguments())
                 .commit();
 
+
         //Searching for other players
         searching.setOnClickListener(v -> {
             final CollectionReference collectionReference = db.collection("Users");
@@ -88,8 +91,19 @@ public class ProfileFragment extends Fragment {
                 ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
                         if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
+                            searchedplayer.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (search_friend != null){
+                                        FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
+                                        ADSF1.main(friend_name,document.get("Email").toString());
+                                        ADSF1.show(getActivity().getSupportFragmentManager(), "Add Station");
+                                    }
+                                }
+                            });
+
                             if (document.exists()) {
                                 //For app log
                                 Log.d("Search", "Username Found");

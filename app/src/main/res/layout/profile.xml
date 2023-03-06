@@ -57,6 +57,7 @@
         android:fontFamily="monospace"
         android:hint="@string/player_search_hint"
         android:textColorHint="@color/white"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/friend_fragment"
         app:layout_constraintEnd_toStartOf="@+id/search_btn"
         app:layout_constraintStart_toStartOf="parent"
