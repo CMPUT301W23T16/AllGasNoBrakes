@@ -34,7 +34,6 @@ import java.io.Serializable;
 
 public class ProfileFragment extends Fragment {
 
-    private PlayerProfile user;
     private TextView username;
     private TextView email;
     private Button editing;
@@ -73,10 +72,9 @@ public class ProfileFragment extends Fragment {
 
         //Searching for other players
         searching.setOnClickListener(v -> {
-            final CollectionReference collectionReference = db.collection("Users");
             final String friend_name = search_friend.getText().toString();
 
-            if (search_friend.length() > 0) {  //Should I check if the username entered is the same as profile??
+            if (search_friend.length() > 0) {  //Should it check if the username entered is the same as profile??
                 //For opening a another profile fragment for the other player
                 FragmentManager other = getParentFragmentManager();
 
@@ -95,12 +93,12 @@ public class ProfileFragment extends Fragment {
                                 //Make bundle of the friend profile
                                 Bundle friend_bundle = new Bundle();
                                 friend_bundle.putString("Username", document.getId());
-                                friend_bundle.putString("Email", (String) document.get("Email"));
+                                friend_bundle.putString("Email", document.getString("Email"));
 
-                                //Show the profile, so maybe open a fragment of the other player's profile??
+                                //Show the profile --> open a fragment of the other player's profile??
                                 other.beginTransaction()
                                         .setReorderingAllowed(true)
-                                        .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)  //Rework this later
+                                        .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)
                                         .replace(R.id.menu_bar_container, MenuBarFragment.class, friend_bundle)
                                         .commit();
 
@@ -112,7 +110,7 @@ public class ProfileFragment extends Fragment {
                                 //https://developer.android.com/guide/topics/ui/notifiers/toasts --> How to make a toast
 
                                 Context context = getActivity();
-                                CharSequence text = "Cannot find username. Please try again";
+                                CharSequence text = "Cannot find username. Please try again";  //Message for Toast
                                 int duration = Toast.LENGTH_LONG;
 
                                 Toast toast = Toast.makeText(context, text, duration);
@@ -124,16 +122,6 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
-
         return view;
-    }
-
-    //Use onPause() to save info between fragments
-    @Override
-    public void onPause() {
-        super.onPause();
-        //Saving the user
-        requireArguments().putSerializable("User", (Serializable) user);
-
     }
 }
