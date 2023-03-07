@@ -4,8 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,9 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -25,8 +21,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -91,7 +85,7 @@ public class PlayerProfile implements Serializable {
     public void retrieveQR(RecyclerView.Adapter QrAdapter) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Users")
-                .document(username).collection("QR");
+                .document(username).collection("QRRef");
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -108,16 +102,16 @@ public class PlayerProfile implements Serializable {
 
                 // Then in the QR database, we retrieve the details of those QRs and store the data locally
                 if (! QRS.isEmpty()) {
-                    db.collection("QR")
+                    db.collection("/QR")
                             .whereIn("Hash", QRS)
                             .orderBy("Score", Query.Direction.DESCENDING)
                             .orderBy("Name", Query.Direction.ASCENDING)
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
-                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                    if (value != null) {
-                                        QRList.clear();
-                                        for (QueryDocumentSnapshot QR: value) {
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot QR : task.getResult()) {
+                                            Log.d("GetQR", QR.getId() + " => " + QR.getData());
                                             String QRHash = QR.getId();
                                             String QRName = (String) QR.get("Name");
                                             Number QRScore = (Number) QR.get("Score");
@@ -125,6 +119,8 @@ public class PlayerProfile implements Serializable {
                                             // QRList.sort(new HashedQR().reversed());
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
+                                    } else {
+                                        Log.d("GetQR", "Error getting documents: ", task.getException());
                                     }
                                 }
                             });

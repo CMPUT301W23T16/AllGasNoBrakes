@@ -1,5 +1,10 @@
 package com.example.allgasnobrakes;
-
+/**
+ * geneartes a unique name
+ * - 16 to the power of 6 unique possible names
+ * @author zhaoyu5
+ * @version 1.0
+ */
 public class NameGenerator {
     private String hashedQR;
 
