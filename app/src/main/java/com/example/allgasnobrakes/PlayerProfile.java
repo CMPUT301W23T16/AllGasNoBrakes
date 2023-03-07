@@ -87,21 +87,21 @@ public class PlayerProfile implements Serializable {
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username).collection("QRRef");
 
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 ArrayList<String> QRS = new ArrayList<>();
 
                 // We get the hashed value for each of QRs that the player has...
-                for(QueryDocumentSnapshot QRRef: queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot QRRef : task.getResult()) {
                     DocumentReference hashedQR = db.document(QRRef.getString("QRReference"));
                     QRS.add(hashedQR.getId());
                 }
 
-                for (String i: QRS) {Log.d("Test", i);}
+                for (String i : QRS) {Log.d("Test", i);}
 
                 // Then in the QR database, we retrieve the details of those QRs and store the data locally
-                if (! QRS.isEmpty()) {
+                if (!QRS.isEmpty()) {
                     db.collection("/QR")
                             .whereIn("Hash", QRS)
                             .orderBy("Score", Query.Direction.DESCENDING)
