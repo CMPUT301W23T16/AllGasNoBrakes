@@ -3,76 +3,136 @@ package com.example.allgasnobrakes;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Handles operations with QR code list
- * @author zhaoyu4
- * @version 1.0
+ * @author zhaoyu4 zhaoyu5
+ * @version 3.0
  */
 
-public class QRListFragment extends Fragment  {
+public class QRListFragment extends DialogFragment {
 
+    private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
-    protected ArrayList<HashedQR> player_Qr;
-    final String TAG = "Sample";
+
+    PlayerProfile user;
 
     public QRListFragment() {
         super(R.layout.homepage);
     }
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.homepage, container, false);
-        FirebaseFirestore db;
-        db = FirebaseFirestore.getInstance();
-        final String username = requireArguments().getString("Username");
-        Log.d("user", username);
+
+    /**
+     * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
+     * resort in ascending order
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        user = (PlayerProfile) requireArguments().getSerializable("User");
+        Log.d("Current User", user.getUsername());
         final Activity activity = getActivity();
-        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR");
 
-
-        player_Qr = new ArrayList<>();
-        QRList = root.findViewById(R.id.codes_list);
+        QRList = view.findViewById(R.id.codes_list);
         QRList.setLayoutManager(new LinearLayoutManager(activity));
-        QrAdapter = new QrArrayAdapter(player_Qr, activity);
+        QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
         QRList.setAdapter(QrAdapter);
 
+        if (user.getQRList().size() == 0) {
+            user.retrieveQR(QrAdapter);
+        }
 
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        currentSortOrder = view.findViewById(R.id.sort_order);
+        currentSortOrder.setText(requireArguments().getString("SortOrder"));
+
+        if (currentSortOrder.getText().toString().equals("Highest Score")) {
+            user.getQRList().sort(new HashedQR().reversed());
+        } else {
+            user.getQRList().sort(new HashedQR());
+        }
+
+        currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                player_Qr.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    Log.d(TAG, String.valueOf(doc.getData().get("Score")));
-                    String hash = doc.getId();
-                    String Score = (String) doc.getData().get("Score");
-                    player_Qr.add(new HashedQR(hash, Integer.parseInt(Score))); // Adding the cities and provinces from FireStore
+            public void onClick(View v) {
+                if (currentSortOrder.getText().toString().equals("Highest Score")) {
+                    user.getQRList().sort(new HashedQR());
+                    QrAdapter.notifyDataSetChanged();
+                    currentSortOrder.setText(R.string.lowest_score_text);
+                } else {
+                    user.getQRList().sort(new HashedQR().reversed());
+                    currentSortOrder.setText(R.string.highest_score_text);
+                    QrAdapter.notifyDataSetChanged();
                 }
-                QrAdapter.notifyDataSetChanged();
             }
         });
 
+        // https://www.geeksforgeeks.org/swipe-to-delete-and-undo-in-android-recyclerview/
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-        return root;
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // this method is called when we swipe our item to right direction.
+                // on below line we are getting the item at a particular position.
+                HashedQR deletedQR = user.getQRList().get(viewHolder.getAdapterPosition());
+
+                // below line is to get the position
+                // of the item at that position.
+                int position = viewHolder.getAdapterPosition();
+
+                // this method is called when item is swiped.
+                // below line is to remove item from our array list.
+                user.getQRList().remove(viewHolder.getAdapterPosition());
+
+                // Then we remove it from the cloud database
+                user.deleteQR(deletedQR.getHashedQR());
+
+                // below line is to notify our item is removed from adapter.
+                QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+                // below line is to display our snackbar with action.
+                Snackbar.make(QRList, deletedQR.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // adding on click listener to our action of snack bar.
+                        // below line is to add our item to array list with a position.
+                        user.getQRList().add(position, deletedQR);
+
+                        // Add it back to cloud database
+                        user.addQR(deletedQR.getHashedQR());
+
+                        // below line is to notify item is
+                        // added to our adapter class.
+                        QrAdapter.notifyItemInserted(position);
+                    }
+                }).show();
+            }
+        }).attachToRecyclerView(QRList);
     }
 
+    /**
+     * Overridden to keep sorting order persistent across fragment transactions
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
+        requireArguments().putSerializable("User", user);
+    }
 }

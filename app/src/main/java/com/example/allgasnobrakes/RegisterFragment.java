@@ -95,7 +95,7 @@ public class RegisterFragment extends Fragment {
                                 Toast toast = Toast.makeText(context, text, duration);
                                 toast.show();
 
-                            }else{ //Username is unique, so account can be created
+                            } else { //Username is unique, so account can be created
 
                                 //Puts email and password information into data. Creates the new player account
                                 data.put("Email", email);
@@ -151,5 +151,4 @@ public class RegisterFragment extends Fragment {
         });
         return view;
     }
-
 }
