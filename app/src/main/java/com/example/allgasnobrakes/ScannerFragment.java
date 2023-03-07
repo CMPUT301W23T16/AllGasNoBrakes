@@ -67,6 +67,7 @@ public class ScannerFragment extends Fragment {
                     QRData.put("Comment", comment.getText().toString());
 
                     NameGenerator name = new NameGenerator(sha256hex);
+                    CarGenerator car = new CarGenerator(sha256hex);
 
                     if (total>0 && sha256hex.length()>0) {
                         collectionReference
