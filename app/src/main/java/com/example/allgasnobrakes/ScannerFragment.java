@@ -54,8 +54,8 @@ public class ScannerFragment extends Fragment {
         FirebaseFirestore db;
         final String TAG = "Sample";
         db = FirebaseFirestore.getInstance();
-        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QR");
-        final CollectionReference collectionReference = db.collection("QR");
+        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QRRef");
+        final CollectionReference collectionReference = db.collection("/QR");
         Button confirm = root.findViewById(R.id.confirm_button);
         EditText comment = root.findViewById(R.id.comment);
         confirm.setOnClickListener(new View.OnClickListener() {
