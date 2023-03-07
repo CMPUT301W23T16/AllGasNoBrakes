@@ -35,6 +35,7 @@ public class MenuBarFragment extends Fragment {
         cameraButton = view.findViewById(R.id.camera_button);
         profileButton = view.findViewById(R.id.profile_button);
 
+        // Switch to homepage
         homeButton.setOnClickListener(v ->
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
@@ -42,6 +43,7 @@ public class MenuBarFragment extends Fragment {
                         .commit()
         );
 
+        // Switch to code scanner
         cameraButton.setOnClickListener(v ->
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
@@ -49,6 +51,7 @@ public class MenuBarFragment extends Fragment {
                         .commit()
         );
 
+        // Switch to player profile page
         profileButton.setOnClickListener(v ->
                 parent.beginTransaction()
                         .setReorderingAllowed(true)

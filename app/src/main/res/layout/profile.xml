@@ -94,7 +94,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/friend_fragment"
-        android:name="com.example.allgasnobrakes.ProfileFragment"
+        android:name="com.example.allgasnobrakes.BlankFragment"
         android:layout_width="0dp"
         android:layout_height="260dp"
         app:layout_constraintBottom_toBottomOf="parent"

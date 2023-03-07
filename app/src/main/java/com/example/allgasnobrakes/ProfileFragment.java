@@ -64,8 +64,16 @@ public class ProfileFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         //Sets the text for the username and email
-        username.setText(requireArguments().getString("Username"));
-        email.setText(requireArguments().getString("Email"));
+        PlayerProfile currentUser = (PlayerProfile) requireArguments().getSerializable("User");
+        username.setText(currentUser.getUsername());
+        email.setText(currentUser.getEmail());
+
+        //For opening a another profile fragment for the other player
+        FragmentManager other = getParentFragmentManager();
+        other.beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.friend_fragment, FriendFragment.class, requireArguments())
+                .commit();
 
         //Searching for other players
         searching.setOnClickListener(v -> {
@@ -73,8 +81,6 @@ public class ProfileFragment extends Fragment {
             final String friend_name = search_friend.getText().toString();
 
             if (search_friend.length() > 0) {  //Should I check if the username entered is the same as profile??
-                //For opening a another profile fragment for the other player
-                FragmentManager other = getParentFragmentManager();
 
                 //https://firebase.google.com/docs/firestore/query-data/get-data --> how to get a doc from firestore
                 DocumentReference ref = db.collection("Users").document(friend_name);
@@ -97,7 +103,6 @@ public class ProfileFragment extends Fragment {
                                 other.beginTransaction()
                                         .setReorderingAllowed(true)
                                         .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)  //Rework this later
-                                        .replace(R.id.menu_bar_container, MenuBarFragment.class, friend_bundle)
                                         .commit();
 
                             } else {  //if username does not exist
