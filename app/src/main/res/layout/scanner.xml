@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/agnb_back_pattern">
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scanner_view"
@@ -36,6 +37,8 @@
         android:layout_below="@+id/tv_textView"
         android:layout_marginTop="51dp"
         android:ems="10"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Comment"
         android:inputType="textPersonName" />
 
