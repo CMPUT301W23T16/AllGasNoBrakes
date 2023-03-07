@@ -37,7 +37,7 @@
         android:ems="10"
         android:fontFamily="monospace"
         android:text="@string/roll_out_message_text"
-        android:textColor="@color/light_pink"
+        android:textColor="@color/white"
         android:textSize="36sp"
         android:textStyle="bold" />
 
