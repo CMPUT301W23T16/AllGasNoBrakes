@@ -3,7 +3,6 @@ package com.example.allgasnobrakes;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,9 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,7 +51,7 @@ public class PlayerProfile extends Observable implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
-        profileSummary.update(count, score);
+        profileSummary.assign(count, score);
     }
 
     public String getUsername() {
@@ -138,7 +135,7 @@ public class PlayerProfile extends Observable implements Serializable {
                                             // QRList.sort(new HashedQR().reversed());
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
-                                        profileSummary.update(QRS.size(), score);
+                                        profileSummary.assign(QRS.size(), score);
                                         setChanged();
                                         notifyObservers();
                                     } else {
@@ -152,24 +149,31 @@ public class PlayerProfile extends Observable implements Serializable {
         Log.d("Test", "Called");
     }
 
-    public void deleteQR(String hash) {
+    public void deleteQR(HashedQR QR) {
         FirebaseFirestore.getInstance().collection("Users")
                 .document(username).collection("QRRef")
-                .document(hash).delete();
+                .document(QR.getHashedQR()).delete();
+
+        profileSummary.update(-1, -QR.getScore());
+        setChanged();
+        notifyObservers();
     }
 
-    public void addQR(String hash) {
+    public void addQR(HashedQR QR) {
         FirebaseFirestore.getInstance().collection("Users")
                 .document(username).collection("QRRef")
-                .document(hash)
+                .document(QR.getHashedQR())
                 .set(new HashMap<String, Object>(){
-                    {put("QRReference", "QR/" + hash);}
+                    {put("QRReference", "QR/" + QR.getHashedQR());}
                 })
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // These are a method which gets executed when the task is succeeded
                         Log.d("Add QR", "Data has been added successfully!");
+                        profileSummary.update(1, QR.getScore());
+                        setChanged();
+                        notifyObservers();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

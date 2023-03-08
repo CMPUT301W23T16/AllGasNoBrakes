@@ -112,7 +112,7 @@ public class QRListFragment extends Fragment  {
                 user.getQRList().remove(viewHolder.getAdapterPosition());
 
                 // Then we remove it from the cloud database
-                user.deleteQR(deletedQR.getHashedQR());
+                user.deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
                 QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
@@ -127,7 +127,7 @@ public class QRListFragment extends Fragment  {
                         user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR.getHashedQR());
+                        user.addQR(deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.
