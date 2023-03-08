@@ -96,34 +96,52 @@ public class ScannerFragment extends Fragment {
                                     }
                                 });
                     }
-
-                    playerReference
-                            .document(sha256hex)
-                            .set(QRData)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // These are a method which gets executed when the task is succeeded
-                                    Log.d("playerRef", "Data has been added successfully!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // These are a method which gets executed if there’s any problem
-                                    Log.d("playerRef", "Data could not be added!" + e.toString());
-                                }
-                            });
-
-                    playerAttributes.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    playerReference.document(sha256hex).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            int count = ((Number) task.getResult().get("QR Count")).intValue();
-                            int score = ((Number) task.getResult().get("Total Score")).intValue();
-                            playerAttributes.update("Total Score", score+total);
-                            playerAttributes.update("QR Count", count+1);
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d(TAG, "Document exists!");
+                                } else {
+                                    Log.d(TAG, "Document does not exist!");
+                                    playerReference
+                                            .document(sha256hex)
+                                            .set(QRData)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // These are a method which gets executed when the task is succeeded
+                                                    Log.d("playerRef", "Data has been added successfully!");
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // These are a method which gets executed if there’s any problem
+                                                    Log.d("playerRef", "Data could not be added!" + e.toString());
+                                                }
+                                            });
+                                    playerAttributes.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+
+                                            int count = ((Number) task.getResult().get("QR Count")).intValue();
+                                            int score = ((Number) task.getResult().get("Total Score")).intValue();
+                                            playerAttributes.update("Total Score", score+total);
+                                            playerAttributes.update("QR Count", count+1);
+
+                                        }
+                                    });
+                                }
+                            } else {
+                                Log.d(TAG, "Failed with: ", task.getException());
+                            }
                         }
                     });
+
                 }
 
             }

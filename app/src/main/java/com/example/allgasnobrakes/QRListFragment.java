@@ -141,9 +141,6 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
-        user.retrieveQR(QrAdapter);
-        Score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
-        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
     }
 
     @Override

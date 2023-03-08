@@ -3,7 +3,6 @@ package com.example.allgasnobrakes;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,9 +11,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -147,6 +145,14 @@ public class PlayerProfile implements Serializable {
     }
 
     public void deleteQR(String hash) {
+        FirebaseFirestore.getInstance().collection("Users").document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                int count = ((Number) task.getResult().get("QR Count")).intValue();
+                int score = ((Number) task.getResult().get("Total Score")).intValue();
+                FirebaseFirestore.getInstance().collection("Users").document(username).update("QR Count", count-1);
+            }
+        });
         FirebaseFirestore.getInstance().collection("Users")
                 .document(username).collection("QR")
                 .document(hash).delete();
