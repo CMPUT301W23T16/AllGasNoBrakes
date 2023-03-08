@@ -10,11 +10,12 @@
 
     <!--Chosen Palette-->
     <color name="bright_pink">#D05AD6</color>
-    <color name="light_pink">#EED7EF</color>
-    <color name="bkgd_color">#070023</color>
-    <color name="button_color">#660896</color>
+    <color name="light_pink">#ED97F1</color>
     <color name="blue">#3200BA</color>
     <color name="dark_blue">#0C0563</color>
     <color name="light_blue">#3F5299</color>
 
+    <color name="bkgd_color">#070023</color>
+    <color name="button_color">#660896</color>
+    <color name="status_bar">#341053</color>
 </resources>

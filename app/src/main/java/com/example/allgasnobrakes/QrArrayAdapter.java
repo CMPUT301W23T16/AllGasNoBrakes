@@ -21,6 +21,7 @@ public class QrArrayAdapter extends RecyclerView.Adapter<QrArrayAdapter.ViewHold
     private ArrayList<HashedQR> QR;
     private Context context;
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -33,7 +34,7 @@ public class QrArrayAdapter extends RecyclerView.Adapter<QrArrayAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HashedQR Qr = QR.get(position);
 
-        holder.Hash.setText(Qr.getHashedQR());
+        holder.Hash.setText(Qr.getName());
         holder.Score.setText(Integer.toString(Qr.getScore()));
     }
 

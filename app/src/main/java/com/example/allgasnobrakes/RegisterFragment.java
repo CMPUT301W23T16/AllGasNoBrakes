@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -69,7 +68,7 @@ public class RegisterFragment extends Fragment {
             final String email = emailEditText.getText().toString();
             final String password = passwordEdittext.getText().toString();
 
-            HashMap<String, String> data = new HashMap<>();
+            HashMap<String, Object> data = new HashMap<>();
 
             //Checks that user has entered something into all registration fields
             if (username.length() > 0 && email.length() > 0 && password.length() > 0) {
@@ -95,12 +94,14 @@ public class RegisterFragment extends Fragment {
                                 Toast toast = Toast.makeText(context, text, duration);
                                 toast.show();
 
-                            }else{ //Username is unique, so account can be created
+                            } else { //Username is unique, so account can be created
 
                                 //Puts email and password information into data. Creates the new player account
                                 data.put("Email", email);
                                 data.put("Password", password);
-                                PlayerProfile playerProfile = new PlayerProfile(username, email, password);
+                                data.put("Total Score", 0);
+                                data.put("QR Count", 0);
+                                PlayerProfile playerProfile = new PlayerProfile(username, email, password,0,0);
                                 viewModel.selectPlayer(playerProfile);
 
                                 //Saves the DeviceID so app can automatically sign-in user from now on
@@ -151,5 +152,4 @@ public class RegisterFragment extends Fragment {
         });
         return view;
     }
-
 }

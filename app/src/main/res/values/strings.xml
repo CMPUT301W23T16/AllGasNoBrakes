@@ -12,6 +12,8 @@
     <string name="register_button_text">Register</string>
     <string name="welcome_message_text">WELCOME BACK</string>
     <string name="roll_out_message_text">ROLL OUT</string>
+    <string name="highest_score_text">Highest Score</string>
+    <string name="lowest_score_text">Lowest Score</string>
 
     <!--These are all for the profile pages-->
     <string name="username_string">Username</string>
@@ -34,4 +36,3 @@
     <string name="cancel_changes_txt">Cancel</string>
     <string name="username_holder">Username</string>
 </resources>
-
