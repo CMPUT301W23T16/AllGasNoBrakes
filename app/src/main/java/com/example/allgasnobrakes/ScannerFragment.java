@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,7 +66,8 @@ public class ScannerFragment extends Fragment {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sha256hex != null){
+
+                if (sha256hex != null ){
                     HashMap<String, Object> QRData = new HashMap<>();
                     QRData.put("QRReference", "/" + collectionReference.document(sha256hex).getPath());
                     QRData.put("Comment", comment.getText().toString());

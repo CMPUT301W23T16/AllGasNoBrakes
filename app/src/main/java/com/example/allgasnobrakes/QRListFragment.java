@@ -4,36 +4,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import android.widget.Button;
-
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.google.android.material.color.utilities.Score;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Locale;
-
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Locale;
 
 
 /**
@@ -158,6 +141,9 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
+        user.retrieveQR(QrAdapter);
+        Score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
     }
 
     @Override
