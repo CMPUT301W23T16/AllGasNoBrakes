@@ -1,6 +1,7 @@
 package com.example.allgasnobrakes;
 
 import android.app.Activity;
+import android.database.Observable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +15,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.color.utilities.Score;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Locale;
+import java.util.Observer;
 
 
 /**
@@ -30,8 +33,8 @@ public class QRListFragment extends Fragment  {
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
-    private TextView totalCount;
-    private TextView Score;
+    private QRCountView totalCount;
+    private ScoreView score;
 
     PlayerProfile user;
 
@@ -54,11 +57,14 @@ public class QRListFragment extends Fragment  {
         QRList.setLayoutManager(new LinearLayoutManager(activity));
         QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
         QRList.setAdapter(QrAdapter);
+
         totalCount = view.findViewById(R.id.total_codes);
         totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        score = view.findViewById(R.id.player_score);
+        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
 
-        Score = view.findViewById(R.id.player_score);
-        Score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        user.addObserver(totalCount);
+        user.addObserver(score);
 
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
@@ -106,7 +112,7 @@ public class QRListFragment extends Fragment  {
                 user.getQRList().remove(viewHolder.getAdapterPosition());
 
                 // Then we remove it from the cloud database
-                user.deleteQR(deletedQR.getHashedQR());
+                user.deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
                 QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
@@ -121,7 +127,7 @@ public class QRListFragment extends Fragment  {
                         user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR.getHashedQR());
+                        user.addQR(deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.
@@ -141,14 +147,14 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
+        user.deleteObservers();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         user.retrieveQR(QrAdapter);
-        Score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
-        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
-
+        Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
     }
 }

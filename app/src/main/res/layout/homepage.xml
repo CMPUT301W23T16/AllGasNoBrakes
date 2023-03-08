@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.example.allgasnobrakes.QRCountView
         android:id="@+id/total_codes"
         android:layout_width="138dp"
         android:layout_height="59dp"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.example.allgasnobrakes.ScoreView
         android:id="@+id/player_score"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

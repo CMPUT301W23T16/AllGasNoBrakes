@@ -1,19 +1,9 @@
 package com.example.allgasnobrakes;
 
-import static android.content.ContentValues.TAG;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import android.util.Log;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class QRCounter implements Serializable {
     private int totalQR;
@@ -40,8 +30,17 @@ public class QRCounter implements Serializable {
         this.totalScore = totalScore;
     }
 
+    public void assign(int QR, int score) {
+        totalQR = QR;
+        totalScore = score;
+        Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
+        Log.d("QRC", String.format(Locale.CANADA, "%d", score));
+    }
+
     public void update(int QR, int score) {
-        setTotalQR(QR);
-        setTotalScore(score);
+        totalQR += QR;
+        totalScore += score;
+        Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
+        Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 }
