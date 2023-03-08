@@ -147,6 +147,7 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
+        user.deleteObservers();
     }
 
     @Override
