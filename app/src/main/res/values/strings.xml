@@ -12,5 +12,27 @@
     <string name="register_button_text">Register</string>
     <string name="welcome_message_text">WELCOME BACK</string>
     <string name="roll_out_message_text">ROLL OUT</string>
-</resources>
+    <string name="highest_score_text">Highest Score</string>
+    <string name="lowest_score_text">Lowest Score</string>
 
+    <!--These are all for the profile pages-->
+    <string name="username_string">Username</string>
+    <string name="player_name">Player\'s Name</string>
+    <string name="player_email">Player\'s Email</string>
+    <string name="edit_button">Edit</string>
+    <string name="contact_info_header">Player Information</string>
+    <string name="player_search_hint">Player Search</string>
+    <string name="password_header">New Password</string>
+    <string name="email_header">New Email</string>
+    <string name="username_prompt">Username</string>
+    <string name="username_header">Change Username</string>
+    <string name="name_prompt">Name</string>
+    <string name="player_name_prompt">Change Name</string>
+    <string name="edit_profile_header">Editing User Profile</string>
+    <string name="email_prompt">Email</string>
+    <string name="password_prompt">Password</string>
+    <string name="search_text">Search</string>
+    <string name="save_changes_txt">Save</string>
+    <string name="cancel_changes_txt">Cancel</string>
+    <string name="username_holder">Username</string>
+</resources>
