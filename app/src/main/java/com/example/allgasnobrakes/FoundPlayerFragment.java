@@ -45,7 +45,6 @@ public class FoundPlayerFragment extends DialogFragment {
     }
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.foundplayerprofile, null);
-        ArrayList<HashedQR> QRList2 = new ArrayList<HashedQR>();
         TextView username = view.findViewById(R.id.username);
         TextView email = view.findViewById(R.id.email);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -54,46 +53,10 @@ public class FoundPlayerFragment extends DialogFragment {
         QRList = view.findViewById(R.id.codes_list1);
         QRList.setLayoutManager(new LinearLayoutManager(getActivity()));
         PlayerProfile user = new PlayerProfile(username1,this.email,"test");
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Users").document(username1).collection("QR");
 
-
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    Log.d("test2",doc.getId() );
-                    DocumentReference p = db.collection("QR").document(doc.getId());
-                    p.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Log.d("test", "DocumentSnapshot data: " + document.getData().get("Score"));
-                                    String QRHash = doc.getId();
-                                    String QRName = (String) document.getData().get("Name");
-                                    Number QRScore = (Number) document.getData().get("Score");
-                                    QRList2.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
-                                    QrAdapter.notifyDataSetChanged();
-                                } else {
-                                    Log.d("test", "No such document");
-                                }
-                            } else {
-                                Log.d("test", "get failed with ", task.getException());
-                            }
-                        }
-                    });
-
-                }
-
-            }
-        });
-        QrAdapter = new QrArrayAdapter(QRList2, getActivity());
+        QrAdapter = new QrArrayAdapter(user.getQRList(), getActivity());
         QRList.setAdapter(QrAdapter);
-
+        user.retrieveQR(QrAdapter);
 
 
 

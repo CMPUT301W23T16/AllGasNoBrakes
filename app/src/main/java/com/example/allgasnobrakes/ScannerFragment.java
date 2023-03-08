@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,14 +68,14 @@ public class ScannerFragment extends Fragment {
                     QRData.put("Comment", comment.getText().toString());
                     NameGenerator name = new NameGenerator(sha256hex);
                     CarGenerator car = new CarGenerator(sha256hex);
-
-                    if (total>0 && sha256hex.length()>0) {
+                    if (total>=0 && sha256hex.length()>0) {
                         collectionReference
                                 .document(sha256hex)
                                 .set(new HashMap<String, Object>(){
                                          {put("Score", total);
                                              put("Name", name.Generate());
-                                             put("Hash", sha256hex);}})
+                                             put("Hash", sha256hex);
+                                             put("Face",car.Generate());}})
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
