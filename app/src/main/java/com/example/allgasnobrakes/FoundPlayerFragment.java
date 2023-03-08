@@ -56,15 +56,7 @@ public class FoundPlayerFragment extends DialogFragment {
 
         QrAdapter = new QrArrayAdapter(user.getQRList(), getActivity());
         QRList.setAdapter(QrAdapter);
-        user.retrieveQR(QrAdapter);
-
-
-
-
-
-
-
-
+        user.retrieveQR(QrAdapter, "Highest Score");
 
         return builder
                 .setView(view)

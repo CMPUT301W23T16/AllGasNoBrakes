@@ -97,10 +97,18 @@ public class PlayerProfile extends Observable implements Serializable {
      * notifies the view that displays this information to update itself with the latest data.
      * @param QrAdapter - the view to be updated
      */
-    public void retrieveQR(RecyclerView.Adapter QrAdapter) {
+    public void retrieveQR(RecyclerView.Adapter QrAdapter, String sortOrder) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username).collection("QRRef");
+
+        Query.Direction order;
+        if (sortOrder.equals("Highest Score")) {
+            order = Query.Direction.DESCENDING;
+        } else {
+            order = Query.Direction.ASCENDING;
+        }
+
 
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -119,7 +127,7 @@ public class PlayerProfile extends Observable implements Serializable {
                 if (!QRS.isEmpty()) {
                     db.collection("/QR")
                             .whereIn("Hash", QRS)
-                            .orderBy("Score", Query.Direction.DESCENDING)
+                            .orderBy("Score", order)
                             .orderBy("Name", Query.Direction.ASCENDING)
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override

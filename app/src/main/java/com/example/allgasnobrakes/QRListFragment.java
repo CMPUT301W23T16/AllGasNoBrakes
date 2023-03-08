@@ -69,12 +69,6 @@ public class QRListFragment extends Fragment  {
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
 
-        if (currentSortOrder.getText().toString().equals("Highest Score")) {
-            user.getQRList().sort(new HashedQR().reversed());
-        } else {
-            user.getQRList().sort(new HashedQR());
-        }
-
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,8 +147,9 @@ public class QRListFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-        user.retrieveQR(QrAdapter);
+        user.retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        Log.d("resume", requireArguments().getString("SortOrder"));
     }
 }
