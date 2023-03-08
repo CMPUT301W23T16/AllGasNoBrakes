@@ -11,6 +11,11 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Java Observer TextView for QR count
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class QRCountView extends androidx.appcompat.widget.AppCompatTextView implements Observer {
     public QRCountView(@NonNull Context context) {
         super(context);

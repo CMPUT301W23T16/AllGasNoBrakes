@@ -11,6 +11,11 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Java Observer TextView for total QR score
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class ScoreView extends androidx.appcompat.widget.AppCompatTextView implements Observer {
     public ScoreView(@NonNull Context context) {
         super(context);

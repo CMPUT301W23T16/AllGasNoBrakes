@@ -5,6 +5,11 @@ import android.util.Log;
 import java.io.Serializable;
 import java.util.Locale;
 
+/**
+ * A class that stores player profile summary information
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class QRCounter implements Serializable {
     private int totalQR;
     private int totalScore;
