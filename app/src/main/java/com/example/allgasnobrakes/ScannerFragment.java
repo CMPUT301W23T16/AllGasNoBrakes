@@ -65,7 +65,6 @@ public class ScannerFragment extends Fragment {
                     HashMap<String, Object> QRData = new HashMap<>();
                     QRData.put("QRReference", "/" + collectionReference.document(sha256hex).getPath());
                     QRData.put("Comment", comment.getText().toString());
-
                     NameGenerator name = new NameGenerator(sha256hex);
                     CarGenerator car = new CarGenerator(sha256hex);
 
