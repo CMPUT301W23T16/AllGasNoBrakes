@@ -141,6 +141,7 @@ public class ScannerFragment extends Fragment {
                                 current = current + starting;
                             }
                         }
+
                     }
                 });
             }
@@ -151,6 +152,8 @@ public class ScannerFragment extends Fragment {
                 mCodeScanner.startPreview();
             }
         });
+
+
         return root;
     }
 }

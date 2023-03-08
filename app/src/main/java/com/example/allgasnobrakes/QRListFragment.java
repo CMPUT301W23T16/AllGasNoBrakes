@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import android.view.ViewGroup;
+import android.widget.TextView;
+
 import android.widget.Button;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +19,20 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
 import com.google.android.material.snackbar.Snackbar;
+
 
 /**
  * Handles operations with QR code list
@@ -49,6 +67,12 @@ public class QRListFragment extends Fragment  {
         QRList.setLayoutManager(new LinearLayoutManager(activity));
         QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
         QRList.setAdapter(QrAdapter);
+        TextView totalCount = view.findViewById(R.id.total_codes);
+        QRCounter qrCounter = new QRCounter();
+        qrCounter.updateCounter(username, totalCount);
+
+        TextView Score = view.findViewById(R.id.player_score);
+        qrCounter.scoreCounter(username, Score);
 
         if (user.getQRList().size() == 0) {
             user.retrieveQR(QrAdapter);
@@ -105,6 +129,7 @@ public class QRListFragment extends Fragment  {
                 // below line is to notify our item is removed from adapter.
                 QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
 
+
                 // below line is to display our snackbar with action.
                 Snackbar.make(QRList, deletedQR.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
@@ -123,6 +148,7 @@ public class QRListFragment extends Fragment  {
                 }).show();
             }
         }).attachToRecyclerView(QRList);
+
     }
 
     /**
