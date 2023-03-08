@@ -34,6 +34,8 @@ public class PlayerProfile implements Serializable {
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
 
+    private QRCounter profileSummary;
+
     public PlayerProfile(String username, String email) {
         this.username = username;
         this.email = email;
@@ -59,6 +61,10 @@ public class PlayerProfile implements Serializable {
 
     public ArrayList<HashedQR> getQRList() {
         return QRList;
+    }
+
+    public QRCounter getSummary() {
+        return profileSummary;
     }
 
     public void setUsername(String username) {
@@ -109,6 +115,7 @@ public class PlayerProfile implements Serializable {
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    int totalScore = 0;
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot QR : task.getResult()) {
                                             Log.d("GetQR", QR.getId() + " => " + QR.getData());
