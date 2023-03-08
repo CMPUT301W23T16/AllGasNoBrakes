@@ -52,7 +52,7 @@ public class FoundPlayerFragment extends DialogFragment {
         email.setText(this.email);
         QRList = view.findViewById(R.id.codes_list1);
         QRList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        PlayerProfile user = new PlayerProfile(username1,this.email,"test");
+        PlayerProfile user = new PlayerProfile(username1, this.email);
 
         QrAdapter = new QrArrayAdapter(user.getQRList(), getActivity());
         QRList.setAdapter(QrAdapter);

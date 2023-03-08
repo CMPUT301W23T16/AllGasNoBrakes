@@ -22,35 +22,39 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * Contains player profile information
  * @author zhaoyu4
  * @version 2.0
  */
-public class PlayerProfile implements Serializable {
+public class PlayerProfile extends Observable implements Serializable {
     private String username;
     private String email;
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
-    private QRCounter profileSummary;
+    private final QRCounter profileSummary = new QRCounter(0, 0);
 
     public PlayerProfile(String username, String email) {
+        super();
         this.username = username;
         this.email = email;
     }
 
     public PlayerProfile(String username, String email, String password) {
+        super();
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
     public PlayerProfile(String username, String email, String password, int score, int count) {
+        super();
         this.username = username;
         this.email = email;
         this.password = password;
-        profileSummary = new QRCounter(score, count);
+        profileSummary.update(count, score);
     }
 
     public String getUsername() {
@@ -135,6 +139,8 @@ public class PlayerProfile implements Serializable {
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
                                         profileSummary.update(QRS.size(), score);
+                                        setChanged();
+                                        notifyObservers();
                                     } else {
                                         Log.d("GetQR", "Error getting documents: ", task.getException());
                                     }
@@ -148,13 +154,13 @@ public class PlayerProfile implements Serializable {
 
     public void deleteQR(String hash) {
         FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QR")
+                .document(username).collection("QRRef")
                 .document(hash).delete();
     }
 
     public void addQR(String hash) {
         FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QR")
+                .document(username).collection("QRRef")
                 .document(hash)
                 .set(new HashMap<String, Object>(){
                     {put("QRReference", "QR/" + hash);}

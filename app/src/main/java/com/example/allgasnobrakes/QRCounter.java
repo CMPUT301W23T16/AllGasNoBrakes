@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class QRCounter implements Serializable {
     private int totalQR;
@@ -41,7 +42,9 @@ public class QRCounter implements Serializable {
     }
 
     public void update(int QR, int score) {
-        setTotalQR(QR);
-        setTotalScore(score);
+        totalQR = QR;
+        totalScore = score;
+        Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
+        Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 }
