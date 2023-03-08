@@ -93,6 +93,16 @@ public class ProfileFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
                         if (task.isSuccessful()) {
+                            searchedplayer.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (search_friend != null){
+                                        FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
+                                        ADSF1.main(friend_name,document.get("Email").toString());
+                                        ADSF1.show(getActivity().getSupportFragmentManager(), "Add Station");
+                                    }
+                                }
+                            });
 
                             if (document.exists()) {
                                 //For app log
@@ -102,27 +112,12 @@ public class ProfileFragment extends Fragment {
                                 Bundle friend_bundle = new Bundle();
                                 friend_bundle.putString("Username", document.getId());
                                 friend_bundle.putString("Email", document.get("Email").toString());
-                                PlayerProfile friend = new PlayerProfile(document.getId(), document.get("Email").toString());
 
                                 //Show the profile, so maybe open a fragment of the other player's profile??
                                 other.beginTransaction()
                                         .setReorderingAllowed(true)
                                         .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)  //Rework this later
                                         .commit();
-
-                                searchedplayer.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (search_friend != null){
-                                            QRListFragment ADSF1 = new QRListFragment();
-                                            Bundle bundle = new Bundle();
-                                            bundle.putSerializable("User", friend);
-                                            ADSF1.setArguments(bundle);
-                                            // ADSF1.main(friend_name,document.get("Email").toString());
-                                            ADSF1.show(getActivity().getSupportFragmentManager(), "Add Station");
-                                        }
-                                    }
-                                });
 
                             } else {  //if username does not exist
                                 //For app log

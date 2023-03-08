@@ -33,6 +33,7 @@ public class PlayerProfile implements Serializable {
     private String email;
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
+    private QRCounter profileSummary;
 
     public PlayerProfile(String username, String email) {
         this.username = username;
@@ -43,6 +44,13 @@ public class PlayerProfile implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public PlayerProfile(String username, String email, String password, int score, int count) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        profileSummary = new QRCounter(score, count);
     }
 
     public String getUsername() {
@@ -59,6 +67,10 @@ public class PlayerProfile implements Serializable {
 
     public ArrayList<HashedQR> getQRList() {
         return QRList;
+    }
+
+    public QRCounter getProfileSummary() {
+        return profileSummary;
     }
 
     public void setUsername(String username) {
@@ -110,15 +122,19 @@ public class PlayerProfile implements Serializable {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
+                                        QRList.clear();
+                                        int score = 0;
                                         for (QueryDocumentSnapshot QR : task.getResult()) {
                                             Log.d("GetQR", QR.getId() + " => " + QR.getData());
                                             String QRHash = QR.getId();
                                             String QRName = (String) QR.get("Name");
                                             Number QRScore = (Number) QR.get("Score");
+                                            score += QRScore.intValue();
                                             QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
                                             // QRList.sort(new HashedQR().reversed());
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
+                                        profileSummary.update(QRS.size(), score);
                                     } else {
                                         Log.d("GetQR", "Error getting documents: ", task.getException());
                                     }
