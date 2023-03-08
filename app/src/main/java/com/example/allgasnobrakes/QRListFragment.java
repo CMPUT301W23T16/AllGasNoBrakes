@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.material.color.utilities.Score;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -45,6 +47,8 @@ public class QRListFragment extends Fragment  {
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
+    private TextView totalCount;
+    private TextView Score;
 
     PlayerProfile user;
 
@@ -67,16 +71,11 @@ public class QRListFragment extends Fragment  {
         QRList.setLayoutManager(new LinearLayoutManager(activity));
         QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
         QRList.setAdapter(QrAdapter);
-        TextView totalCount = view.findViewById(R.id.total_codes);
-        QRCounter qrCounter = new QRCounter();
-        qrCounter.updateCounter(username, totalCount);
+        totalCount = view.findViewById(R.id.total_codes);
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
 
-        TextView Score = view.findViewById(R.id.player_score);
-        qrCounter.scoreCounter(username, Score);
-
-        if (user.getQRList().size() == 0) {
-            user.retrieveQR(QrAdapter);
-        }
+        Score = view.findViewById(R.id.player_score);
+        Score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
 
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
@@ -159,5 +158,14 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        user.retrieveQR(QrAdapter);
+        Score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+
     }
 }
