@@ -1,21 +1,26 @@
 package com.example.allgasnobrakes;
 
 import android.app.Activity;
+import android.database.Observable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.color.utilities.Score;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Locale;
+import java.util.Observer;
+
 
 /**
  * Handles operations with QR code list
@@ -23,11 +28,13 @@ import com.google.android.material.snackbar.Snackbar;
  * @version 3.0
  */
 
-public class QRListFragment extends DialogFragment {
+public class QRListFragment extends Fragment  {
 
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
+    private QRCountView totalCount;
+    private ScoreView score;
 
     PlayerProfile user;
 
@@ -51,9 +58,13 @@ public class QRListFragment extends DialogFragment {
         QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
         QRList.setAdapter(QrAdapter);
 
-        if (user.getQRList().size() == 0) {
-            user.retrieveQR(QrAdapter);
-        }
+        totalCount = view.findViewById(R.id.total_codes);
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        score = view.findViewById(R.id.player_score);
+        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+
+        user.addObserver(totalCount);
+        user.addObserver(score);
 
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
@@ -101,10 +112,11 @@ public class QRListFragment extends DialogFragment {
                 user.getQRList().remove(viewHolder.getAdapterPosition());
 
                 // Then we remove it from the cloud database
-                user.deleteQR(deletedQR.getHashedQR());
+                user.deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
                 QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
 
                 // below line is to display our snackbar with action.
                 Snackbar.make(QRList, deletedQR.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
@@ -115,7 +127,7 @@ public class QRListFragment extends DialogFragment {
                         user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR.getHashedQR());
+                        user.addQR(deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.
@@ -124,6 +136,7 @@ public class QRListFragment extends DialogFragment {
                 }).show();
             }
         }).attachToRecyclerView(QRList);
+
     }
 
     /**
@@ -134,5 +147,14 @@ public class QRListFragment extends DialogFragment {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
+        user.deleteObservers();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        user.retrieveQR(QrAdapter);
+        Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
     }
 }

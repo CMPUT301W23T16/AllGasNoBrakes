@@ -65,7 +65,9 @@ public class SignInFragment extends Fragment {
                                 String playerName = cloudID.getId();
                                 String email = (String) document.getData().get("Email");
                                 String password = (String) document.getData().get("Password");
-                                PlayerProfile playerProfile = new PlayerProfile(playerName, email, password);
+                                Number score = (Number) document.getData().get("Total Score");
+                                Number QRCount = (Number) document.getData().get("QR Count");
+                                PlayerProfile playerProfile = new PlayerProfile(playerName, email, password, score.intValue(), QRCount.intValue());
                                 viewModel.selectPlayer(playerProfile);
                             } else {
                                 Log.d("User", "No such document");
