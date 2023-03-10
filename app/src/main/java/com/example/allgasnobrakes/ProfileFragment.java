@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment {
                                     if (search_friend != null){
                                         FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
                                         ADSF1.main(friend_name,document.get("Email").toString());
-                                        ADSF1.show(getActivity().getSupportFragmentManager(), "Add Station");
+                                        ADSF1.show(getActivity().getSupportFragmentManager(), "finding");
                                     }
                                 }
                             });
