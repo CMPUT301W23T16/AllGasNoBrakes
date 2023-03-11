@@ -29,6 +29,12 @@ public class ScoreView extends androidx.appcompat.widget.AppCompatTextView imple
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Updates the view with the new score
+     * @param o     the observable object.
+     * @param arg   an argument passed to the {@code notifyObservers}
+     *                 method.
+     */
     @Override
     public void update(Observable o, Object arg) {
         setText(String.format(Locale.CANADA, "%d", ((PlayerProfile) o).getProfileSummary().getTotalScore()));
