@@ -48,6 +48,20 @@ public class ProfileFragment extends Fragment {
         super(R.layout.profile);
     }
 
+    /**
+     * This gets the information the user inputted to create an account and adds it to the database.
+     *      - Also checks if the username entered is unique (ie. not in the database).
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return a view for profile.xml
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,7 +91,6 @@ public class ProfileFragment extends Fragment {
                 .replace(R.id.friend_fragment, FriendFragment.class, requireArguments())
                 .commit();
 
-
         //Searching for other players
         searching.setOnClickListener(v -> {
             final CollectionReference collectionReference = db.collection("Users");
@@ -93,30 +106,31 @@ public class ProfileFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
                         if (task.isSuccessful()) {
-                            searchedplayer.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (search_friend != null){
-                                        FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
-                                        ADSF1.main(friend_name,document.get("Email").toString());
-                                        ADSF1.show(getActivity().getSupportFragmentManager(), "Add Station");
-                                    }
-                                }
-                            });
 
                             if (document.exists()) {
                                 //For app log
                                 Log.d("Search", "Username Found");
+
+                                //Opens a fragment to show the searched player
+                                searchedplayer.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (search_friend != null){
+                                            FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
+                                            ADSF1.main(friend_name,document.get("Email").toString());
+                                            ADSF1.show(getActivity().getSupportFragmentManager(), "Finding");
+                                        }
+                                    }
+                                });
 
                                 //Make bundle of the friend profile
                                 Bundle friend_bundle = new Bundle();
                                 friend_bundle.putString("Username", document.getId());
                                 friend_bundle.putString("Email", document.get("Email").toString());
 
-                                //Show the profile, so maybe open a fragment of the other player's profile??
                                 other.beginTransaction()
                                         .setReorderingAllowed(true)
-                                        .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)  //Rework this later
+                                        .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)
                                         .commit();
 
                             } else {  //if username does not exist

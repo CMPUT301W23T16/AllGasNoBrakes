@@ -11,8 +11,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -25,7 +23,7 @@ import java.util.Observable;
 
 /**
  * Contains player profile information
- * @author zhaoyu4
+ * @author zhaoyu4 zhaoyu5
  * @version 2.0
  */
 public class PlayerProfile extends Observable implements Serializable {
@@ -139,9 +137,10 @@ public class PlayerProfile extends Observable implements Serializable {
                                             Log.d("GetQR", QR.getId() + " => " + QR.getData());
                                             String QRHash = QR.getId();
                                             String QRName = (String) QR.get("Name");
+                                            String QRFace = (String) QR.get("Face");
                                             Number QRScore = (Number) QR.get("Score");
                                             score += QRScore.intValue();
-                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
+                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName,QRFace));
                                             // QRList.sort(new HashedQR().reversed());
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }

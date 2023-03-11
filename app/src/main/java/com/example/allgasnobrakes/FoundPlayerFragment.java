@@ -16,17 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-
+/**
+ * foundplayerfragment, displays searched player profile
+ * @author zhaoyu5
+ * @version 1.0
+ */
 public class FoundPlayerFragment extends DialogFragment {
     private String username1;
     private String email;
@@ -54,7 +51,28 @@ public class FoundPlayerFragment extends DialogFragment {
         QRList.setLayoutManager(new LinearLayoutManager(getActivity()));
         PlayerProfile user = new PlayerProfile(username1, this.email);
 
-        QrAdapter = new QrArrayAdapter(user.getQRList(), getActivity());
+        QrAdapter = new QrArrayAdapter(user.getQRList(), getActivity(), new QrArrayAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(HashedQR hashedQR) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference docRef = db.collection("Users").document(username1).collection("QRRef").document(hashedQR.getHashedQR());
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Document found in the offline cache
+                            final String document = (String) task.getResult().get("Comment");
+                            HashedQrFragment ADSF1 = new HashedQrFragment();
+                            ADSF1.main(hashedQR,document);
+                            ADSF1.show(getActivity().getSupportFragmentManager(), "finding");
+                            Log.d("test", "Cached document data: " + document);
+                        } else {
+                            Log.d("test", "Cached get failed: ", task.getException());
+                        }
+                    }
+                });
+            }
+        });
         QRList.setAdapter(QrAdapter);
         user.retrieveQR(QrAdapter, "Highest Score");
 
