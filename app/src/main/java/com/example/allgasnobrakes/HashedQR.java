@@ -5,13 +5,14 @@ import java.util.Comparator;
 
 /**
  * Describes the hashed QR code
- * @author zhaoyu4
+ * @author zhaoyu4 zhaoyu5
  * @version 2.0
  */
 public class HashedQR implements Comparator<HashedQR>, Serializable {
     private final String hashedQR;
     private final int score;
     private String name;
+    private String face;
 //    private String[][] face;
 //    private final double[] geolocation= new double[2];
 //    String name, String[][] face, int lat, int lon
@@ -36,11 +37,11 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.score = 0;
         this.name = "name";
     }
-    public HashedQR(String hashedQR, int score, String name) {
+    public HashedQR(String hashedQR, int score, String name,String face) {
         this.hashedQR = hashedQR;
         this.score = score;
         this.name = name;
-//        this.face = face;
+        this.face = face;
 //        geolocation[0] = lat;
 //        geolocation[1] = lon;
     }
@@ -56,10 +57,10 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     public String getName() {
         return name;
     }
-//
-//    public String[][] getFace() {
-//        return face;
-//    }
+
+    public String getFace() {
+        return face;
+    }
 //
 //    public double[] getGeolocation() {
 //        return geolocation;
