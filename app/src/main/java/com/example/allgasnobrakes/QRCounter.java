@@ -14,6 +14,11 @@ public class QRCounter implements Serializable {
     private int totalQR;
     private int totalScore;
 
+    /**
+     *
+     * @param score The total QR score of the player account
+     * @param count The total number of the QR codes that account has
+     */
     public QRCounter(int score, int  count) {
         totalQR = count;
         totalScore = score;
@@ -35,6 +40,11 @@ public class QRCounter implements Serializable {
         this.totalScore = totalScore;
     }
 
+    /**
+     * Directly assigns the the number of QR and the total score to this amount
+     * @param QR Number of QR codes the user has
+     * @param score The total score of those QR codes
+     */
     public void assign(int QR, int score) {
         totalQR = QR;
         totalScore = score;
@@ -42,6 +52,11 @@ public class QRCounter implements Serializable {
         Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 
+    /**
+     * Updates the QR count and total score by the specified amount
+     * @param QR The number of QR codes will change by this amount
+     * @param score The total score will change by this amount
+     */
     public void update(int QR, int score) {
         totalQR += QR;
         totalScore += score;

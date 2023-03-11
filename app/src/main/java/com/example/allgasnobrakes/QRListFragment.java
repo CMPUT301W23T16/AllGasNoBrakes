@@ -45,7 +45,8 @@ public class QRListFragment extends Fragment  {
 
     /**
      * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
-     * resort in ascending order
+     * resort in ascending order. Displays player profile summary information (QRCounter). Allows
+     * user to delete QR codes from their account
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -167,6 +168,9 @@ public class QRListFragment extends Fragment  {
         user.deleteObservers();
     }
 
+    /**
+     * Overridden to update the user's QR code list everytime we switch back to this page
+     */
     @Override
     public void onResume() {
         super.onResume();

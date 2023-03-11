@@ -32,11 +32,22 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         }
     }
 
+    /**
+     * Constructor to initialize a dummy QR code
+     */
     public HashedQR() {
         this.hashedQR = "hashedQR";
         this.score = 0;
         this.name = "name";
     }
+
+    /**
+     * Constructor to initialize a QR code with the specific information
+     * @param hashedQR The hashed value of the QR code
+     * @param score The score of the QR code
+     * @param name The name of the QR
+     * @param face The unique visual representation of the QR
+     */
     public HashedQR(String hashedQR, int score, String name,String face) {
         this.hashedQR = hashedQR;
         this.score = score;
