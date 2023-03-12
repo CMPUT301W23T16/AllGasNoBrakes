@@ -1,9 +1,8 @@
 package com.example.allgasnobrakes;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
+import org.junit.Test;
 
 public class QRCounterTest {
 
@@ -24,7 +23,7 @@ public class QRCounterTest {
         QRCounter qrCounter = testQRCounter();
         int oldCount = qrCounter.getTotalQR();
         int oldScore = qrCounter.getTotalScore();
-        qrCounter.update(3, 40);
+        qrCounter.update("", 3, 40);
         assertEquals(qrCounter.getTotalQR(), oldCount + 3);
         assertEquals(qrCounter.getTotalScore(), oldScore + 40);
     }

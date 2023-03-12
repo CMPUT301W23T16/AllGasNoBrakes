@@ -187,7 +187,7 @@ public class PlayerProfile extends Observable implements Serializable {
                 .document(username).collection("QRRef")
                 .document(QR.getHashedQR()).delete();
 
-        profileSummary.update(-1, -QR.getScore());
+        profileSummary.update(getUsername(), -1, -QR.getScore());
         setChanged();
         notifyObservers();
     }
@@ -208,7 +208,7 @@ public class PlayerProfile extends Observable implements Serializable {
                     public void onSuccess(Void aVoid) {
                         // These are a method which gets executed when the task is succeeded
                         Log.d("Add QR", "Data has been added successfully!");
-                        profileSummary.update(1, QR.getScore());
+                        profileSummary.update(getUsername(), 1, QR.getScore());
                         setChanged();
                         notifyObservers();
                     }

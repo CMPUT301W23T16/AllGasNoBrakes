@@ -2,6 +2,14 @@ package com.example.allgasnobrakes;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -55,8 +63,20 @@ public class QRCounter implements Serializable {
      * @param QR The number of QR codes will change by this amount
      * @param score The total score will change by this amount
      */
-    public void update(int QR, int score) {
+    public void update(String username, int QR, int score) {
         totalQR += QR;
         totalScore += score;
+        DocumentReference documentReference =
+                FirebaseFirestore.getInstance().collection("Users").document(username);
+
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                int totalCount = ((Number) task.getResult().get("QR Count")).intValue();
+                int totalScore = ((Number) task.getResult().get("Total Score")).intValue();
+                documentReference.update("Total Score", totalScore + score);
+                documentReference.update("QR Count", totalCount + QR);
+            }
+        });
     }
 }
