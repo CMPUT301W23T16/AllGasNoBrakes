@@ -48,8 +48,6 @@ public class QRCounter implements Serializable {
     public void assign(int QR, int score) {
         totalQR = QR;
         totalScore = score;
-        Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
-        Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 
     /**
@@ -60,7 +58,5 @@ public class QRCounter implements Serializable {
     public void update(int QR, int score) {
         totalQR += QR;
         totalScore += score;
-        Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
-        Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 }
