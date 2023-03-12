@@ -10,16 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
+/**
+ * Recycleview adapeter
+ * @author zhaoyu5
+ * @version 1.0
+ */
 public class QrArrayAdapter extends RecyclerView.Adapter<QrArrayAdapter.ViewHolder> {
-
-    public QrArrayAdapter(ArrayList<HashedQR> QR, Context context) {
-        this.QR = QR;
-        this.context = context;
-    }
 
     private ArrayList<HashedQR> QR;
     private Context context;
+    private ItemClickListener item;
+
+    public QrArrayAdapter(ArrayList<HashedQR> QR, Context context, ItemClickListener item1) {
+        this.QR = QR;
+        this.context = context;
+        this.item = item1;
+    }
+
+
 
     @NonNull
     @Override
@@ -36,6 +44,14 @@ public class QrArrayAdapter extends RecyclerView.Adapter<QrArrayAdapter.ViewHold
 
         holder.Hash.setText(Qr.getName());
         holder.Score.setText(Integer.toString(Qr.getScore()));
+
+        holder.itemView.setOnClickListener(view -> {
+            item.onItemClick(QR.get(position));
+        });
+    }
+
+    public interface ItemClickListener{
+        void onItemClick(HashedQR hashedQR);
     }
 
     @Override
