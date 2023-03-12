@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(Leaderboard.class);
-
+        requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 100);
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
                 CAMERA_PERMISSION_CODE);
 
