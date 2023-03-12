@@ -48,7 +48,7 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
      * @param name The name of the QR
      * @param face The unique visual representation of the QR
      */
-    public HashedQR(String hashedQR, int score, String name,String face) {
+    public HashedQR(String hashedQR, int score, String name, String face) {
         this.hashedQR = hashedQR;
         this.score = score;
         this.name = name;
