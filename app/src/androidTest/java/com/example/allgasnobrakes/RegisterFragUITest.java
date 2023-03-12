@@ -1,10 +1,8 @@
 package com.example.allgasnobrakes;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -19,11 +17,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 /**
- * Test class for RegisterFragment. All the UI tests for the fragment are written here
+ * Test class for RegisterFragment. All the UI tests for the register fragment are written here
  * - Robotium is used for the tests
  */
+
+//https://www.vogella.com/tutorials/Robotium/article.html
+    //Lars Vogel, last updated 01.09.2016 - article contains a table of Solo test methods and their descriptions
 @RunWith(AndroidJUnit4.class)
 public class RegisterFragUITest {
 
@@ -69,10 +69,10 @@ public class RegisterFragUITest {
         //https://stackoverflow.com/questions/7763906/check-existence-of-a-fragment-using-robotium-android#:~:text=first%20call%20getCurrentActivity%20%28%29%20on%20Solo%20and%20then,call%20getFragmentManager%20%28%29.findFragmentById%20%28%29%20or%20getSupportFragmentManager%20%28%29.findFragmentById%20%28%29
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
 
+        //gionnut on Stackoverflow on September 30, 2014. Seeing this post was what made me try using .isShown() in these tests
+        //https://stackoverflow.com/questions/26020839/how-to-check-from-robotium-that-my-png-is-present-on-the-screen#:~:text=try%20using.isShown%20%28%29%20solo.getCurrentActivity%20%28%29.getResources%20%28%29.getDrawable%20%28R.drawable.action_drw%29.isShown%20%28%29%3B,is%20displayed%3A%20assertEquals%20%28true%2C%20solo.getCurrentActivity%20%28%29.findViewById%20%28R.id.getting_started_image_1%29.isShown%20%28%29%29%3B
         //Checks that the register button is still shown (indicating the register fragment is shown
         assertTrue("button not shown", (solo.getView(R.id.registerbutton)).isShown());
-
-
     }
 
     /**
@@ -98,6 +98,7 @@ public class RegisterFragUITest {
         //https://stackoverflow.com/questions/11135105/toast-is-not-shown-android-robotium-test
         //Will search for the string in the toast
         //assertTrue(solo.waitForText("Username already exists"));
+        //Toast appears during test, but does not get read????
 
         //Checks that the register button is still shown (indicating the register fragment is shown)
         //If sign-up was successful, the QRList fragment would have been shown instead
