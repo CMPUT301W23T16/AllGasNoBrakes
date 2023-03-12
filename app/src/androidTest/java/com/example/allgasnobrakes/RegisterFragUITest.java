@@ -58,31 +58,16 @@ public class RegisterFragUITest {
     }
 
     /**
-     * Checks that RegisterFragment is shown
+     * Tests that the username entered is unique
+     * - Test will try to register with a username that already exists
      */
     @Test
-    public void shownRegisterFrag() {
+    public void aUniqueUsernameTest() {
         //Asserts activity
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         //Avi Cherry on Stackoverflow answered how to check if a fragment exists in the app
         //https://stackoverflow.com/questions/7763906/check-existence-of-a-fragment-using-robotium-android#:~:text=first%20call%20getCurrentActivity%20%28%29%20on%20Solo%20and%20then,call%20getFragmentManager%20%28%29.findFragmentById%20%28%29%20or%20getSupportFragmentManager%20%28%29.findFragmentById%20%28%29
-        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
-
-        //gionnut on Stackoverflow on September 30, 2014. Seeing this post was what made me try using .isShown() in these tests
-        //https://stackoverflow.com/questions/26020839/how-to-check-from-robotium-that-my-png-is-present-on-the-screen#:~:text=try%20using.isShown%20%28%29%20solo.getCurrentActivity%20%28%29.getResources%20%28%29.getDrawable%20%28R.drawable.action_drw%29.isShown%20%28%29%3B,is%20displayed%3A%20assertEquals%20%28true%2C%20solo.getCurrentActivity%20%28%29.findViewById%20%28R.id.getting_started_image_1%29.isShown%20%28%29%29%3B
-        //Checks that the register button is still shown (indicating the register fragment is shown
-        assertTrue("button not shown", (solo.getView(R.id.registerbutton)).isShown());
-    }
-
-    /**
-     * Tests that the username entered is unique
-     * - Test will try to register with a username that already exists
-     */
-    @Test
-    public void uniqueUsernameTest() {
-        //Asserts activity
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
 
         //This user already exists in the database
@@ -96,13 +81,33 @@ public class RegisterFragUITest {
 
         //Karim on Stackoverflow how to search for a Toast on a robotium test (Aug. 11, 2014)
         //https://stackoverflow.com/questions/11135105/toast-is-not-shown-android-robotium-test
-        //Will search for the string in the toast
         //assertTrue(solo.waitForText("Username already exists"));
-        //Toast appears during test, but does not get read????
+        //Toast appears during test, but is not read????
 
+        //gionnut on Stackoverflow on September 30, 2014. Seeing this post was what made me try using .isShown() in these tests
+        //https://stackoverflow.com/questions/26020839/how-to-check-from-robotium-that-my-png-is-present-on-the-screen#:~:text=try%20using.isShown%20%28%29%20solo.getCurrentActivity%20%28%29.getResources%20%28%29.getDrawable%20%28R.drawable.action_drw%29.isShown%20%28%29%3B,is%20displayed%3A%20assertEquals%20%28true%2C%20solo.getCurrentActivity%20%28%29.findViewById%20%28R.id.getting_started_image_1%29.isShown%20%28%29%29%3B
         //Checks that the register button is still shown (indicating the register fragment is shown)
         //If sign-up was successful, the QRList fragment would have been shown instead
         assertTrue("button not shown", (solo.getView(R.id.registerbutton)).isShown());
+    }
+
+    @Test
+    public void createAccount() {
+        //Asserts activity
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
+
+        //This user already exists in the database
+        solo.enterText((EditText) solo.getView(R.id.username_edittext), "Gwendolen");
+        //Other info to fill input fields
+        solo.enterText((EditText) solo.getView(R.id.email_edittext), "fairfax@gmail.com");
+        solo.enterText((EditText) solo.getView(R.id.password_edittext), "earnest");
+
+        //Attempts to register this user
+        solo.clickOnButton("Register");
+
+        //Searches for "Profile" button in the bottom menu bar
+        assertTrue(solo.searchButton("Profile"));
     }
 
 }
