@@ -67,11 +67,13 @@ public class QRListFragment extends Fragment  {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             // Document found in the offline cache
-                            final String document = (String) task.getResult().get("Comment");
+                            final String comment = (String) task.getResult().get("Comment");
+                            final String longitude = (String) task.getResult().get("Longitude");
+                            final String latitude = (String) task.getResult().get("Latitude");
                             HashedQrFragment ADSF1 = new HashedQrFragment();
-                            ADSF1.main(hashedQR,document);
+                            ADSF1.main(hashedQR,comment,longitude,latitude);
                             ADSF1.show(getActivity().getSupportFragmentManager(), "finding");
-                            Log.d("test", "Cached document data: " + document);
+                            Log.d("test", "Cached document data: " + comment);
                         } else {
                             Log.d("test", "Cached get failed: ", task.getException());
                         }
