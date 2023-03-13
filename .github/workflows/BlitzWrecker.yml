@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "BlitzWrecker" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "BlitzWrecker" ]
 
 jobs:
   build:
