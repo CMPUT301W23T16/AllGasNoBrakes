@@ -1,12 +1,10 @@
 package com.example.allgasnobrakes;
 
 import android.app.Activity;
-import android.database.Observable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +13,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.color.utilities.Score;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
-import java.util.Observer;
 
 
 /**
@@ -55,7 +56,31 @@ public class QRListFragment extends Fragment  {
 
         QRList = view.findViewById(R.id.codes_list);
         QRList.setLayoutManager(new LinearLayoutManager(activity));
-        QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
+        QrAdapter = new QrArrayAdapter(user.getQRList(), activity, new QrArrayAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(HashedQR hashedQR) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference docRef = db.collection("Users").document(user.getUsername()).collection("QRRef").document(hashedQR.getHashedQR());
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Document found in the offline cache
+                            final String comment = (String) task.getResult().get("Comment");
+                            final String longitude = (String) task.getResult().get("Longitude");
+                            final String latitude = (String) task.getResult().get("Latitude");
+                            HashedQrFragment ADSF1 = new HashedQrFragment();
+                            ADSF1.main(hashedQR,comment,longitude,latitude);
+                            ADSF1.show(getActivity().getSupportFragmentManager(), "finding");
+                            Log.d("test", "Cached document data: " + comment);
+                        } else {
+                            Log.d("test", "Cached get failed: ", task.getException());
+                        }
+                    }
+                });
+
+            }
+        });
         QRList.setAdapter(QrAdapter);
 
         totalCount = view.findViewById(R.id.total_codes);
