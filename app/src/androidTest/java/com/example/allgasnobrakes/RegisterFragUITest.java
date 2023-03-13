@@ -91,23 +91,26 @@ public class RegisterFragUITest {
         assertTrue("button not shown", (solo.getView(R.id.registerbutton)).isShown());
     }
 
-    @Test
-    public void createAccount() {
-        //Asserts activity
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
+       //This test creates an account (through robotium). This test is dependent, it has to run last of the tests in this file, but has to run before other UI tests
+       // so it can test the rest of the app (since the app needs an account)
+       // Uncomment these section if you want to test this (account creating)
+//     @Test
+//     public void createAccount() {
+//         //Asserts activity
+//         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+//         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
 
-        //This user already exists in the database
-        solo.enterText((EditText) solo.getView(R.id.username_edittext), "Gwendolen");
-        //Other info to fill input fields
-        solo.enterText((EditText) solo.getView(R.id.email_edittext), "fairfax@gmail.com");
-        solo.enterText((EditText) solo.getView(R.id.password_edittext), "earnest");
+//         //This user already exists in the database
+//         solo.enterText((EditText) solo.getView(R.id.username_edittext), "Gwendolen");
+//         //Other info to fill input fields
+//         solo.enterText((EditText) solo.getView(R.id.email_edittext), "fairfax@gmail.com");
+//         solo.enterText((EditText) solo.getView(R.id.password_edittext), "earnest");
 
-        //Attempts to register this user
-        solo.clickOnButton("Register");
+//         //Attempts to register this user
+//         solo.clickOnButton("Register");
 
-        //Searches for "Profile" button in the bottom menu bar
-        assertTrue(solo.searchButton("Profile"));
-    }
+//         //Searches for "Profile" button in the bottom menu bar
+//         assertTrue(solo.searchButton("Profile"));
+//     }
 
 }
