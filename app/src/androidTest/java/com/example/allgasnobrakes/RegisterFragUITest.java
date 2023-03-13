@@ -91,8 +91,7 @@ public class RegisterFragUITest {
         assertTrue("button not shown", (solo.getView(R.id.registerbutton)).isShown());
     }
 
-       //This test creates an account (through robotium). This test is dependent, it has to run last of the tests in this file, but has to run before other UI tests
-       // so it can test the rest of the app (since the app needs an account)
+       //This test creates an account (through robotium). This test is dependent, it has to run last of the tests in this file
        // Uncomment these section if you want to test this (account creating)
 //     @Test
 //     public void createAccount() {
