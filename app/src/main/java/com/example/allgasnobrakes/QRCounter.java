@@ -14,9 +14,9 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * A class that stores player profile summary information
- * @author zhaoyu4
- * @version 1.0
+ * A class that stores player profile summary information. Displays total QR codes and total score
+ * @author fartar zhaoyu4
+ * @version 2.0
  */
 public class QRCounter implements Serializable {
     private int totalQR;
