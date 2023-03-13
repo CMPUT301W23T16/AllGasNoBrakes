@@ -1,0 +1,23 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "QR",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "Hash",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "Name",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
