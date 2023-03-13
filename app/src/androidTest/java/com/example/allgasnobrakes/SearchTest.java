@@ -52,10 +52,10 @@ public class SearchTest {
         if (solo.waitForText("ROLL OUT")){
             solo.clickOnButton("ROLL OUT");
         }else{
-            solo.enterText((EditText) solo.getView(R.id.username_edittext), "Alger");
+            solo.enterText((EditText) solo.getView(R.id.username_edittext), "test");
             //Other info to fill input fields
-            solo.enterText((EditText) solo.getView(R.id.email_edittext), "bunbury@gmail.com");
-            solo.enterText((EditText) solo.getView(R.id.password_edittext), "Earnest");
+            solo.enterText((EditText) solo.getView(R.id.email_edittext), "test@gmail.com");
+            solo.enterText((EditText) solo.getView(R.id.password_edittext), "test");
             solo.clickOnButton("Register");
         }
         //This user already exists in the database
