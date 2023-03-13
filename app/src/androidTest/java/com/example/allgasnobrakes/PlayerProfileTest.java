@@ -9,6 +9,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ public class PlayerProfileTest {
             "test@gmail.com", "1234", 0, 0);
 
     private final HashedQR dummyQR = new HashedQR();
-
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private static CollectionReference collectionReference;
 
     /**
@@ -31,7 +32,7 @@ public class PlayerProfileTest {
     @BeforeClass
     public static void useEmulator() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.useEmulator("10.0.2.2", 8080);
+        firestore.useEmulator("127.0.0.1", 8080);
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)
