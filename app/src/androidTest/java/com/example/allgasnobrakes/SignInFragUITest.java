@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.graphics.PointF;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.telephony.TelephonyManager;
@@ -37,6 +38,8 @@ public class SignInFragUITest {
 
     private static String id;
 
+    private static final HashedQR dummyQR = new HashedQR();
+
     private Solo solo; //used to call the interface component
 
     @Rule
@@ -61,6 +64,15 @@ public class SignInFragUITest {
                 .set(new HashMap<String, String>(){{
                     put("LastUser", "/Users/" + testUser.getUsername());
                 }});
+
+        firestore.collection("QR").document(dummyQR.getHashedQR())
+                .set(new HashMap<String, Object>(){{
+                    put("Score", dummyQR.getScore());
+                    put("Name", dummyQR.getName());
+                    put("Hash", dummyQR.getHashedQR());
+                }});
+
+        testUser.addQR(dummyQR);
     }
 
     @Before
@@ -123,9 +135,14 @@ public class SignInFragUITest {
     }
 
     @AfterClass
-    public static void deleteTestUser() {
+    public static void deleteTestUser() throws InterruptedException {
+
         firestore.collection("Users").document(testUser.getUsername()).delete();
 
         firestore.collection("DeviceID").document(id).delete();
+
+        firestore.collection("QR").document(dummyQR.getHashedQR()).delete();
+
+        Thread.sleep(3000);
     }
 }
