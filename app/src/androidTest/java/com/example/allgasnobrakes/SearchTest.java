@@ -61,10 +61,10 @@ public class SearchTest {
         //This user already exists in the database
 
         solo.clickOnButton("Profile");
-        solo.enterText((EditText) solo.getView(R.id.search_friends), "Blitz");
+        solo.enterText((EditText) solo.getView(R.id.search_friends), "Luna");
         solo.clickOnButton("Search");
-        solo.clickOnText("blitz@gmail.vom");
-        assertEquals(true, solo.waitForText("Blitz"));
+        solo.clickOnText("luna@gmail.com");
+        assertEquals(true, solo.waitForText("Luna"));
     }
 
 }

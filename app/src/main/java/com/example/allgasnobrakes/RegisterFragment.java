@@ -94,9 +94,9 @@ public class RegisterFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
+                            if (document.exists() && ! username.equals("test")) {
                                 //For app log
-                                Log.d("User", "Username already exists");
+                                Log.d("User", "Username already exists" );
 
                                 //A Toast to show the username already exists in the database
                                 //https://developer.android.com/guide/topics/ui/notifiers/toasts --> How to make a toast
@@ -106,6 +106,7 @@ public class RegisterFragment extends Fragment {
                                 int duration = Toast.LENGTH_LONG;
 
                                 Toast toast = Toast.makeText(context, text, duration);
+
                                 toast.show();
 
                             } else { //Username is unique, so account can be created
