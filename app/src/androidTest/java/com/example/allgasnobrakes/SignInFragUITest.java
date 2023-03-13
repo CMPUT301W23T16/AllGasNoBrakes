@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.provider.Settings;
+import android.provider.Telephony;
+import android.telephony.TelephonyManager;
 import android.widget.Button;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -16,24 +19,53 @@ import com.robotium.solo.Solo;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
+
 @RunWith(AndroidJUnit4.class)
 public class SignInFragUITest {
-    private Solo solo;  //used to call the interface component
+    private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    private static final PlayerProfile testUser =
+            new PlayerProfile("Test User", "test@gmail.com", "1234",
+                    0, 0);
+
+    private static String id;
+
+    private Solo solo; //used to call the interface component
 
     @Rule
-    //initalTouchMode is set to true so that anything that touches the screen during the test isn't affected/side effects
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, true);
 
     /**
-     * Runs before all tests
+     * Runs once before testing to inject the testing environment
      */
+    @BeforeClass
+    public static void registerUser() {
+        id = "ec7df04b91ff8c69";
+
+        firestore.collection("Users").document(testUser.getUsername())
+                .set(new HashMap<String, Object>(){{
+                    put("Email", testUser.getEmail());
+                    put("Password", testUser.getPassword());
+                    put("QR Count", 0);
+                    put("Total Score", 0);
+                }});
+
+        firestore.collection("DeviceID").document(id)
+                .set(new HashMap<String, String>(){{
+                    put("LastUser", "/Users/" + testUser.getUsername());
+                }});
+    }
+
     @Before
     public void setUp() {
-        solo = new Solo (InstrumentationRegistry.getInstrumentation(),rule.getActivity());
+        solo = new Solo (InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
 
     /**
@@ -92,7 +124,8 @@ public class SignInFragUITest {
 
     @AfterClass
     public static void deleteTestUser() {
-        FirebaseFirestore.getInstance().collection("Users").document("Blitz")
-                .delete();
+        firestore.collection("Users").document(testUser.getUsername()).delete();
+
+        firestore.collection("DeviceID").document(id).delete();
     }
 }
