@@ -33,8 +33,21 @@ public class SearchPlayerUITest {
     @Before
     public void setUp() {
         solo = new Solo (InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-        solo.clickOnButton("ROLL OUT");
-        solo.clickOnButton("Profile");
+
+        if (solo.searchButton("Register")) {
+            //This user will be created in the database
+            solo.enterText((EditText) solo.getView(R.id.username_edittext), "Dorian");
+
+            //Other info to fill input fields
+            solo.enterText((EditText) solo.getView(R.id.email_edittext), "doriangray@gmail.com");
+            solo.enterText((EditText) solo.getView(R.id.password_edittext), "portrait");
+
+            //Register this user
+            solo.clickOnButton("Register");
+        } else {
+            //Signs into the app
+            solo.clickOnButton("ROLL OUT");
+        }
     }
 
     /**
@@ -64,6 +77,9 @@ public class SearchPlayerUITest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.profile);
 
+        //Navigates to profile page
+        solo.clickOnButton("Profile");
+
         //Searches for user named "Algernon" - exists in database
         solo.enterText((EditText) solo.getView(R.id.search_friends), "Algernon");
         solo.clickOnButton("Search");
@@ -82,6 +98,9 @@ public class SearchPlayerUITest {
         //Asserts Main Activity
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.profile);
+
+        //Navigates to profile page
+        solo.clickOnButton("Profile");
 
         //searches for non-existent player named "Cecily"
         solo.enterText((EditText) solo.getView(R.id.search_friends), "Cecily");
