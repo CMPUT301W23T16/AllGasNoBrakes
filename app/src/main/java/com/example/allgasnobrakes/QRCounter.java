@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Locale;
 /**
  * Displays total QR codes and total score
- * @author fartar
+ * @author fartar zhaoyu4
  * @version 2.0
  */
 public class QRCounter implements Serializable {
@@ -37,14 +37,10 @@ public class QRCounter implements Serializable {
     public void assign(int QR, int score) {
         totalQR = QR;
         totalScore = score;
-        //Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
-        //Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 
     public void update(int QR, int score) {
         totalQR += QR;
         totalScore += score;
-        //Log.d("QRC", String.format(Locale.CANADA, "%d", QR));
-        //Log.d("QRC", String.format(Locale.CANADA, "%d", score));
     }
 }

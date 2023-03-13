@@ -3,7 +3,6 @@ package com.example.allgasnobrakes;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,9 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,27 +19,39 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * Contains player profile information
- * @author zhaoyu4
+ * @author zhaoyu4 zhaoyu5
  * @version 2.0
  */
-public class PlayerProfile implements Serializable {
+public class PlayerProfile extends Observable implements Serializable {
     private String username;
     private String email;
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
+    private final QRCounter profileSummary = new QRCounter(0, 0);
 
     public PlayerProfile(String username, String email) {
+        super();
         this.username = username;
         this.email = email;
     }
 
     public PlayerProfile(String username, String email, String password) {
+        super();
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public PlayerProfile(String username, String email, String password, int score, int count) {
+        super();
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        profileSummary.assign(count, score);
     }
 
     public String getUsername() {
@@ -59,6 +68,10 @@ public class PlayerProfile implements Serializable {
 
     public ArrayList<HashedQR> getQRList() {
         return QRList;
+    }
+
+    public QRCounter getProfileSummary() {
+        return profileSummary;
     }
 
     public void setUsername(String username) {
@@ -110,15 +123,22 @@ public class PlayerProfile implements Serializable {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
+                                        QRList.clear();
+                                        int score = 0;
                                         for (QueryDocumentSnapshot QR : task.getResult()) {
                                             Log.d("GetQR", QR.getId() + " => " + QR.getData());
                                             String QRHash = QR.getId();
                                             String QRName = (String) QR.get("Name");
+                                            String QRFace = (String) QR.get("Face");
                                             Number QRScore = (Number) QR.get("Score");
-                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName));
+                                            score += QRScore.intValue();
+                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName,QRFace));
                                             // QRList.sort(new HashedQR().reversed());
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
+                                        profileSummary.assign(QRS.size(), score);
+                                        setChanged();
+                                        notifyObservers();
                                     } else {
                                         Log.d("GetQR", "Error getting documents: ", task.getException());
                                     }
@@ -130,24 +150,31 @@ public class PlayerProfile implements Serializable {
         Log.d("Test", "Called");
     }
 
-    public void deleteQR(String hash) {
+    public void deleteQR(HashedQR QR) {
         FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QR")
-                .document(hash).delete();
+                .document(username).collection("QRRef")
+                .document(QR.getHashedQR()).delete();
+
+        profileSummary.update(-1, -QR.getScore());
+        setChanged();
+        notifyObservers();
     }
 
-    public void addQR(String hash) {
+    public void addQR(HashedQR QR) {
         FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QR")
-                .document(hash)
+                .document(username).collection("QRRef")
+                .document(QR.getHashedQR())
                 .set(new HashMap<String, Object>(){
-                    {put("QRReference", "QR/" + hash);}
+                    {put("QRReference", "QR/" + QR.getHashedQR());}
                 })
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // These are a method which gets executed when the task is succeeded
                         Log.d("Add QR", "Data has been added successfully!");
+                        profileSummary.update(1, QR.getScore());
+                        setChanged();
+                        notifyObservers();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -4,34 +4,23 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import android.widget.Button;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Locale;
 
 
 /**
@@ -45,6 +34,8 @@ public class QRListFragment extends Fragment  {
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
+    private QRCountView totalCount;
+    private ScoreView score;
 
     PlayerProfile user;
 
@@ -65,18 +56,40 @@ public class QRListFragment extends Fragment  {
 
         QRList = view.findViewById(R.id.codes_list);
         QRList.setLayoutManager(new LinearLayoutManager(activity));
-        QrAdapter = new QrArrayAdapter(user.getQRList(), activity);
+        QrAdapter = new QrArrayAdapter(user.getQRList(), activity, new QrArrayAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(HashedQR hashedQR) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference docRef = db.collection("Users").document(user.getUsername()).collection("QRRef").document(hashedQR.getHashedQR());
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Document found in the offline cache
+                            final String comment = (String) task.getResult().get("Comment");
+                            final String longitude = (String) task.getResult().get("Longitude");
+                            final String latitude = (String) task.getResult().get("Latitude");
+                            HashedQrFragment ADSF1 = new HashedQrFragment();
+                            ADSF1.main(hashedQR,comment,longitude,latitude);
+                            ADSF1.show(getActivity().getSupportFragmentManager(), "finding");
+                            Log.d("test", "Cached document data: " + comment);
+                        } else {
+                            Log.d("test", "Cached get failed: ", task.getException());
+                        }
+                    }
+                });
+
+            }
+        });
         QRList.setAdapter(QrAdapter);
-        TextView totalCount = view.findViewById(R.id.total_codes);
-        QRCounter qrCounter = new QRCounter();
-        qrCounter.updateCounter(username, totalCount);
 
-        TextView Score = view.findViewById(R.id.player_score);
-        qrCounter.scoreCounter(username, Score);
+        totalCount = view.findViewById(R.id.total_codes);
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        score = view.findViewById(R.id.player_score);
+        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
 
-        if (user.getQRList().size() == 0) {
-            user.retrieveQR(QrAdapter);
-        }
+        user.addObserver(totalCount);
+        user.addObserver(score);
 
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
@@ -124,7 +137,7 @@ public class QRListFragment extends Fragment  {
                 user.getQRList().remove(viewHolder.getAdapterPosition());
 
                 // Then we remove it from the cloud database
-                user.deleteQR(deletedQR.getHashedQR());
+                user.deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
                 QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
@@ -139,7 +152,7 @@ public class QRListFragment extends Fragment  {
                         user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR.getHashedQR());
+                        user.addQR(deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.
@@ -159,5 +172,14 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
+        user.deleteObservers();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        user.retrieveQR(QrAdapter);
+        Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
     }
 }
