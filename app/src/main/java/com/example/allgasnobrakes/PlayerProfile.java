@@ -33,6 +33,10 @@ public class PlayerProfile extends Observable implements Serializable {
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
 
+    private final CollectionReference QRReference =
+            FirebaseFirestore.getInstance().collection("Users")
+                    .document(username).collection("QRRef");
+
     /**
      * Constructor without password, for searching for friends account
      * @param username The username of the account
@@ -160,7 +164,7 @@ public class PlayerProfile extends Observable implements Serializable {
                                             String QRFace = (String) QR.get("Face");
                                             Number QRScore = (Number) QR.get("Score");
                                             score += QRScore.intValue();
-                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName,QRFace));
+                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName, QRFace));
                                             // QRList.sort(new HashedQR().reversed());
                                             QrAdapter.notifyDataSetChanged(); // Notify the view to update
                                         }
@@ -183,9 +187,7 @@ public class PlayerProfile extends Observable implements Serializable {
      * @param QR The QR code to be deleted
      */
     public void deleteQR(HashedQR QR) {
-        FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QRRef")
-                .document(QR.getHashedQR()).delete();
+        QRReference.document(QR.getHashedQR()).delete();
 
         profileSummary.update(getUsername(), -1, -QR.getScore());
         setChanged();
@@ -197,9 +199,7 @@ public class PlayerProfile extends Observable implements Serializable {
      * @param QR The QR code to be re-added
      */
     public void addQR(HashedQR QR) {
-        FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QRRef")
-                .document(QR.getHashedQR())
+        QRReference.document(QR.getHashedQR())
                 .set(new HashMap<String, Object>(){
                     {put("QRReference", "QR/" + QR.getHashedQR());}
                 })

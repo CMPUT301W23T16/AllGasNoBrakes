@@ -15,7 +15,9 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private String face;
 //    private String[][] face;
 //    private final double[] geolocation= new double[2];
-//    String name, String[][] face, int lat, int lon
+//    String name, String[][] face,
+    private double lat;
+    private double lon;
 
     /**
      * Sort QR code by increasing score first, then alphabetically by name
@@ -72,11 +74,15 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     public String getFace() {
         return face;
     }
-//
-//    public double[] getGeolocation() {
-//        return geolocation;
-//    }
-//
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
 //    public void setHashedQR(String hashedQR) {
 //        this.hashedQR = hashedQR;
 //    }
@@ -93,8 +99,8 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
 //        this.face = face;
 //    }
 //
-//    public void setGeolocation(double lat, double lon) {
-//        this.geolocation[0] = lat;
-//        this.geolocation[1] = lon;
-//    }
+    public void setGeolocation(double lat, double lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
 }
