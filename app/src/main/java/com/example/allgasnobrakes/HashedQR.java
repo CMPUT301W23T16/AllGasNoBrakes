@@ -15,7 +15,7 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private String face;
 //    private String[][] face;
 //    private final double[] geolocation= new double[2];
-//    String name, String[][] face,
+    private String comment;
     private double lat;
     private double lon;
 
@@ -55,8 +55,17 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.score = score;
         this.name = name;
         this.face = face;
-//        geolocation[0] = lat;
-//        geolocation[1] = lon;
+    }
+
+    public HashedQR(String hashedQR, int score, String name, String face,
+                    String comment, double lat, double lon) {
+        this.hashedQR = hashedQR;
+        this.score = score;
+        this.name = name;
+        this.face = face;
+        this.comment = comment;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     public String getHashedQR() {
@@ -75,6 +84,10 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         return face;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
     public double getLat() {
         return lat;
     }
@@ -83,22 +96,6 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         return lon;
     }
 
-//    public void setHashedQR(String hashedQR) {
-//        this.hashedQR = hashedQR;
-//    }
-//
-//    public void setScore(int score) {
-//        this.score = score;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public void setFace(String[][] face) {
-//        this.face = face;
-//    }
-//
     public void setGeolocation(double lat, double lon) {
         this.lat = lat;
         this.lon = lon;
