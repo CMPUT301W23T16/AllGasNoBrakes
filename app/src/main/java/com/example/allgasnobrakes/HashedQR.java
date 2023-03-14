@@ -1,7 +1,10 @@
 package com.example.allgasnobrakes;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Describes the hashed QR code
@@ -13,11 +16,10 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private final int score;
     private String name;
     private String face;
-//    private String[][] face;
-//    private final double[] geolocation= new double[2];
     private String comment;
-    private double lat;
-    private double lon;
+    private Object lat;
+    private Object lon;
+    private boolean location;
 
     /**
      * Sort QR code by increasing score first, then alphabetically by name
@@ -58,7 +60,8 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     }
 
     public HashedQR(String hashedQR, int score, String name, String face,
-                    String comment, double lat, double lon) {
+                    String comment, Object lat, Object lon) {
+
         this.hashedQR = hashedQR;
         this.score = score;
         this.name = name;
@@ -66,6 +69,18 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.comment = comment;
         this.lat = lat;
         this.lon = lon;
+
+        if (lat.equals("")) {
+            location = false;
+        }
+
+        FirebaseFirestore.getInstance().collection("QR")
+                .document(hashedQR).set(new HashMap<String, Object>(){{
+                    put("Face", face);
+                    put("Hash", hashedQR);
+                    put("Name", name);
+                    put("Score", score);
+                }});
     }
 
     public String getHashedQR() {
@@ -88,16 +103,16 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         return comment;
     }
 
-    public double getLat() {
+    public Object getLat() {
         return lat;
     }
 
-    public double getLon() {
+    public Object getLon() {
         return lon;
     }
 
-    public void setGeolocation(double lat, double lon) {
-        this.lat = lat;
-        this.lon = lon;
-    }
+//    public void setGeolocation(double lat, double lon) {
+//        this.lat = lat;
+//        this.lon = lon;
+//    }
 }

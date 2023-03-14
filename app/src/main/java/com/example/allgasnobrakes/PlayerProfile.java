@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,9 +34,7 @@ public class PlayerProfile extends Observable implements Serializable {
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
 
-    private final CollectionReference QRReference =
-            FirebaseFirestore.getInstance().collection("Users")
-                    .document(username).collection("QRRef");
+    private CollectionReference QRReference;
 
     /**
      * Constructor without password, for searching for friends account
@@ -76,6 +75,8 @@ public class PlayerProfile extends Observable implements Serializable {
         this.email = email;
         this.password = password;
         profileSummary.assign(count, score);
+        QRReference = FirebaseFirestore.getInstance().collection("Users")
+                .document(username).collection("QRRef");
     }
 
     public String getUsername() {
@@ -199,26 +200,23 @@ public class PlayerProfile extends Observable implements Serializable {
      * @param QR The QR code to be re-added
      */
     public void addQR(HashedQR QR) {
-        QRReference.document(QR.getHashedQR())
-                .set(new HashMap<String, Object>(){
-                    {put("QRReference", "QR/" + QR.getHashedQR());}
-                })
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        QRReference.document(QR.getHashedQR()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        // These are a method which gets executed when the task is succeeded
-                        Log.d("Add QR", "Data has been added successfully!");
-                        profileSummary.update(getUsername(), 1, QR.getScore());
-                        setChanged();
-                        notifyObservers();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // These are a method which gets executed if there’s any problem
-                        Log.d("Add QR", "Data could not be added!" + e.toString());
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            profileSummary.update(getUsername(), 1, QR.getScore());
+                            setChanged();
+                            notifyObservers();
+                        }
                     }
                 });
+        QRReference.document(QR.getHashedQR()).set(new HashMap<String, Object>(){
+            {
+                put("QRReference", "QR/" + QR.getHashedQR());
+                put("Comment", QR.getComment());
+                put("Latitude", QR.getLat());
+                put("Longitude", QR.getLon());
+            }
+        });
     }
 }
