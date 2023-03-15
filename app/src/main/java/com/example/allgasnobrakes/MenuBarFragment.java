@@ -25,6 +25,19 @@ public class MenuBarFragment extends Fragment {
         super(R.layout.menu_bar);
     }
 
+    /**
+     * Provides three button for switching between the QR list, the QR code scanner, and the player
+     * profile page. Also passes account information for those pages to use
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return The menu bar view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

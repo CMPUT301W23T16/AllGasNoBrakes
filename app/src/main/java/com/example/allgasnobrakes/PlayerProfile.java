@@ -33,12 +33,23 @@ public class PlayerProfile extends Observable implements Serializable {
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
 
+    /**
+     * Constructor without password, for searching for friends account
+     * @param username The username of the account
+     * @param email The email of the account
+     */
     public PlayerProfile(String username, String email) {
         super();
         this.username = username;
         this.email = email;
     }
 
+    /**
+     * Constructor with password, for the user's account
+     * @param username The username of the account
+     * @param email The username of the account
+     * @param password The password of the account
+     */
     public PlayerProfile(String username, String email, String password) {
         super();
         this.username = username;
@@ -46,6 +57,15 @@ public class PlayerProfile extends Observable implements Serializable {
         this.password = password;
     }
 
+    /**
+     * Constructor with password, with initialization of player profile summary, for the user's
+     * account
+     * @param username The username of the account
+     * @param email The username of the account
+     * @param password The password of the account
+     * @param score The total QR score of the player account
+     * @param count The total number of the QR codes that account has
+     */
     public PlayerProfile(String username, String email, String password, int score, int count) {
         super();
         this.username = username;
@@ -95,10 +115,18 @@ public class PlayerProfile extends Observable implements Serializable {
      * notifies the view that displays this information to update itself with the latest data.
      * @param QrAdapter - the view to be updated
      */
-    public void retrieveQR(RecyclerView.Adapter QrAdapter) {
+    public void retrieveQR(RecyclerView.Adapter QrAdapter, String sortOrder) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username).collection("QRRef");
+
+        Query.Direction order;
+        if (sortOrder.equals("Highest Score")) {
+            order = Query.Direction.DESCENDING;
+        } else {
+            order = Query.Direction.ASCENDING;
+        }
+
 
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -117,7 +145,7 @@ public class PlayerProfile extends Observable implements Serializable {
                 if (!QRS.isEmpty()) {
                     db.collection("/QR")
                             .whereIn("Hash", QRS)
-                            .orderBy("Score", Query.Direction.DESCENDING)
+                            .orderBy("Score", order)
                             .orderBy("Name", Query.Direction.ASCENDING)
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -150,16 +178,24 @@ public class PlayerProfile extends Observable implements Serializable {
         Log.d("Test", "Called");
     }
 
+    /**
+     * Removed the QR code from the user's account
+     * @param QR The QR code to be deleted
+     */
     public void deleteQR(HashedQR QR) {
         FirebaseFirestore.getInstance().collection("Users")
                 .document(username).collection("QRRef")
                 .document(QR.getHashedQR()).delete();
 
-        profileSummary.update(-1, -QR.getScore());
+        profileSummary.update(getUsername(), -1, -QR.getScore());
         setChanged();
         notifyObservers();
     }
 
+    /**
+     * Implementation of the UNDO function in case the user deleted a QR code by accident
+     * @param QR The QR code to be re-added
+     */
     public void addQR(HashedQR QR) {
         FirebaseFirestore.getInstance().collection("Users")
                 .document(username).collection("QRRef")
@@ -172,7 +208,7 @@ public class PlayerProfile extends Observable implements Serializable {
                     public void onSuccess(Void aVoid) {
                         // These are a method which gets executed when the task is succeeded
                         Log.d("Add QR", "Data has been added successfully!");
-                        profileSummary.update(1, QR.getScore());
+                        profileSummary.update(getUsername(), 1, QR.getScore());
                         setChanged();
                         notifyObservers();
                     }

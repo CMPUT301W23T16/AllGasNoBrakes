@@ -7,6 +7,7 @@ import org.junit.Test;
  * Test cases for QRCounter
  * @author fartar
  */
+// will not work with current version of the app
 public class QRCounterTest {
 
     @Test
