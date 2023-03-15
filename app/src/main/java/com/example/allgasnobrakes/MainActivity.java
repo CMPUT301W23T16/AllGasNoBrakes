@@ -1,3 +1,4 @@
+
 package com.example.allgasnobrakes;
 
 import android.Manifest;
@@ -7,13 +8,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,33 +17,28 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
     private PlayerProfile currentUser;
     private final FragmentManager fm = getSupportFragmentManager();
     private final int CAMERA_PERMISSION_CODE = 101;
 
     private Leaderboard viewModel;
-    private RecyclerView QRList;
-    private RecyclerView.Adapter QrAdapter;
-    protected ArrayList<HashedQR> player_Qr;
-    private
-    FirebaseFirestore db;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(Leaderboard.class);
+        requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA }, 101);
 
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
-                CAMERA_PERMISSION_CODE);
 
         setContentView(R.layout.activity_main);
 
+        /*
+        We check if there has been a previous log in on the device. If the is, we log in the last
+        user on the device, and ask for confirmation. If there isn't one, we prompt the new user
+        to register
+         */
         if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -62,14 +53,14 @@ public class MainActivity extends AppCompatActivity {
                         Bundle bundle = new Bundle();
 
                         if (document.exists()) {
-                            Log.d("User", "DocumentSnapshot data: " + document.getData());
+                            Log.d("Log In", "DocumentSnapshot data: " + document.getData());
                             bundle.putString("LastUser", document.get("LastUser").toString()); // TODO: add error checking
                             fm.beginTransaction()
                                     .setReorderingAllowed(true)
                                     .replace(R.id.fragment_container, SignInFragment.class, bundle)
                                     .commit();
                         } else {
-                            Log.d("User", "No such document");
+                            Log.d("Log In", "No such document");
                             bundle.putString("deviceID", id);
                             fm.beginTransaction()
                                     .setReorderingAllowed(true)
@@ -78,19 +69,22 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     } else {
-                        Log.d("User", "get failed with ", task.getException());
+                        Log.d("Log In", "get failed with ", task.getException());
                     }
                 }
             });
         }
 
+        /*
+        We have received player information, load into the homepage
+         */
         viewModel.getSelectedPlayer().observe(this, item -> {
             setContentView(R.layout.split_fragment);
             currentUser = item;
 
             Bundle bundle = new Bundle();
-            bundle.putString("Username", currentUser.getUsername());
-            bundle.putString("Email", currentUser.getEmail());
+            bundle.putSerializable("User", currentUser);
+            bundle.putString("SortOrder", "Highest Score");
 
             fm.beginTransaction()
                     .setReorderingAllowed(true)
@@ -98,5 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.menu_bar_container, MenuBarFragment.class, bundle)
                     .commit();
         });
+
     }
+
 }

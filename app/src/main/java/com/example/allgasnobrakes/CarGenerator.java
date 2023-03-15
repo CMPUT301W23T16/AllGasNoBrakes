@@ -1,10 +1,10 @@
 package com.example.allgasnobrakes;
 
 
-public class NameGenerator {
+public class CarGenerator {
     private String hashedQR;
 
-    public NameGenerator(String hashedQR) {
+    public CarGenerator(String hashedQR) {
         this.hashedQR = hashedQR;
     }
     

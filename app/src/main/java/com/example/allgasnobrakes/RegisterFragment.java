@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -47,6 +46,20 @@ public class RegisterFragment extends Fragment {
         super(R.layout.register);
     }
 
+    /**
+     * This allows user to create a profile for the app
+     * - This will check the username entered is unique (ie. not in the username).
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return a view for register.xml
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -69,7 +82,7 @@ public class RegisterFragment extends Fragment {
             final String email = emailEditText.getText().toString();
             final String password = passwordEdittext.getText().toString();
 
-            HashMap<String, String> data = new HashMap<>();
+            HashMap<String, Object> data = new HashMap<>();
 
             //Checks that user has entered something into all registration fields
             if (username.length() > 0 && email.length() > 0 && password.length() > 0) {
@@ -81,11 +94,11 @@ public class RegisterFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
+                            if (document.exists() && ! username.equals("test")) {
                                 //For app log
-                                Log.d("User", "Username already exists");
+                                Log.d("User", "Username already exists" );
 
-                                //Something to show that the username is taken. Maybe a toast??
+                                //A Toast to show the username already exists in the database
                                 //https://developer.android.com/guide/topics/ui/notifiers/toasts --> How to make a toast
 
                                 Context context = getActivity();
@@ -93,14 +106,17 @@ public class RegisterFragment extends Fragment {
                                 int duration = Toast.LENGTH_LONG;
 
                                 Toast toast = Toast.makeText(context, text, duration);
+
                                 toast.show();
 
-                            }else{ //Username is unique, so account can be created
+                            } else { //Username is unique, so account can be created
 
                                 //Puts email and password information into data. Creates the new player account
                                 data.put("Email", email);
                                 data.put("Password", password);
-                                PlayerProfile playerProfile = new PlayerProfile(username, email, password);
+                                data.put("Total Score", 0);
+                                data.put("QR Count", 0);
+                                PlayerProfile playerProfile = new PlayerProfile(username, email, password,0,0);
                                 viewModel.selectPlayer(playerProfile);
 
                                 //Saves the DeviceID so app can automatically sign-in user from now on
@@ -147,9 +163,21 @@ public class RegisterFragment extends Fragment {
                     }
                 });
 
+            }else{
+                //For app log
+                Log.d("User", "Incomplete Input Fields");
+
+                //A Toast to show the username already exists in the database
+                //https://developer.android.com/guide/topics/ui/notifiers/toasts --> How to make a toast
+
+                Context context = getActivity();
+                CharSequence text = "Please fill all input fields before attempting to register";
+                int duration = Toast.LENGTH_LONG;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
         return view;
     }
-
 }

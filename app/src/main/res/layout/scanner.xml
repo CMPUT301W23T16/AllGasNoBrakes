@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/agnb_scanner_back">
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scanner_view"
@@ -27,6 +28,49 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/comment"
+        android:layout_width="301dp"
+        android:layout_height="67dp"
+        android:layout_below="@+id/tv_textView"
+        android:layout_marginTop="51dp"
+        android:ems="10"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:hint="Comment"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_textView"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="69dp"
+        android:layout_toEndOf="@+id/comment"
+        android:text="Confirm"
+        android:textSize="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scanner_view"
+        android:text="location"
+        android:textColor="@color/white"
+        android:textSize="30dp" />
+
+    <ToggleButton
+        android:id="@+id/location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scanner_view"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-4dp"
+        android:layout_marginEnd="195dp"
+        android:backgroundTint="#7A7777"
+        android:text="ToggleButton"
+        android:textSize="15dp" />
 
 </RelativeLayout>

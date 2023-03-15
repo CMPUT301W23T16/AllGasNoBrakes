@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 /**
  * Displays fragment for user's profile
  * - allows user to search for other players
- * @author zhaoyu4 and theresag
+ * @author zhaoyu4, zhaoyu5, and theresag
  * @version 2.0
  */
 
@@ -38,6 +39,7 @@ public class ProfileFragment extends Fragment {
     //For searching for other players
     private EditText search_friend;
     private Button searching;
+    private FragmentContainerView searchedplayer;
 
     //Needs firestore to search for players
     private FirebaseFirestore db;
@@ -46,6 +48,20 @@ public class ProfileFragment extends Fragment {
         super(R.layout.profile);
     }
 
+    /**
+     * This gets the information the user inputted to create an account and adds it to the database.
+     *      - Also checks if the username entered is unique (ie. not in the database).
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return a view for profile.xml
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,7 +71,7 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.username_text);
         email = view.findViewById(R.id.email_text);
         editing = view.findViewById(R.id.edit_btn);
-
+        searchedplayer = view.findViewById(R.id.friend_fragment);
         //For searching for other players
         search_friend = view.findViewById(R.id.search_friends);
         searching = view.findViewById(R.id.search_btn);
@@ -64,8 +80,16 @@ public class ProfileFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         //Sets the text for the username and email
-        username.setText(requireArguments().getString("Username"));
-        email.setText(requireArguments().getString("Email"));
+        PlayerProfile currentUser = (PlayerProfile) requireArguments().getSerializable("User");
+        username.setText(currentUser.getUsername());
+        email.setText(currentUser.getEmail());
+
+        //For opening a another profile fragment for the other player
+        FragmentManager other = getParentFragmentManager();
+        other.beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.friend_fragment, FriendFragment.class, requireArguments())
+                .commit();
 
         //Searching for other players
         searching.setOnClickListener(v -> {
@@ -73,8 +97,6 @@ public class ProfileFragment extends Fragment {
             final String friend_name = search_friend.getText().toString();
 
             if (search_friend.length() > 0) {  //Should I check if the username entered is the same as profile??
-                //For opening a another profile fragment for the other player
-                FragmentManager other = getParentFragmentManager();
 
                 //https://firebase.google.com/docs/firestore/query-data/get-data --> how to get a doc from firestore
                 DocumentReference ref = db.collection("Users").document(friend_name);
@@ -82,22 +104,33 @@ public class ProfileFragment extends Fragment {
                 ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
                         if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
+
                             if (document.exists()) {
                                 //For app log
                                 Log.d("Search", "Username Found");
+
+                                //Opens a fragment to show the searched player
+                                searchedplayer.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (search_friend != null){
+                                            FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
+                                            ADSF1.main(friend_name,document.get("Email").toString());
+                                            ADSF1.show(getActivity().getSupportFragmentManager(), "Finding");
+                                        }
+                                    }
+                                });
 
                                 //Make bundle of the friend profile
                                 Bundle friend_bundle = new Bundle();
                                 friend_bundle.putString("Username", document.getId());
                                 friend_bundle.putString("Email", document.get("Email").toString());
 
-                                //Show the profile, so maybe open a fragment of the other player's profile??
                                 other.beginTransaction()
                                         .setReorderingAllowed(true)
-                                        .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)  //Rework this later
-                                        .replace(R.id.menu_bar_container, MenuBarFragment.class, friend_bundle)
+                                        .replace(R.id.friend_fragment, FriendFragment.class, friend_bundle)
                                         .commit();
 
                             } else {  //if username does not exist
