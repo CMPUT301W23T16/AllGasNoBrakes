@@ -200,22 +200,21 @@ public class PlayerProfile extends Observable implements Serializable {
      * @param QR The QR code to be re-added
      */
     public void addQR(HashedQR QR) {
-        QRReference.document(QR.getHashedQR()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            profileSummary.update(getUsername(), 1, QR.getScore());
-                            setChanged();
-                            notifyObservers();
-                        }
-                    }
-                });
-        QRReference.document(QR.getHashedQR()).set(new HashMap<String, Object>(){
+        QRReference.document(QR.getHashedQR()).set(new HashMap<String, Object>() {
             {
                 put("QRReference", "QR/" + QR.getHashedQR());
                 put("Comment", QR.getComment());
                 put("Latitude", QR.getLat());
                 put("Longitude", QR.getLon());
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    profileSummary.update(getUsername(), 1, QR.getScore());
+                    setChanged();
+                    notifyObservers();
+                }
             }
         });
     }
