@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.zxing.qrcode.encoder.QRCode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -119,68 +120,37 @@ public class PlayerProfile extends Observable implements Serializable {
      * Retrieves the collection of HashedQR that a player has collected and stores it locally. Also
      * notifies the view that displays this information to update itself with the latest data.
      * @param QrAdapter - the view to be updated
+     * @param sortOrder - the order by which to sort the QR code
      */
     public void retrieveQR(RecyclerView.Adapter QrAdapter, String sortOrder) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Users")
-                .document(username).collection("QRRef");
-
-        Query.Direction order;
-        if (sortOrder.equals("Highest Score")) {
-            order = Query.Direction.DESCENDING;
-        } else {
-            order = Query.Direction.ASCENDING;
-        }
-
-
-        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        QRReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                ArrayList<String> QRS = new ArrayList<>();
+                QRList.clear();
+                int score = 0;
 
                 // We get the hashed value for each of QRs that the player has...
                 for (QueryDocumentSnapshot QRRef : task.getResult()) {
-                    DocumentReference hashedQR = db.document(QRRef.getString("QRReference"));
-                    QRS.add(hashedQR.getId());
+                    HashedQR newQR = new HashedQR(QRRef.getId(), QRRef.get("Comment", String.class),
+                            QRRef.get("Latitude"), QRRef.get("Longitude"));
+                    QRList.add(newQR);
+                    score += newQR.getScore();
                 }
 
-                for (String i : QRS) {Log.d("Test", i);}
-
-                // Then in the QR database, we retrieve the details of those QRs and store the data locally
-                if (!QRS.isEmpty()) {
-                    db.collection("/QR")
-                            .whereIn("Hash", QRS)
-                            .orderBy("Score", order)
-                            .orderBy("Name", Query.Direction.ASCENDING)
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        QRList.clear();
-                                        int score = 0;
-                                        for (QueryDocumentSnapshot QR : task.getResult()) {
-                                            Log.d("GetQR", QR.getId() + " => " + QR.getData());
-                                            String QRHash = QR.getId();
-                                            String QRName = (String) QR.get("Name");
-                                            String QRFace = (String) QR.get("Face");
-                                            Number QRScore = (Number) QR.get("Score");
-                                            score += QRScore.intValue();
-                                            QRList.add(new HashedQR(QRHash, QRScore.intValue(), QRName, QRFace));
-                                            // QRList.sort(new HashedQR().reversed());
-                                            QrAdapter.notifyDataSetChanged(); // Notify the view to update
-                                        }
-                                        profileSummary.assign(QRS.size(), score);
-                                        setChanged();
-                                        notifyObservers();
-                                    } else {
-                                        Log.d("GetQR", "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
+                if (sortOrder.equals("Highest Score")) {
+                    QRList.sort(new HashedQR().reversed());
+                } else {
+                    QRList.sort(new HashedQR());
                 }
+
+                profileSummary.assign(QRList.size(), score);
+                QrAdapter.notifyDataSetChanged(); // Notify the recycler view to update
+                setChanged();
+                notifyObservers();
+
+                Log.d("Order", "Test order");
             }
         });
-        Log.d("Test", "Called");
     }
 
     /**

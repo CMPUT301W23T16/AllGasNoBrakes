@@ -1,10 +1,19 @@
 package com.example.allgasnobrakes;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Describes the hashed QR code
@@ -13,7 +22,7 @@ import java.util.HashMap;
  */
 public class HashedQR implements Comparator<HashedQR>, Serializable {
     private final String hashedQR;
-    private final int score;
+    private int score;
     private String name;
     private String face;
     private String comment;
@@ -43,6 +52,27 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.hashedQR = "hashedQR";
         this.score = 10;
         this.name = "name";
+    }
+
+    public HashedQR(String hashedQR, String comment, Object lat, Object lon) {
+        this.hashedQR = hashedQR;
+        this.comment = comment;
+        this.lat = lat;
+        this.lon = lon;
+
+        FirebaseFirestore.getInstance().collection("QR").document(hashedQR)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot QRCode = task.getResult();
+                            name = QRCode.get("Name", String.class);
+                            face = QRCode.get("Face", String.class);
+                            score = QRCode.get("Score", int.class);
+                            Log.d("Score", String.format(Locale.CANADA, "%s" , QRCode.get("Score")));
+                        }
+                    }
+                });
     }
 
     /**
