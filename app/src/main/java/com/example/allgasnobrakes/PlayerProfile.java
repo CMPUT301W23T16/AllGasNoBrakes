@@ -12,15 +12,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.zxing.qrcode.encoder.QRCode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -28,13 +32,13 @@ import java.util.Observable;
  * @author zhaoyu4 zhaoyu5
  * @version 2.0
  */
-public class PlayerProfile extends Observable implements Serializable {
+public class PlayerProfile extends Observable implements Serializable, EventListener {
     private String username;
     private String email;
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference QRReference;
 
     /**
@@ -123,34 +127,38 @@ public class PlayerProfile extends Observable implements Serializable {
      * @param sortOrder - the order by which to sort the QR code
      */
     public void retrieveQR(RecyclerView.Adapter QrAdapter, String sortOrder) {
-        QRReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                QRList.clear();
-                int score = 0;
+        Query.Direction order;
 
-                // We get the hashed value for each of QRs that the player has...
-                for (QueryDocumentSnapshot QRRef : task.getResult()) {
-                    HashedQR newQR = new HashedQR(QRRef.getId(), QRRef.get("Comment", String.class),
-                            QRRef.get("Latitude"), QRRef.get("Longitude"));
-                    QRList.add(newQR);
-                    score += newQR.getScore();
-                }
+        if (sortOrder.equals("Highest Score")) {
+            order = Query.Direction.DESCENDING;
+        } else {
+            order = Query.Direction.ASCENDING;
+        }
 
-                if (sortOrder.equals("Highest Score")) {
-                    QRList.sort(new HashedQR().reversed());
-                } else {
-                    QRList.sort(new HashedQR());
-                }
+        db.collection("QR")
+                .whereArrayContains("Owned by", username)
+                .orderBy("Score", order)
+                .orderBy("Name", Query.Direction.ASCENDING)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QRList.clear();
+                        int score = 0;
 
-                profileSummary.assign(QRList.size(), score);
-                QrAdapter.notifyDataSetChanged(); // Notify the recycler view to update
-                setChanged();
-                notifyObservers();
+                        // We get the hashed value for each of QRs that the player has...
+                        for (QueryDocumentSnapshot QR : task.getResult()) {
+                            Log.d("test", (String) ((HashMap<String, Object>) QR.getData().get("Owned by")).get("Comment"));
+                            HashedQR newQR = new HashedQR();
+                            QRList.add(newQR);
+                            score += newQR.getScore();
+                        }
 
-                Log.d("Order", "Test order");
-            }
-        });
+                        profileSummary.assign(QRList.size(), score);
+                        QrAdapter.notifyDataSetChanged(); // Notify the recycler view to update
+                        setChanged();
+                        notifyObservers();
+                    }
+                });
     }
 
     /**
@@ -170,22 +178,19 @@ public class PlayerProfile extends Observable implements Serializable {
      * @param QR The QR code to be re-added
      */
     public void addQR(HashedQR QR) {
-        QRReference.document(QR.getHashedQR()).set(new HashMap<String, Object>() {
-            {
-                put("QRReference", "QR/" + QR.getHashedQR());
-                put("Comment", QR.getComment());
-                put("Latitude", QR.getLat());
-                put("Longitude", QR.getLon());
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    profileSummary.update(getUsername(), 1, QR.getScore());
-                    setChanged();
-                    notifyObservers();
-                }
-            }
-        });
+        QRList.add(QR);
+        profileSummary.update(getUsername(), 1, QR.getScore());
+
+        HashMap<String, Object> info = new HashMap<>();
+        HashMap<String, Object> meta = new HashMap<>();
+
+        meta.put("Comment",QR.getComment());
+        meta.put("Lat",QR.getLat());
+        meta.put("Lon",QR.getLon());
+
+        info.put(username, meta);
+
+        db.collection("QR").document(QR.getHashedQR())
+                .update("Owned by", info);
     }
 }

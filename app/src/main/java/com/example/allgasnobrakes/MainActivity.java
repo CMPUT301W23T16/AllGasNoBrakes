@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.useEmulator("10.0.2.2", 8080);
             DocumentReference cloudID = db.collection("DeviceID").document(id);
 
             //https://firebase.google.com/docs/firestore/query-data/get-data

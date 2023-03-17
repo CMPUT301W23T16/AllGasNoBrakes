@@ -198,7 +198,6 @@ public class ScannerFragment extends Fragment {
             }
         });
 
-
         return root;
     }
 }
