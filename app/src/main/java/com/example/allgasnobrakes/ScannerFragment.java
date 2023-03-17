@@ -81,16 +81,9 @@ public class ScannerFragment extends Fragment {
         CodeScannerView scannerView = root.findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(activity, scannerView);
         mCodeScanner.startPreview();
-        TextView t = root.findViewById(R.id.tv_textView);
         PlayerProfile playerProfile = (PlayerProfile) requireArguments().getSerializable("User");
-        FirebaseFirestore db;
-        final String TAG = "Sample";
         client = LocationServices.getFusedLocationProviderClient(getActivity());
         ToggleButton location = root.findViewById(R.id.location_button);
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference playerReference = db.collection("Users").document(playerProfile.getUsername()).collection("QRRef");
-        final CollectionReference collectionReference = db.collection("/QR");
-        final DocumentReference playerAttributes = db.collection("Users").document(playerProfile.getUsername());
         Button confirm = root.findViewById(R.id.confirm_button);
         EditText comment = root.findViewById(R.id.comment);
         confirm.setOnClickListener(new View.OnClickListener() {
@@ -130,9 +123,7 @@ public class ScannerFragment extends Fragment {
                                             // Set latitude
                                             QRData.put("Longitude", String.valueOf(location1.getLongitude()));
                                             QRData.put("Latitude", String.valueOf(location1.getLatitude()));
-
                                         }
-
                                     };
                                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                         // TODO: Consider calling
@@ -146,12 +137,9 @@ public class ScannerFragment extends Fragment {
                                     }
                                     client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                                 }
-
                             }
                         });
                     }
-
-
                 }
                 else {
                     // When location service is not enabled
@@ -160,101 +148,15 @@ public class ScannerFragment extends Fragment {
                     QRData.put("Latitude", "");
                 }
 
-                if (sha256hex != null ){
-
-                    QRData.put("QRReference", "/" + collectionReference.document(sha256hex).getPath());
-                    QRData.put("Comment", comment.getText().toString());
+                if (sha256hex != null ) {
                     NameGenerator name = new NameGenerator(sha256hex);
                     CarGenerator car = new CarGenerator(sha256hex);
-                    if (total>=0 && sha256hex.length()>0) {
-                        collectionReference
-                                .document(sha256hex)
-                                .set(new HashMap<String, Object>(){
-                                    {put("Score", total);
-                                        put("Name", name.Generate());
-                                        put("Hash", sha256hex);
-                                        put("Face",car.Generate());}})
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // These are a method which gets executed when the task is succeeded
-                                        Log.d("collectionRef", "Data has been added successfully!");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // These are a method which gets executed if there’s any problem
-                                        Log.d("collectionRef", "Data could not be added!" + e.toString());
-                                    }
-                                });
-                    }
-                    playerReference.document(sha256hex).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Log.d(TAG, "Document exists!");
-                                    playerReference
-                                            .document(sha256hex)
-                                            .set(QRData)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    // These are a method which gets executed when the task is succeeded
-                                                    Log.d("playerRef", "Data has been added successfully!");
+                    HashedQR newQR = new HashedQR(sha256hex, total, name.Generate(), car.Generate(),
+                            comment.getText().toString(),
+                            QRData.get("Latitude"), QRData.get("Longitude"));
 
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    // These are a method which gets executed if there’s any problem
-                                                    Log.d("playerRef", "Data could not be added!" + e.toString());
-                                                }
-                                            });
-                                } else {
-                                    Log.d(TAG, "Document does not exist!");
-                                    playerReference
-                                            .document(sha256hex)
-                                            .set(QRData)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    // These are a method which gets executed when the task is succeeded
-                                                    Log.d("playerRef", "Data has been added successfully!");
-
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    // These are a method which gets executed if there’s any problem
-                                                    Log.d("playerRef", "Data could not be added!" + e.toString());
-                                                }
-                                            });
-                                    playerAttributes.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-
-                                            int count = ((Number) task.getResult().get("QR Count")).intValue();
-                                            int score = ((Number) task.getResult().get("Total Score")).intValue();
-                                            playerAttributes.update("Total Score", score+total);
-                                            playerAttributes.update("QR Count", count+1);
-
-                                        }
-                                    });
-                                }
-                            } else {
-                                Log.d(TAG, "Failed with: ", task.getException());
-                            }
-                        }
-                    });
-
+                    playerProfile.addQR(newQR);
                 }
-
             }
         });
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -297,7 +199,6 @@ public class ScannerFragment extends Fragment {
                 mCodeScanner.startPreview();
             }
         });
-
 
         return root;
     }
