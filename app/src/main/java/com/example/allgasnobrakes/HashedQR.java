@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -107,23 +108,14 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         }
 
         DocumentReference QR = db.collection("QR").document(hashedQR);
-        QR.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot ds = task.getResult();
 
-                    if (! ds.exists()) {
-                        QR.set(new HashMap<String, Object>(){{
-                            put("Face", face);
-                            put("Hash", hashedQR);
-                            put("Name", name);
-                            put("Score", score);
-                        }});
-                    }
-                }
-            }
-        });
+        QR.set(new HashMap<String, Object>(){{
+            put("Face", face);
+            put("Hash", hashedQR);
+            put("Name", name);
+            put("Score", score);
+            Log.d("create", "1");
+        }}, SetOptions.merge());
 
     }
 

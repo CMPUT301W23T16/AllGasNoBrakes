@@ -191,21 +191,19 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      */
     public void addQR(HashedQR QR, boolean updateCloud) {
         profileSummary.update(getUsername(), 1, QR.getScore(), updateCloud);
-
-        HashMap<String, Object> info = new HashMap<>();
         HashMap<String, Object> meta = new HashMap<>();
 
-        meta.put("Comment",QR.getComment());
-        meta.put("Lat",QR.getLat());
-        meta.put("Lon",QR.getLon());
-
-        info.put("Owned by", new ArrayList<String>(){{add(username);}});
+        meta.put("Comment", QR.getComment());
+        meta.put("Lat", QR.getLat());
+        meta.put("Lon", QR.getLon());
 
         db.collection("QR").document(QR.getHashedQR())
                 .collection("Players").document(username)
                 .set(meta);
 
         db.collection("QR").document(QR.getHashedQR())
-                .set(info, SetOptions.merge());
+                .update("OwnedBy", FieldValue.arrayUnion(username));
+
+        Log.d("update", "2");
     }
 }

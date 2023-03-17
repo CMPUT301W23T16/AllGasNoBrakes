@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
          */
         if (savedInstanceState == null) {
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+//            String id = "DAJ101";
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.useEmulator("10.0.2.2", 8080);
