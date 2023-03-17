@@ -63,23 +63,21 @@ public class QRCounter implements Serializable {
      * @param QR The number of QR codes will change by this amount
      * @param score The total score will change by this amount
      */
-    public void update(String username, int QR, int score, boolean updateCloud) {
+    public void update(String username, int QR, int score) {
         totalQR += QR;
         totalScore += score;
 
-        if (updateCloud) {
-            DocumentReference documentReference =
-                    FirebaseFirestore.getInstance().collection("Users").document(username);
+        DocumentReference documentReference =
+                FirebaseFirestore.getInstance().collection("Users").document(username);
 
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    int totalCount = ((Number) task.getResult().get("QR Count")).intValue();
-                    int totalScore = ((Number) task.getResult().get("Total Score")).intValue();
-                    documentReference.update("Total Score", totalScore + score);
-                    documentReference.update("QR Count", totalCount + QR);
-                }
-            });
-        }
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                int totalCount = ((Number) task.getResult().get("QR Count")).intValue();
+                int totalScore = ((Number) task.getResult().get("Total Score")).intValue();
+                documentReference.update("Total Score", totalScore + score);
+                documentReference.update("QR Count", totalCount + QR);
+            }
+        });
     }
 }

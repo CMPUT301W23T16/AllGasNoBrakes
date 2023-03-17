@@ -147,7 +147,7 @@ public class QRListFragment extends Fragment  {
                         user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR, true);
+                        user.addQR(deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.

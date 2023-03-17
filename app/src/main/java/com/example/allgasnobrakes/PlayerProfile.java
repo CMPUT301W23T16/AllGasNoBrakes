@@ -136,14 +136,13 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         }
 
         db.collection("QR")
-                .whereArrayContains("Owned by", username)
+                .whereArrayContains("OwnedBy", username)
                 .orderBy("Score", order)
                 .orderBy("Name", Query.Direction.ASCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         QRList.clear();
-                        int score = 0;
 
                         // We get the hashed value for each of QRs that the player has...
                         for (QueryDocumentSnapshot QR : task.getResult()) {
@@ -167,8 +166,6 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                                         }
                                     });
                         }
-
-                        profileSummary.assign(QRList.size(), score);
                     }
                 });
     }
@@ -180,7 +177,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     public void deleteQR(HashedQR QR) {
         QRReference.document(QR.getHashedQR()).delete();
 
-        profileSummary.update(getUsername(), -1, -QR.getScore(), true);
+        profileSummary.update(getUsername(), -1, -QR.getScore());
         setChanged();
         notifyObservers();
     }
@@ -189,8 +186,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      * Implementation of the UNDO function in case the user deleted a QR code by accident
      * @param QR The QR code to be re-added
      */
-    public void addQR(HashedQR QR, boolean updateCloud) {
-        profileSummary.update(getUsername(), 1, QR.getScore(), updateCloud);
+    public void addQR(HashedQR QR) {
+        profileSummary.update(getUsername(), 1, QR.getScore());
         HashMap<String, Object> meta = new HashMap<>();
 
         meta.put("Comment", QR.getComment());
