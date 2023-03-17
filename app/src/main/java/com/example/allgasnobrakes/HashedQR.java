@@ -119,7 +119,6 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
                             put("Hash", hashedQR);
                             put("Name", name);
                             put("Score", score);
-                            put("Owned by", new HashMap<>());
                         }});
                     }
                 }
@@ -154,5 +153,17 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
 
     public Object getLon() {
         return lon;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setLat(Object lat) {
+        this.lat = lat;
+    }
+
+    public void setLon(Object lon) {
+        this.lon = lon;
     }
 }

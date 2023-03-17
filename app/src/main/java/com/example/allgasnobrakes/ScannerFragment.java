@@ -155,7 +155,7 @@ public class ScannerFragment extends Fragment {
                             comment.getText().toString(),
                             QRData.get("Latitude"), QRData.get("Longitude"));
 
-                    playerProfile.addQR(newQR);
+                    playerProfile.addQR(newQR, true);
                 }
             }
         });

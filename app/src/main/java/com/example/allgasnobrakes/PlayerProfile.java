@@ -147,16 +147,28 @@ public class PlayerProfile extends Observable implements Serializable, EventList
 
                         // We get the hashed value for each of QRs that the player has...
                         for (QueryDocumentSnapshot QR : task.getResult()) {
-                            Log.d("test", (String) ((HashMap<String, Object>) QR.getData().get("Owned by")).get("Comment"));
-                            HashedQR newQR = new HashedQR();
-                            QRList.add(newQR);
-                            score += newQR.getScore();
+                            HashedQR newQR = new HashedQR(QR.getId(), QR.get("Score", int.class),
+                                    QR.get("Name", String.class), QR.get("Face", String.class));
+
+                            db.document("/QR/" + QR.getId() + "/Players/" + username).get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot meta = task.getResult();
+                                            newQR.setComment(meta.get("Comment", String.class));
+                                            newQR.setLat(meta.get("Lat"));
+                                            newQR.setLat(meta.get("Lon"));
+
+                                            QRList.add(newQR);
+
+                                            QrAdapter.notifyDataSetChanged(); // Notify the recycler view to update
+                                            setChanged();
+                                            notifyObservers();
+                                        }
+                                    });
                         }
 
                         profileSummary.assign(QRList.size(), score);
-                        QrAdapter.notifyDataSetChanged(); // Notify the recycler view to update
-                        setChanged();
-                        notifyObservers();
                     }
                 });
     }
@@ -168,7 +180,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     public void deleteQR(HashedQR QR) {
         QRReference.document(QR.getHashedQR()).delete();
 
-        profileSummary.update(getUsername(), -1, -QR.getScore());
+        profileSummary.update(getUsername(), -1, -QR.getScore(), true);
         setChanged();
         notifyObservers();
     }
@@ -177,9 +189,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      * Implementation of the UNDO function in case the user deleted a QR code by accident
      * @param QR The QR code to be re-added
      */
-    public void addQR(HashedQR QR) {
-        QRList.add(QR);
-        profileSummary.update(getUsername(), 1, QR.getScore());
+    public void addQR(HashedQR QR, boolean updateCloud) {
+        profileSummary.update(getUsername(), 1, QR.getScore(), updateCloud);
 
         HashMap<String, Object> info = new HashMap<>();
         HashMap<String, Object> meta = new HashMap<>();
@@ -188,9 +199,13 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         meta.put("Lat",QR.getLat());
         meta.put("Lon",QR.getLon());
 
-        info.put(username, meta);
+        info.put("Owned by", new ArrayList<String>(){{add(username);}});
 
         db.collection("QR").document(QR.getHashedQR())
-                .update("Owned by", info);
+                .collection("Players").document(username)
+                .set(meta);
+
+        db.collection("QR").document(QR.getHashedQR())
+                .set(info, SetOptions.merge());
     }
 }
