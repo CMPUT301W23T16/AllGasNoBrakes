@@ -76,15 +76,7 @@ public class FoundPlayerFragment extends DialogFragment {
             }
         });
         QRList.setAdapter(QrAdapter);
-        user.retrieveQR(QrAdapter);
-
-
-
-
-
-
-
-
+        user.retrieveQR(QrAdapter, "Highest Score");
 
         return builder
                 .setView(view)

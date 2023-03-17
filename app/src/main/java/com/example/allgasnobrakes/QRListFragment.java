@@ -45,7 +45,8 @@ public class QRListFragment extends Fragment  {
 
     /**
      * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
-     * resort in ascending order
+     * resort in ascending order. Displays player profile summary information (QRCounter). Allows
+     * user to delete QR codes from their account
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -93,12 +94,6 @@ public class QRListFragment extends Fragment  {
 
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
-
-        if (currentSortOrder.getText().toString().equals("Highest Score")) {
-            user.getQRList().sort(new HashedQR().reversed());
-        } else {
-            user.getQRList().sort(new HashedQR());
-        }
 
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,11 +170,15 @@ public class QRListFragment extends Fragment  {
         user.deleteObservers();
     }
 
+    /**
+     * Overridden to update the user's QR code list everytime we switch back to this page
+     */
     @Override
     public void onResume() {
         super.onResume();
-        user.retrieveQR(QrAdapter);
+        user.retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        Log.d("resume", requireArguments().getString("SortOrder"));
     }
 }
