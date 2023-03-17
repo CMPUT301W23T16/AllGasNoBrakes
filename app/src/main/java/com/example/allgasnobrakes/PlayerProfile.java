@@ -175,7 +175,9 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      * @param QR The QR code to be deleted
      */
     public void deleteQR(HashedQR QR) {
-        QRReference.document(QR.getHashedQR()).delete();
+        db.document("/QR/" + QR.getHashedQR() + "/Players/" + username).delete();
+        db.document("/QR/" + QR.getHashedQR())
+                .update("OwnedBy", FieldValue.arrayRemove(username));
 
         profileSummary.update(getUsername(), -1, -QR.getScore());
         setChanged();
@@ -188,6 +190,9 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      */
     public void addQR(HashedQR QR) {
         profileSummary.update(getUsername(), 1, QR.getScore());
+        setChanged();
+        notifyObservers();
+
         HashMap<String, Object> meta = new HashMap<>();
 
         meta.put("Comment", QR.getComment());
