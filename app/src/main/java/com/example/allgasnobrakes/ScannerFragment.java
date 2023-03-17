@@ -33,14 +33,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.hash.Hashing;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 /**
@@ -263,7 +263,9 @@ public class ScannerFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        sha256hex = DigestUtils.sha256Hex(result.getText());
+                        sha256hex = Hashing.sha256()
+                                .hashString(result.getText(), StandardCharsets.UTF_8)
+                                .toString();
                         char starting = sha256hex.charAt(0);
                         String current = "";
                         for (int i = 1; i < sha256hex.length(); i++){
