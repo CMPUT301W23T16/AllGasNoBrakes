@@ -66,6 +66,7 @@ public class QRCounter implements Serializable {
     public void update(String username, int QR, int score) {
         totalQR += QR;
         totalScore += score;
+
         DocumentReference documentReference =
                 FirebaseFirestore.getInstance().collection("Users").document(username);
 
