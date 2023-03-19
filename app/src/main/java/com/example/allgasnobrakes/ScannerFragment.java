@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +46,10 @@ import java.util.HashMap;
  */
 public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
-    int total = 0;
-    String sha256hex;
-    String name;
-    String car;
+    private int total = 0;
+    private String sha256hex;
+    private String name;
+    private String car;
     FusedLocationProviderClient client;
 
     public ScannerFragment() {
@@ -98,6 +99,9 @@ public class ScannerFragment extends Fragment {
                         name = NameGenerator.Generate(sha256hex);
                         car = CarGenerator.Generate(sha256hex);
 
+                        String scannedContent = name + "\n" + car;
+                        scannedView.setText(scannedContent);
+
                         char starting = sha256hex.charAt(0);
                         String current = "";
                         for (int i = 1; i < sha256hex.length(); i++){
@@ -138,9 +142,6 @@ public class ScannerFragment extends Fragment {
                         .alpha(1f)
                         .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                         .setListener(null);
-
-                String scannedContent = name + "\n" + car;
-                scannedView.setText(scannedContent);
 
                 confirm.setOnClickListener(new View.OnClickListener() {
                     HashMap<String, Object> QRData = new HashMap<>();
