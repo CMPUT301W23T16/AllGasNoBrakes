@@ -33,13 +33,14 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.hash.Hashing;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -100,7 +101,9 @@ public class ScannerFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        sha256hex = DigestUtils.sha256Hex(result.getText());
+                        sha256hex = Hashing.sha256()
+                                .hashString(result.getText(), StandardCharsets.UTF_8)
+                                .toString();
                         name = NameGenerator.Generate(sha256hex);
                         car = CarGenerator.Generate(sha256hex);
 

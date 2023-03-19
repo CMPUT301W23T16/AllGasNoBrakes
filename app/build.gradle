@@ -58,6 +58,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'

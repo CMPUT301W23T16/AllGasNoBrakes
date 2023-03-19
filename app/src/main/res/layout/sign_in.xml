@@ -33,7 +33,7 @@
         android:id="@+id/roll_out_button"
         android:layout_width="match_parent"
         android:layout_height="89dp"
-        android:backgroundTint="@color/button_color"
+        android:backgroundTint="@color/purple"
         android:ems="10"
         android:fontFamily="monospace"
         android:text="@string/roll_out_message_text"
