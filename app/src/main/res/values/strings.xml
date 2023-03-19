@@ -35,4 +35,12 @@
     <string name="save_changes_txt">Save</string>
     <string name="cancel_changes_txt">Cancel</string>
     <string name="username_holder">Username</string>
+
+    <!--For taking a photo-->
+    <string name="photo_button">ADD PHOTO</string>
+    <string name="photo_text_btn">Photo Button</string>
+    <string name="taking_photo_txt">Take Photo</string>
+    <string name="retake_photo_txt">Retake Photo</string>
+    <string name="upload_photo_text">Upload Photo</string>
+
 </resources>
