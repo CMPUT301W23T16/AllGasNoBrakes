@@ -1,12 +1,13 @@
 package com.example.allgasnobrakes;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +31,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -46,13 +41,14 @@ import java.util.HashMap;
 /**
  * Handles operations with code scanner
  * @author zhaoyu4 zhaoyu5
- * @version 2.0
+ * @version 3.0
  */
 public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
     int total = 0;
     String sha256hex;
-    String com;
+    String name;
+    String car;
     FusedLocationProviderClient client;
 
     public ScannerFragment() {
@@ -78,87 +74,20 @@ public class ScannerFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.scanner, container, false);
+
         CodeScannerView scannerView = root.findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(activity, scannerView);
         mCodeScanner.startPreview();
+
+        TextView scannedView = root.findViewById(R.id.scannedView);
+
         PlayerProfile playerProfile = (PlayerProfile) requireArguments().getSerializable("User");
         client = LocationServices.getFusedLocationProviderClient(getActivity());
+
         ToggleButton location = root.findViewById(R.id.location_button);
         Button confirm = root.findViewById(R.id.confirm_button);
         EditText comment = root.findViewById(R.id.comment);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            HashMap<String, Object> QRData = new HashMap<>();
-            @Override
-            public void onClick(View v) {
-                if (location.isChecked()) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        // When permission is granted
-                        // Call method
-                        client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                Location location = task.getResult();
 
-                                // Check condition
-                                if (location != null) {
-                                    QRData.put("Longitude", String.valueOf(location.getLongitude()));
-                                    QRData.put("Latitude", String.valueOf(location.getLatitude()));
-                                } else {
-
-                                    LocationRequest locationRequest = new LocationRequest()
-                                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                                            .setInterval(10000)
-                                            .setFastestInterval(
-                                                    1000)
-                                            .setNumUpdates(1);
-
-                                    // Initialize location call back
-                                    LocationCallback locationCallback = new LocationCallback() {
-                                        @Override
-                                        public void
-                                        onLocationResult(LocationResult locationResult) {
-                                            // Initialize
-                                            // location
-                                            Location location1 = locationResult.getLastLocation();
-                                            // Set latitude
-                                            QRData.put("Longitude", String.valueOf(location1.getLongitude()));
-                                            QRData.put("Latitude", String.valueOf(location1.getLatitude()));
-                                        }
-                                    };
-                                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                        // TODO: Consider calling
-                                        //    ActivityCompat#requestPermissions
-                                        // here to request the missing permissions, and then overriding
-                                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                        //                                          int[] grantResults)
-                                        // to handle the case where the user grants the permission. See the documentation
-                                        // for ActivityCompat#requestPermissions for more details.
-                                        return;
-                                    }
-                                    client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-                                }
-                            }
-                        });
-                    }
-                }
-                else {
-                    // When location service is not enabled
-                    // open location setting
-                    QRData.put("Longitude", "");
-                    QRData.put("Latitude", "");
-                }
-
-                if (sha256hex != null ) {
-                    NameGenerator name = new NameGenerator(sha256hex);
-                    CarGenerator car = new CarGenerator(sha256hex);
-                    HashedQR newQR = new HashedQR(sha256hex, total, name.Generate(), car.Generate(),
-                            comment.getText().toString(),
-                            QRData.get("Latitude"), QRData.get("Longitude"));
-
-                    playerProfile.addQR(newQR);
-                }
-            }
-        });
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -166,6 +95,9 @@ public class ScannerFragment extends Fragment {
                     @Override
                     public void run() {
                         sha256hex = DigestUtils.sha256Hex(result.getText());
+                        name = NameGenerator.Generate(sha256hex);
+                        car = CarGenerator.Generate(sha256hex);
+
                         char starting = sha256hex.charAt(0);
                         String current = "";
                         for (int i = 1; i < sha256hex.length(); i++){
@@ -187,6 +119,98 @@ public class ScannerFragment extends Fragment {
                             }
                         }
 
+                    }
+                });
+
+                scannerView.animate()
+                        .alpha(0f)
+                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                scannerView.setVisibility(View.GONE);
+                            }
+                        });
+
+                scannedView.setVisibility(View.VISIBLE);
+                scannedView.setAlpha(0f);
+                scannedView.animate()
+                        .alpha(1f)
+                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setListener(null);
+
+                String scannedContent = name + "\n" + car;
+                scannedView.setText(scannedContent);
+
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    HashMap<String, Object> QRData = new HashMap<>();
+                    @Override
+                    public void onClick(View v) {
+                        if (location.isChecked()) {
+                            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                // When permission is granted
+                                // Call method
+                                client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Location> task) {
+                                        Location location = task.getResult();
+
+                                        // Check condition
+                                        if (location != null) {
+                                            QRData.put("Longitude", String.valueOf(location.getLongitude()));
+                                            QRData.put("Latitude", String.valueOf(location.getLatitude()));
+                                        } else {
+
+                                            LocationRequest locationRequest = new LocationRequest()
+                                                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                                    .setInterval(10000)
+                                                    .setFastestInterval(
+                                                            1000)
+                                                    .setNumUpdates(1);
+
+                                            // Initialize location call back
+                                            LocationCallback locationCallback = new LocationCallback() {
+                                                @Override
+                                                public void
+                                                onLocationResult(LocationResult locationResult) {
+                                                    // Initialize
+                                                    // location
+                                                    Location location1 = locationResult.getLastLocation();
+                                                    // Set latitude
+                                                    QRData.put("Longitude", String.valueOf(location1.getLongitude()));
+                                                    QRData.put("Latitude", String.valueOf(location1.getLatitude()));
+                                                }
+                                            };
+                                            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                                // TODO: Consider calling
+                                                //    ActivityCompat#requestPermissions
+                                                // here to request the missing permissions, and then overriding
+                                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                                //                                          int[] grantResults)
+                                                // to handle the case where the user grants the permission. See the documentation
+                                                // for ActivityCompat#requestPermissions for more details.
+                                                return;
+                                            }
+                                            client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            // When location service is not enabled
+                            // open location setting
+                            QRData.put("Longitude", "");
+                            QRData.put("Latitude", "");
+                        }
+
+                        if (sha256hex != null ) {
+                            HashedQR newQR = new HashedQR(sha256hex, total, name, car,
+                                    comment.getText().toString(),
+                                    QRData.get("Latitude"), QRData.get("Longitude"));
+
+                            playerProfile.addQR(newQR);
+                        }
                     }
                 });
             }

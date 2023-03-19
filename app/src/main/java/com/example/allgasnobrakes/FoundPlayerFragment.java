@@ -21,8 +21,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 /**
  * foundplayerfragment, displays searched player profile
- * @author zhaoyu5
- * @version 1.0
+ * @author zhaoyu5 zhaoyu4
+ * @version 1.1
  */
 public class FoundPlayerFragment extends DialogFragment {
     private String username1;

@@ -20,7 +20,7 @@ import java.util.Locale;
 /**
  * Describes the hashed QR code
  * @author zhaoyu4 zhaoyu5
- * @version 2.0
+ * @version 3.0
  */
 public class HashedQR implements Comparator<HashedQR>, Serializable {
     private final String hashedQR;

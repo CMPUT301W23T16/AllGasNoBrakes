@@ -6,31 +6,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-import com.google.zxing.qrcode.encoder.QRCode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 
 /**
  * Contains player profile information
  * @author zhaoyu4 zhaoyu5
- * @version 2.0
+ * @version 3.0
  */
 public class PlayerProfile extends Observable implements Serializable, EventListener {
     private String username;
@@ -38,8 +31,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference QRReference;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
      * Constructor without password, for searching for friends account
@@ -80,8 +72,6 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         this.email = email;
         this.password = password;
         profileSummary.assign(count, score);
-        QRReference = FirebaseFirestore.getInstance().collection("Users")
-                .document(username).collection("QRRef");
     }
 
     public String getUsername() {
@@ -160,12 +150,13 @@ public class PlayerProfile extends Observable implements Serializable, EventList
 
                                             QRList.add(newQR);
 
-                                            QrAdapter.notifyDataSetChanged(); // Notify the recycler view to update
-                                            setChanged();
-                                            notifyObservers();
+                                            QrAdapter.notifyDataSetChanged();
                                         }
                                     });
                         }
+                        // Notify the recycler view to update
+                        setChanged();
+                        notifyObservers();
                     }
                 });
     }
