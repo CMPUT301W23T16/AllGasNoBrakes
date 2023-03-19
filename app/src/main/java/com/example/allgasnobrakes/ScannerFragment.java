@@ -111,13 +111,13 @@ public class ScannerFragment extends Fragment {
                                         DocumentSnapshot ds = task.getResult();
 
                                         if (ds.exists()) {
-                                            lastPlace = String.format(Locale.CANADA, "%d", (((ArrayList<String>) (ds.get("OwnedBy"))).size() + 1));
+                                            lastPlace = String.format(Locale.CANADA, "%d", (((ArrayList<String>) (ds.get("OwnedBy"))).size()));
                                             Log.d("lastPlace", String.format(Locale.CANADA, "%d", ((ArrayList<String>) (ds.get("OwnedBy"))).size()));
                                         } else {
-                                            lastPlace = "1";
+                                            lastPlace = "0";
                                         }
 
-                                        String scannedContent = String.format(Locale.CANADA, "%s\n%s\nBy clicking confirm, you will become the %s person to own this car.", name, car, lastPlace);
+                                        String scannedContent = String.format(Locale.CANADA, "%s\n%s\n%s other players own this car.", name, car, lastPlace);
                                         scannedView.setText(scannedContent);
                                     }
                                 });
