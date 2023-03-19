@@ -99,6 +99,8 @@ public class ScannerFragment extends Fragment {
                         name = NameGenerator.Generate(sha256hex);
                         car = CarGenerator.Generate(sha256hex);
 
+                        String lastPlace = HashedQR.getLastPlace(sha256hex);
+
                         String scannedContent = name + "\n" + car;
                         scannedView.setText(scannedContent);
 
