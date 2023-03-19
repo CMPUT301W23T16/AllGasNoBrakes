@@ -33,11 +33,15 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Handles operations with code scanner
@@ -50,6 +54,7 @@ public class ScannerFragment extends Fragment {
     private String sha256hex;
     private String name;
     private String car;
+    private String lastPlace;
     FusedLocationProviderClient client;
 
     public ScannerFragment() {
@@ -99,10 +104,23 @@ public class ScannerFragment extends Fragment {
                         name = NameGenerator.Generate(sha256hex);
                         car = CarGenerator.Generate(sha256hex);
 
-                        String lastPlace = HashedQR.getLastPlace(sha256hex);
+                        FirebaseFirestore.getInstance().document("/QR/" + sha256hex).get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot ds = task.getResult();
 
-                        String scannedContent = name + "\n" + car;
-                        scannedView.setText(scannedContent);
+                                        if (ds.exists()) {
+                                            lastPlace = String.format(Locale.CANADA, "%d", (((ArrayList<String>) (ds.get("OwnedBy"))).size() + 1));
+                                            Log.d("lastPlace", String.format(Locale.CANADA, "%d", ((ArrayList<String>) (ds.get("OwnedBy"))).size()));
+                                        } else {
+                                            lastPlace = "1";
+                                        }
+
+                                        String scannedContent = String.format(Locale.CANADA, "%s\n%s\nBy clicking confirm, you will become the %s person to own this car.", name, car, lastPlace);
+                                        scannedView.setText(scannedContent);
+                                    }
+                                });
 
                         char starting = sha256hex.charAt(0);
                         String current = "";

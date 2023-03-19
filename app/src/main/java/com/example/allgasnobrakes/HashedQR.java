@@ -30,24 +30,7 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private String comment;
     private Object lat;
     private Object lon;
-    private static int lastPlace = 1;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    public static String getLastPlace(String sha256hex) {
-        FirebaseFirestore.getInstance().document("/QR/" + sha256hex).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot ds = task.getResult();
-
-                        if (ds.exists()) {
-                            lastPlace = ((ArrayList<String>) (ds.get("OwnedBy"))).size();
-                            Log.d("lastPlace", String.format(Locale.CANADA, "%d", lastPlace));
-                        }
-                    }
-                });
-        return String.format(Locale.CANADA, "%d", lastPlace);
-    }
 
     /**
      * Sort QR code by increasing score first, then alphabetically by name
