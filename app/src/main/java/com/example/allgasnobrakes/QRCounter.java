@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * A class that stores player profile summary information. Displays total QR codes and total score
  * @author fartar zhaoyu4
- * @version 2.0
+ * @version 3.0
  */
 public class QRCounter implements Serializable {
     private int totalQR;

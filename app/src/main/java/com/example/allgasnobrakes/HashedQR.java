@@ -20,7 +20,7 @@ import java.util.Locale;
 /**
  * Describes the hashed QR code
  * @author zhaoyu4 zhaoyu5
- * @version 2.0
+ * @version 3.0
  */
 public class HashedQR implements Comparator<HashedQR>, Serializable {
     private final String hashedQR;
@@ -30,7 +30,6 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private String comment;
     private Object lat;
     private Object lon;
-    private boolean location;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
@@ -102,10 +101,6 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.comment = comment;
         this.lat = lat;
         this.lon = lon;
-
-        if (lat.equals("")) {
-            location = false;
-        }
 
         DocumentReference QR = db.collection("QR").document(hashedQR);
 
