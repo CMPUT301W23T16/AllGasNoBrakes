@@ -15,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField ("String", "API_KEY", getApiKey())
     }
 
     buildTypes {
@@ -33,6 +34,12 @@ android {
             useJUnitPlatform()
         }
     }
+}
+String getApiKey() {
+    def propFile = rootProject.file("./local.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propFile))
+    return properties['APOD_API_KEY']
 }
 
 dependencies {
