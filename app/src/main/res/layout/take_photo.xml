@@ -6,66 +6,46 @@
     android:layout_height="match_parent"
     android:background="@drawable/agnb_bk4">
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_marginBottom="381dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/captured_image"
+        android:layout_width="0dp"
+        android:layout_height="430dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/image_description"
+        app:layout_constraintBottom_toTopOf="@+id/taking_photo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.camera.view.PreviewView
-            android:id="@+id/preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/orientation"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="100sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_marginBottom="430dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-            </LinearLayout>
-        </androidx.camera.view.PreviewView>
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <Button
         android:id="@+id/taking_photo"
         android:layout_width="168dp"
         android:layout_height="76dp"
-        android:backgroundTint="@color/deep_purple"
+        android:backgroundTint="@color/purple"
         android:fontFamily="serif-monospace"
         android:text="@string/photo_text_btn"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/upload_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container" />
+        app:layout_constraintTop_toBottomOf="@+id/captured_image" />
 
     <Button
         android:id="@+id/upload_photo"
         android:layout_width="168dp"
         android:layout_height="76dp"
-        android:backgroundTint="@color/deep_purple"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/purple"
         android:fontFamily="serif-monospace"
         android:text="@string/upload_photo_text"
         android:textStyle="bold"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taking_photo" />
 

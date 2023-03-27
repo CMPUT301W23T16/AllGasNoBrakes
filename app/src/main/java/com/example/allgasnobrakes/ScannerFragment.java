@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
@@ -94,6 +95,10 @@ public class ScannerFragment extends Fragment {
         ToggleButton location = root.findViewById(R.id.location_button);
         Button confirm = root.findViewById(R.id.confirm_button);
         EditText comment = root.findViewById(R.id.comment);
+
+        //The button will take the user to fragment to take photo of surrounding area
+        Button photo = root.findViewById(R.id.photo_taking_btn);
+        FragmentManager parentFragment = getParentFragmentManager();
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -236,6 +241,7 @@ public class ScannerFragment extends Fragment {
                             playerProfile.addQR(newQR);
                         }
                     }
+
                 });
             }
         });
@@ -243,6 +249,17 @@ public class ScannerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mCodeScanner.startPreview();
+            }
+        });
+
+        //when the user clicks on the button, app will switch PhotoFragment.java
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parentFragment.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.split_container, PhotoFragment.class, requireArguments())
+                        .commit();
             }
         });
 
