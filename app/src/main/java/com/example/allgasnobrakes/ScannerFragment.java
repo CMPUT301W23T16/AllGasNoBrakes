@@ -265,4 +265,10 @@ public class ScannerFragment extends Fragment {
 
         return root;
     }
+
+    @Override
+    public void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
+    }
 }
