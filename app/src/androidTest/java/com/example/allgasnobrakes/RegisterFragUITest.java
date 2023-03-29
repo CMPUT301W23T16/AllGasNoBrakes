@@ -71,7 +71,7 @@ public class RegisterFragUITest {
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.register);
 
         //This user already exists in the database
-        solo.enterText((EditText) solo.getView(R.id.username_edittext), "Algernon");
+        solo.enterText((EditText) solo.getView(R.id.username_edittext), "Alger");
         //Other info to fill input fields
         solo.enterText((EditText) solo.getView(R.id.email_edittext), "bunbury@gmail.com");
         solo.enterText((EditText) solo.getView(R.id.password_edittext), "Earnest");
@@ -89,6 +89,27 @@ public class RegisterFragUITest {
         //Checks that the register button is still shown (indicating the register fragment is shown)
         //If sign-up was successful, the QRList fragment would have been shown instead
         assertTrue("button not shown", (solo.getView(R.id.registerbutton)).isShown());
+    }
+    @Test
+    public void search(){
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.profile);
+        if (solo.waitForText("ROLL OUT")){
+            solo.clickOnButton("ROLL OUT");
+        }else{
+            solo.enterText((EditText) solo.getView(R.id.username_edittext), "Alger");
+            //Other info to fill input fields
+            solo.enterText((EditText) solo.getView(R.id.email_edittext), "bunbury@gmail.com");
+            solo.enterText((EditText) solo.getView(R.id.password_edittext), "Earnest");
+            solo.clickOnButton("Register");
+        }
+        //This user already exists in the database
+
+        solo.clickOnButton("Profile");
+        solo.enterText((EditText) solo.getView(R.id.search_friends), "Blitz");
+        solo.clickOnButton("Search");
+        solo.clickOnText("blitz@gmail.vom");
+        assertEquals(true, solo.waitForText("Blitz"));
     }
 
        //This test creates an account (through robotium). This test is dependent, it has to run last of the tests in this file

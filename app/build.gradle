@@ -15,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField ("String", "API_KEY", getApiKey())
     }
 
     buildTypes {
@@ -33,6 +34,12 @@ android {
             useJUnitPlatform()
         }
     }
+}
+String getApiKey() {
+    def propFile = rootProject.file("./local.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propFile))
+    return properties['APOD_API_KEY']
 }
 
 dependencies {
@@ -58,7 +65,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
-
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'

@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * A class that stores player profile summary information. Displays total QR codes and total score
  * @author fartar zhaoyu4
- * @version 2.0
+ * @version 3.0
  */
 public class QRCounter implements Serializable {
     private int totalQR;
@@ -66,6 +66,7 @@ public class QRCounter implements Serializable {
     public void update(String username, int QR, int score) {
         totalQR += QR;
         totalScore += score;
+
         DocumentReference documentReference =
                 FirebaseFirestore.getInstance().collection("Users").document(username);
 

@@ -17,7 +17,7 @@
         android:id="@+id/sort_order"
         android:layout_width="127dp"
         android:layout_height="58dp"
-        android:backgroundTint="@color/button_color"
+        android:backgroundTint="@color/purple"
         android:text="@string/sort_text"
         app:layout_constraintBottom_toTopOf="@+id/player_score"
         app:layout_constraintEnd_toStartOf="@+id/guideline"

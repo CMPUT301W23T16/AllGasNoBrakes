@@ -16,13 +16,15 @@
         app:flashButtonColor="@color/white"
         app:flashButtonVisible="true"
         app:maskColor="#6C000000"
-        />
+        >
+
+    </com.budiyev.android.codescanner.CodeScannerView>
 
     <TextView
         android:id="@+id/tv_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scanner_view"
+        android:layout_below="@+id/scannedView"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
@@ -50,13 +52,14 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="69dp"
         android:layout_toEndOf="@+id/comment"
+        android:backgroundTint="@color/purple"
         android:text="Confirm"
         android:textSize="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scanner_view"
+        android:layout_below="@+id/scannedView"
         android:text="location"
         android:textColor="@color/white"
         android:textSize="30dp" />
@@ -65,12 +68,28 @@
         android:id="@+id/location_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scanner_view"
+        android:layout_below="@+id/scannedView"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="-4dp"
         android:layout_marginEnd="195dp"
         android:backgroundTint="#7A7777"
         android:text="ToggleButton"
         android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/scannedView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:alpha="0"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:text="TextView" />
 
 </RelativeLayout>
