@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/image_description"
-        app:layout_constraintBottom_toTopOf="@+id/taking_photo"
+        app:layout_constraintBottom_toTopOf="@+id/captured_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,24 +28,8 @@
         android:fontFamily="serif-monospace"
         android:text="@string/photo_text_btn"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/upload_photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/captured_image" />
-
-    <Button
-        android:id="@+id/upload_photo"
-        android:layout_width="168dp"
-        android:layout_height="76dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/purple"
-        android:fontFamily="serif-monospace"
-        android:text="@string/upload_photo_text"
-        android:textStyle="bold"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taking_photo" />
 
