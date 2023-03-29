@@ -30,7 +30,6 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private String comment;
     private Object lat;
     private Object lon;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
      * Sort QR code by increasing score first, then alphabetically by name
@@ -102,7 +101,7 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.lat = lat;
         this.lon = lon;
 
-        DocumentReference QR = db.collection("QR").document(hashedQR);
+        DocumentReference QR = FirebaseFirestore.getInstance().collection("QR").document(hashedQR);
 
         QR.set(new HashMap<String, Object>(){{
             put("Face", face);
