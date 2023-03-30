@@ -32,7 +32,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
-
 /**
  * Handles the camera fragment for taking a photo.
  * @author theresag
@@ -45,6 +44,8 @@ public class PhotoFragment extends Fragment {
     private ImageView imgCamera;
     private ProgressDialog progressDialog;
     private Bitmap img;
+
+    private String downloadURL;
 
     public PhotoFragment() {
         super(R.layout.take_photo);
@@ -65,7 +66,7 @@ public class PhotoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final Activity activity = getActivity();
+        //final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.take_photo, container, false);
 
         Button btnCamera = root.findViewById(R.id.taking_photo);
@@ -78,28 +79,8 @@ public class PhotoFragment extends Fragment {
             public void onClick(View v) {
                 Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 someActivityResultLauncher.launch(iCamera);
-
             }
         });
-
-        //https://www.geeksforgeeks.org/how-to-open-camera-through-intent-and-display-captured-image-in-android/
-        //How to connect the xml and java file for taking a photo using the camera intent in Android Studio
-//        camera_id.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //https://developer.android.com/training/camera/camera-intents
-//                //Official android developer page about using camera intents
-//
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                assert activity != null;
-//                try {
-//                    activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//                } catch (ActivityNotFoundException e) {
-//                    Log.d("Camera", "onClick: "+e);
-//                }
-//
-//            }
-//        });
         return root;
     }
 
@@ -111,6 +92,7 @@ public class PhotoFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // There are no request codes
                         Intent data = result.getData();
+                        assert data != null;
                         img = (Bitmap)(data.getExtras().get("data"));
                         imgCamera.setImageBitmap(img);
                         compressImages();
@@ -136,6 +118,9 @@ public class PhotoFragment extends Fragment {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.cancel();
                 Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+
+                downloadURL = storageReference.getDownloadUrl().toString();
+                Log.d("Upload", "Download URL: "+downloadURL);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
