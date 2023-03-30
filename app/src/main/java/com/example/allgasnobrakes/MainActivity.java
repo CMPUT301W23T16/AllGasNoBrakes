@@ -22,12 +22,12 @@ public class MainActivity extends AppCompatActivity {
     private final FragmentManager fm = getSupportFragmentManager();
 //    private final int CAMERA_PERMISSION_CODE = 101;
 
-    private Leaderboard viewModel;
+    private PPFViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(Leaderboard.class);
+        viewModel = new ViewModelProvider(this).get(PPFViewModel.class);
         requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA }, 101);
 
 
@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         to register
          */
         if (savedInstanceState == null) {
-            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//            String id = "DAJ101";
+//            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            String id = "DAJ101";
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 //            db.useEmulator("10.0.2.2", 8080);

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
  * @author zhaoyu4
  * @version 1.0
  */
-public class Leaderboard extends ViewModel {
+public class PPFViewModel extends ViewModel {
     private final MutableLiveData<PlayerProfile> players = new MutableLiveData<>();
 
     public void selectPlayer(PlayerProfile player) {

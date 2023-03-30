@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_mid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <Button
         android:id="@+id/camera_button"
-        android:layout_width="127dp"
+        android:layout_width="100dp"
         android:layout_height="58dp"
         android:backgroundTint="@color/purple"
         android:fontFamily="monospace"
         android:text="@string/camera_text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profile_button"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_mid"
         app:layout_constraintStart_toEndOf="@+id/home_button" />
 
     <Button
         android:id="@+id/home_button"
-        android:layout_width="127dp"
+        android:layout_width="100dp"
         android:layout_height="58dp"
         android:backgroundTint="@color/purple"
         android:fontFamily="monospace"
@@ -28,12 +34,23 @@
 
     <Button
         android:id="@+id/profile_button"
-        android:layout_width="127dp"
+        android:layout_width="100dp"
         android:layout_height="58dp"
         android:backgroundTint="@color/purple"
         android:fontFamily="monospace"
         android:text="@string/profile_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/leaderboard_button"
+        android:layout_width="100dp"
+        android:layout_height="58dp"
+        android:backgroundTint="@color/purple"
+        android:fontFamily="monospace"
+        android:text="@string/leaderboard_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profile_button"
+        app:layout_constraintStart_toStartOf="@+id/vertical_mid" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -40,7 +40,7 @@ public class RegisterFragment extends Fragment {
     private EditText passwordEdittext;
 
     private FirebaseFirestore db;
-    private Leaderboard viewModel;
+    private PPFViewModel viewModel;
 
     public RegisterFragment() {
         super(R.layout.register);
@@ -64,7 +64,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(requireActivity()).get(Leaderboard.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(PPFViewModel.class);
         View view = inflater.inflate(R.layout.register, container, false);
         String deviceID = requireArguments().getString("deviceID");
 

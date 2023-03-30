@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.allgasnobrakes.views.LeaderboardFragment;
+
 /**
  * Handles menu bar operations
  * @author zhaoyu4
@@ -20,6 +22,7 @@ public class MenuBarFragment extends Fragment {
     private Button homeButton;
     private Button cameraButton;
     private Button profileButton;
+    private Button leaderboardButton;
 
     public MenuBarFragment() {
         super(R.layout.menu_bar);
@@ -47,6 +50,7 @@ public class MenuBarFragment extends Fragment {
         homeButton = view.findViewById(R.id.home_button);
         cameraButton = view.findViewById(R.id.camera_button);
         profileButton = view.findViewById(R.id.profile_button);
+        leaderboardButton = view.findViewById(R.id.leaderboard_button);
 
         // Switch to homepage
         homeButton.setOnClickListener(v ->
@@ -69,6 +73,14 @@ public class MenuBarFragment extends Fragment {
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.split_container, ProfileFragment.class, requireArguments())
+                        .commit()
+        );
+
+        // Switch to player profile page
+        leaderboardButton.setOnClickListener(v ->
+                parent.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.split_container, LeaderboardFragment.class, requireArguments())
                         .commit()
         );
         return view;

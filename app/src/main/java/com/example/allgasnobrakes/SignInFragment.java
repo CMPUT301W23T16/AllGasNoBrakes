@@ -19,8 +19,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Map;
-
 /**
  * Handles returning user (sign in) operations
  * @author zhaoyu4
@@ -28,7 +26,7 @@ import java.util.Map;
  */
 public class SignInFragment extends Fragment {
     private FirebaseFirestore db;
-    private Leaderboard viewModel;
+    private PPFViewModel viewModel;
     private TextView username;
     private Button rollOutButton;
 
@@ -51,7 +49,7 @@ public class SignInFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(requireActivity()).get(Leaderboard.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(PPFViewModel.class);
         View view = inflater.inflate(R.layout.sign_in, container, false);
         String lastUser = requireArguments().getString("LastUser");
 
