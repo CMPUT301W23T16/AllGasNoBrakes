@@ -1,18 +1,12 @@
 package com.example.allgasnobrakes;
 /**
- * geneartes a unique name
+ * generates a unique name
  * - 16 to the power of 6 unique possible names
- * @author zhaoyu5
- * @version 1.0
+ * @author zhaoyu5 zhaoyu4
+ * @version 2.0
  */
 public class NameGenerator {
-    private String hashedQR;
-
-    public NameGenerator(String hashedQR) {
-        this.hashedQR = hashedQR;
-    }
-
-    public String Generate(){
+    public static String Generate(String hashedQR) {
         String[] bit1 = {"Frigid ","Freezing ","Cold ","Chilly ", "Brisk ","Cool ","Mild ","Warm ","Hot ", "Scorching ","Roasting ", "Blazing ", "Toasty ", "Sweltering ","Scalding ","Steaming "};
         String[] bit2 = {"Flo","Glo","Plo","Klo", "Tlo","Rlo","Qlo","Wlo","Slo", "Hlo","Blo", "Dlo", "Clo", "Mlo","Nlo","Vlo"};
         String[] bit3 = {"Fo","Go","Po","Ko", "To","Ro","Qo","Wo","So", "Ho","Bo", "Do", "Co", "Mo","No","Vo"};

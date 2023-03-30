@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "BlitzWrecker" ]
+    branches: [ "AryanSri0" ]
   pull_request:
-    branches: [ "BlitzWrecker" ]
+    branches: [ "AryanSri0" ]
 
 jobs:
   build:
@@ -23,6 +23,7 @@ jobs:
       env:
         APOD_API_KEY: $
       run: echo APOD_API_KEY=\"$APOD_API_KEY\" > ./local.properties
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle

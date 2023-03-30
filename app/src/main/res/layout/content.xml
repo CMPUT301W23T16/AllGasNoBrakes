@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/Hash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:paddingHorizontal="10dp"
-            android:textSize="30sp"
-            android:text="Hash" />
+            android:paddingTop="10dp"
+            android:text="Hash"
+            android:textColor="#000000"
+            android:textSize="30sp" />
 
     </LinearLayout>
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/Score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:hint="Score"
             android:paddingTop="10dp"
-            android:textSize="25sp"
-            android:hint="Score" />
+            android:textColorHint="#000000"
+            android:textSize="25sp" />
 
     </LinearLayout>
 </LinearLayout>
