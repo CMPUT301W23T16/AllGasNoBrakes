@@ -38,7 +38,15 @@ public class LeaderboardFragment extends Fragment {
         viewPager.setAdapter(leaderBoardAdapter);
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText("OBJECT " + (position + 1))
-        ).attach();
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        if (position == 0) {
+                            tab.setText("The One and Only");
+                        } else if (position == 1) {
+                            tab.setText("The Hardcore Collectors");
+                        }
+                    }
+                }).attach();
     }
 }
