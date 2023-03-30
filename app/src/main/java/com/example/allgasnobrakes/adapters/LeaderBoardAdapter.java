@@ -19,11 +19,21 @@ public class LeaderBoardAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
-        return new PlayerListFragment();
+        Fragment fragment = new PlayerListFragment();
+        Bundle bundle = new Bundle();
+
+        if (position == 0) {
+            bundle.putInt("type", 0);
+        } else if (position == 1) {
+            bundle.putInt("type", 1);
+        }
+
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     public int getItemCount() {
-        return 100;
+        return 2;
     }
 }

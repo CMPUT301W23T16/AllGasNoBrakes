@@ -10,10 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.allgasnobrakes.PlayerProfile;
 import com.example.allgasnobrakes.R;
 
+import java.util.ArrayList;
+
 public class PlayerListFragment extends Fragment {
-    private RecyclerView playerList;
+    private RecyclerView playerRecyclerView;
+    private ArrayList<PlayerProfile> playersList;
 
     public PlayerListFragment() {
         super(R.layout.player_list);
@@ -24,7 +28,13 @@ public class PlayerListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final Activity activity = getActivity();
 
-        playerList = view.findViewById(R.id.player_list);
-        playerList.setLayoutManager(new LinearLayoutManager(activity));
+        playerRecyclerView = view.findViewById(R.id.player_list);
+        playerRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        playersList = getPlayersList(requireArguments().getInt("type"));
+    }
+
+    private ArrayList<PlayerProfile> getPlayersList(int type) {
+        ArrayList<PlayerProfile> players = new ArrayList<>();
+        return players;
     }
 }

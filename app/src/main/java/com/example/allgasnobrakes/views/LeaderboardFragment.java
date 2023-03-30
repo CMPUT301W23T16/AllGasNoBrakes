@@ -38,7 +38,7 @@ public class LeaderboardFragment extends Fragment {
         viewPager.setAdapter(leaderBoardAdapter);
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText("OBJECT")
+                (tab, position) -> tab.setText("OBJECT " + (position + 1))
         ).attach();
     }
 }
