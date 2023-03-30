@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -98,10 +99,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     }
 
     public int getHighestScore() {
-        int size = QRList.size() - 1;
-        int scoreAtFirst = QRList.get(0).getScore();
-        int scoreAtLast = QRList.get(size).getScore();
-        return Math.max(scoreAtFirst, scoreAtLast);
+        return profileSummary.getHighestScore();
     }
 
     public void setUsername(String username) {
@@ -112,12 +110,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setQRList(ArrayList<HashedQR> QRList) {
-        this.QRList = QRList;
+    public void setHighestScore(Number highestScore) {
+        profileSummary.setHighestScore(highestScore.intValue());
     }
 
     /**
@@ -205,8 +199,26 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                 .set(meta);
 
         FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
-                .update("OwnedBy", FieldValue.arrayUnion(username));
-
+                .update("OwnedBy", FieldValue.arrayUnion(username))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updatePlayerCount(QR.getHashedQR());
+                    }
+                });
         Log.d("update", "2");
+    }
+
+    private void updatePlayerCount(String hash) {
+        FirebaseFirestore.getInstance().collection("QR").document(hash)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot qr = task.getResult();
+                        int arraySize = ((ArrayList<String>) qr.get("OwnedBy")).size();
+                        FirebaseFirestore.getInstance().collection("QR").document(hash)
+                                .update("PlayerCount", arraySize);
+                    }
+                });
     }
 }
