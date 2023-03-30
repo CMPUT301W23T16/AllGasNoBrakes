@@ -20,6 +20,7 @@ public class LeaderboardFragment extends Fragment {
         super(R.layout.leaderboard);
     }
 
+    LeaderBoardAdapter leaderBoardAdapter;
     ViewPager2 viewPager;
 
     @Nullable
@@ -32,12 +33,12 @@ public class LeaderboardFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        LeaderBoardAdapter leaderBoardAdapter = new LeaderBoardAdapter(this);
+        leaderBoardAdapter = new LeaderBoardAdapter(this);
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(leaderBoardAdapter);
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText("OBJECT " + (position + 1))
+                (tab, position) -> tab.setText("OBJECT")
         ).attach();
     }
 }

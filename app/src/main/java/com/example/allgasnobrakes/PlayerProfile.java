@@ -93,6 +93,17 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         return profileSummary;
     }
 
+    public int getTotalScore() {
+        return profileSummary.getTotalScore();
+    }
+
+    public int getHighestScore() {
+        int size = QRList.size() - 1;
+        int scoreAtFirst = QRList.get(0).getScore();
+        int scoreAtLast = QRList.get(size).getScore();
+        return Math.max(scoreAtFirst, scoreAtLast);
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

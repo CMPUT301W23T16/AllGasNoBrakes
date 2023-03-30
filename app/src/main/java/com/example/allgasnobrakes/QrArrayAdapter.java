@@ -27,8 +27,6 @@ public class QrArrayAdapter extends RecyclerView.Adapter<QrArrayAdapter.ViewHold
         this.item = item1;
     }
 
-
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
