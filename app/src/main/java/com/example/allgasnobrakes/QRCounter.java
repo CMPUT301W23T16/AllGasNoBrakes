@@ -21,7 +21,6 @@ import java.util.Locale;
 public class QRCounter implements Serializable {
     private int totalQR;
     private int totalScore;
-    private int highestScore = 0;
 
     /**
      *
@@ -41,20 +40,12 @@ public class QRCounter implements Serializable {
         return totalScore;
     }
 
-    public int getHighestScore() {
-        return highestScore;
-    }
-
     public void setTotalQR(int totalQR) {
         this.totalQR = totalQR;
     }
 
     public void setTotalScore(int totalScore) {
         this.totalScore = totalScore;
-    }
-
-    public void setHighestScore(int highestScore) {
-        this.highestScore = highestScore;
     }
 
     /**

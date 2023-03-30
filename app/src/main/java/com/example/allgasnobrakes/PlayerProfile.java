@@ -30,6 +30,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     private String username;
     private String email;
     private String password;
+    private int displayMetric;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
 
@@ -98,8 +99,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         return profileSummary.getTotalScore();
     }
 
-    public int getHighestScore() {
-        return profileSummary.getHighestScore();
+    public int getDisplayMetric() {
+        return displayMetric;
     }
 
     public void setUsername(String username) {
@@ -110,8 +111,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         this.email = email;
     }
 
-    public void setHighestScore(Number highestScore) {
-        profileSummary.setHighestScore(highestScore.intValue());
+    public void setDisplayMetric(Number displayMetric) {
+        this.displayMetric = displayMetric.intValue();
     }
 
     /**

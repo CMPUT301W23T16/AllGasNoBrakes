@@ -72,7 +72,7 @@ public class PlayerListFragment extends Fragment {
                         for (DocumentSnapshot doc: task.getResult()) {
                             String playerName = ((ArrayList<String>) doc.get("OwnedBy")).get(0);
                             PlayerProfile player = new PlayerProfile(playerName, "");
-                            player.setHighestScore((Number) doc.get("Score"));
+                            player.setDisplayMetric((Number) doc.get("Score"));
                             players.add(player);
                             playerListAdapter.notifyItemInserted(players.size() - 1);
                         }

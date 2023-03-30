@@ -39,7 +39,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         PlayerProfile player = players.get(position);
 
         holder.username.setText(player.getUsername());
-        holder.totalScore.setText(Integer.toString(player.getHighestScore()));
+        holder.totalScore.setText(Integer.toString(player.getDisplayMetric()));
 
         holder.itemView.setOnClickListener(view -> {
             item.onItemClick(players.get(position));
@@ -62,8 +62,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            username = (TextView) itemView.findViewById(R.id.Hash);
-            totalScore = (TextView) itemView.findViewById(R.id.Score);
+            username = itemView.findViewById(R.id.Hash);
+            totalScore = itemView.findViewById(R.id.Score);
         }
     }
 }
