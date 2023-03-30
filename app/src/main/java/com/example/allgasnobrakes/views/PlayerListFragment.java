@@ -66,6 +66,7 @@ public class PlayerListFragment extends Fragment {
         FirebaseFirestore.getInstance().collection("QR")
                 .whereEqualTo("PlayerCount", 1)
                 .orderBy("Score", Query.Direction.DESCENDING)
+                .limit(10)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -83,7 +84,21 @@ public class PlayerListFragment extends Fragment {
 
     private ArrayList<PlayerProfile> getHighestTotal() {
         ArrayList<PlayerProfile> players = new ArrayList<>();
-        FirebaseFirestore.getInstance();
+        FirebaseFirestore.getInstance().collection("Users")
+                .orderBy("Total Score", Query.Direction.DESCENDING)
+                .limit(10)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (DocumentSnapshot doc: task.getResult()) {
+                            String playerName = doc.getId();
+                            PlayerProfile player = new PlayerProfile(playerName, "");
+                            player.setDisplayMetric((Number) doc.get("Total Score"));
+                            players.add(player);
+                            playerListAdapter.notifyItemInserted(players.size() - 1);
+                        }
+                    }
+                });
         return players;
     }
 
