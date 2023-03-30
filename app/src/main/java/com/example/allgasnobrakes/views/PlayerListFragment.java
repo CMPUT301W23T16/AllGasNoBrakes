@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.allgasnobrakes.PlayerProfile;
 import com.example.allgasnobrakes.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -30,11 +31,28 @@ public class PlayerListFragment extends Fragment {
 
         playerRecyclerView = view.findViewById(R.id.player_list);
         playerRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        playersList = getPlayersList(requireArguments().getInt("type"));
+        getPlayersList(requireArguments().getInt("type"));
     }
 
-    private ArrayList<PlayerProfile> getPlayersList(int type) {
+    private void getPlayersList(int type) {
+        if (type == 0) {
+            playersList = getHighestUnique();
+        } else if (type == 1){
+            playersList = getHighestTotal();
+        }
+
+    }
+
+    private ArrayList<PlayerProfile> getHighestUnique() {
         ArrayList<PlayerProfile> players = new ArrayList<>();
+        FirebaseFirestore.getInstance();
         return players;
     }
+
+    private ArrayList<PlayerProfile> getHighestTotal() {
+        ArrayList<PlayerProfile> players = new ArrayList<>();
+        FirebaseFirestore.getInstance();
+        return players;
+    }
+
 }
