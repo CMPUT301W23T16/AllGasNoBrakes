@@ -288,8 +288,13 @@ public class ScannerFragment extends Fragment {
                                 HashedQR newQR = new HashedQR(sha256hex, total, name, car,
                                         comment.getText().toString(),
                                         QRData.get("Latitude"), QRData.get("Longitude"));
-                                Toast.makeText(getActivity(), newQR.getLat().toString(), Toast.LENGTH_SHORT).show();
+
                                 playerProfile.addQR(newQR);
+                                HashMap<String, Object> meta = new HashMap<>();
+                                meta.put("Lat",QRData.get("Latitude"));
+                                meta.put("Lon",QRData.get("Longitude"));
+                                FirebaseFirestore.getInstance().collection("Geo").document( QRData.get("Latitude").toString() + ","+  QRData.get("Longitude").toString())
+                                        .set(meta);
                             }
                         });
                     }
@@ -302,11 +307,9 @@ public class ScannerFragment extends Fragment {
                     HashedQR newQR = new HashedQR(sha256hex, total, name, car,
                             comment.getText().toString(),
                             QRData.get("Latitude"), QRData.get("Longitude"));
-                    Toast.makeText(getActivity(), newQR.getLat().toString(), Toast.LENGTH_SHORT).show();
+
                     playerProfile.addQR(newQR);
                 }
-
-
             }
         });
     }
