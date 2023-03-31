@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -175,7 +176,7 @@ public class ScannerFragment extends Fragment {
                     HashMap<String, Object> QRData = new HashMap<>();
                     @Override
                     public void onClick(View v) {
-                        if (location.isChecked()) {
+                        if (location.isChecked()&& sha256hex != null) {
                             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                                 // When permission is granted
                                 // Call method
@@ -222,6 +223,11 @@ public class ScannerFragment extends Fragment {
                                             }
                                             client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                                         }
+                                        HashedQR newQR = new HashedQR(sha256hex, total, name, car,
+                                                comment.getText().toString(),
+                                                QRData.get("Latitude"), QRData.get("Longitude"));
+                                        Toast.makeText(activity, newQR.getLat().toString(), Toast.LENGTH_SHORT).show();
+                                        playerProfile.addQR(newQR);
                                     }
                                 });
                             }
@@ -231,15 +237,14 @@ public class ScannerFragment extends Fragment {
                             // open location setting
                             QRData.put("Longitude", "");
                             QRData.put("Latitude", "");
-                        }
-
-                        if (sha256hex != null ) {
                             HashedQR newQR = new HashedQR(sha256hex, total, name, car,
                                     comment.getText().toString(),
                                     QRData.get("Latitude"), QRData.get("Longitude"));
-
+                            Toast.makeText(activity, newQR.getLat().toString(), Toast.LENGTH_SHORT).show();
                             playerProfile.addQR(newQR);
                         }
+
+
                     }
 
                 });

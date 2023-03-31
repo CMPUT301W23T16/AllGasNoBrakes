@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,15 +62,16 @@ public class QRListFragment extends Fragment  {
             @Override
             public void onItemClick(HashedQR hashedQR) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference docRef = db.collection("Users").document(user.getUsername()).collection("QRRef").document(hashedQR.getHashedQR());
+                DocumentReference docRef = db.collection("QR").document(hashedQR.getHashedQR()).collection("Players").document(user.getUsername());
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             // Document found in the offline cache
                             final String comment = (String) task.getResult().get("Comment");
-                            final String longitude = (String) task.getResult().get("Longitude");
-                            final String latitude = (String) task.getResult().get("Latitude");
+                            final String longitude = (String) task.getResult().get("Lon");
+                            final String latitude = (String) task.getResult().get("Lat");
+
                             HashedQrFragment ADSF1 = new HashedQrFragment();
                             ADSF1.main(hashedQR,comment,longitude,latitude);
                             ADSF1.show(getActivity().getSupportFragmentManager(), "finding");

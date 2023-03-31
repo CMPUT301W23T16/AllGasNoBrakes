@@ -1,6 +1,7 @@
 package com.example.allgasnobrakes;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Timer;
 
 /**
  * Contains player profile information
@@ -186,9 +188,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         HashMap<String, Object> meta = new HashMap<>();
 
         meta.put("Comment", QR.getComment());
-        meta.put("Lat", QR.getLat());
-        meta.put("Lon", QR.getLon());
-
+        meta.put("Lat", QR.getLat().toString());
+        meta.put("Lon", QR.getLon().toString());
         FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
                 .collection("Players").document(username)
                 .set(meta);
