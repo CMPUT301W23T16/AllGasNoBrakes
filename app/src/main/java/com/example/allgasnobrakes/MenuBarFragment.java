@@ -20,7 +20,7 @@ public class MenuBarFragment extends Fragment {
     private Button homeButton;
     private Button cameraButton;
     private Button profileButton;
-
+    private Button mapButton;
     public MenuBarFragment() {
         super(R.layout.menu_bar);
     }
@@ -47,7 +47,7 @@ public class MenuBarFragment extends Fragment {
         homeButton = view.findViewById(R.id.home_button);
         cameraButton = view.findViewById(R.id.camera_button);
         profileButton = view.findViewById(R.id.profile_button);
-
+        mapButton = view.findViewById(R.id.location_button);
         // Switch to homepage
         homeButton.setOnClickListener(v ->
                 parent.beginTransaction()
@@ -69,6 +69,12 @@ public class MenuBarFragment extends Fragment {
                 parent.beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.split_container, ProfileFragment.class, requireArguments())
+                        .commit()
+        );
+        mapButton.setOnClickListener(v ->
+                parent.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.split_container, mapFragment.class, requireArguments())
                         .commit()
         );
         return view;
