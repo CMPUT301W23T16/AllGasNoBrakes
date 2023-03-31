@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -29,9 +30,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(Leaderboard.class);
         requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA }, 101);
-
-
         setContentView(R.layout.activity_main);
+
+        //Setting Day/Night Mode for the app (hopefully)
+        //nirav kalola and Bruno Bieri on how your app can handle Day/Night mode for system default
+        //https://stackoverflow.com/questions/18001551/day-night-theme-for-android-app#:~:text=For%20Setting%20Default%20Day,Mode%20use%20AppCompatDelegate.setDefaultNightMode%20%28AppCompatDelegate.MODE_NIGHT_NO%29%3B
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
         /*
         We check if there has been a previous log in on the device. If the is, we log in the last
