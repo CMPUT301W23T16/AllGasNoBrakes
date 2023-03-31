@@ -59,6 +59,8 @@ import java.util.Locale;
  */
 public class ScannerFragment extends Fragment {
     private CodeScanner mCodeScanner;
+    private CodeScannerView scannerView;
+    private TextView scannedView;
     private ToggleButton location;
     private Button confirm;
     private EditText comment;
@@ -94,10 +96,10 @@ public class ScannerFragment extends Fragment {
         final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.scanner, container, false);
 
-        CodeScannerView scannerView = root.findViewById(R.id.scanner_view);
+        scannerView = root.findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(activity, scannerView);
 
-        TextView scannedView = root.findViewById(R.id.scannedView);
+        scannedView = root.findViewById(R.id.scannedView);
         client = LocationServices.getFusedLocationProviderClient(getActivity());
 
         location = root.findViewById(R.id.location_button);
@@ -224,6 +226,9 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        scannedView.setAlpha(0f);
+        scannerView.setVisibility(View.VISIBLE);
+        scannerView.setAlpha(1f);
         mCodeScanner.startPreview();
     }
 
