@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.allgasnobrakes.FoundPlayerFragment;
 import com.example.allgasnobrakes.PlayerProfile;
 import com.example.allgasnobrakes.R;
 import com.example.allgasnobrakes.adapters.PlayerListAdapter;
@@ -44,7 +45,9 @@ public class PlayerListFragment extends Fragment {
                 new PlayerListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(PlayerProfile playerProfile) {
-
+                FoundPlayerFragment ADSF1 = new FoundPlayerFragment();
+                ADSF1.main(playerProfile.getUsername(), playerProfile.getEmail());
+                ADSF1.show(getActivity().getSupportFragmentManager(), "Finding");
             }
         });
 
