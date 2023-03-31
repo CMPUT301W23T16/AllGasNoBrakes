@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.allgasnobrakes.views.BlankFragment;
+import com.example.allgasnobrakes.views.MapFragment;
 import com.example.allgasnobrakes.views.ProfileFragment;
 import com.example.allgasnobrakes.views.QRListFragment;
 import com.example.allgasnobrakes.views.ScannerFragment;
@@ -31,9 +32,9 @@ public class MenuBarAdapter extends FragmentStateAdapter {
             return qrListFragment;
 
         } else if (position == 1) {
-            QRListFragment qrListFragment = new QRListFragment();
-            qrListFragment.setArguments(bundle);
-            return qrListFragment;
+            MapFragment mapFragment = new MapFragment();
+            mapFragment.setArguments(bundle);
+            return mapFragment;
 
         } else if (position == 2) {
             ScannerFragment scannerFragment = new ScannerFragment();

@@ -12,7 +12,7 @@ public class NameGenerator {
         String[] bit3 = {"Fo","Go","Po","Ko", "To","Ro","Qo","Wo","So", "Ho","Bo", "Do", "Co", "Mo","No","Vo"};
         String[] bit4 = {"Big","Colossal","Gigantic","Huge", "Immense","Large","Little","Massive","Microscopic", "Miniature","Puny", "Small", "Tiny", "Teeny","Petite","Short"};
         String[] bit5 = {"Attractive","Bald","Beautiful","Chubby", "Clean","Dazzling","Elegant","Fancy","Handsome", "Gorgeous","Muscular", "Skinny", "Stocky", "Lazy","Scary","Grumpy"};
-        String[] bit6 = {"Chicken","Bear","Bat","Crab", "Crow","Duck","Elephant","Fish","Hamster", "Gorilla","Moose", "Shark", "Snail", "Lobster","Scorpion","Tiger"};
+        String[] bit6 = {"Tesla", "BMW", "Ferrari", "Ford", "Porsche", "Honda", "Lamborghini", "Toyota", "Bentley","Maserati", "Audi", "lexus","Acura","Rolls Royce", "Mercedes-Benz","Bugatti"};
         String name = bit1[Integer.parseInt(String.format("%c",hashedQR.charAt(0)), 16)];
         name += bit2[Integer.parseInt(String.format("%c",hashedQR.charAt(1)), 16)];
         name += bit3[Integer.parseInt(String.format("%c",hashedQR.charAt(2)), 16)];
