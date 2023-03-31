@@ -26,6 +26,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -120,7 +122,8 @@ public class PhotoFragment extends Fragment {
                 Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
 
                 downloadURL = storageReference.getDownloadUrl().toString();
-                Log.d("Upload", "Download URL: "+downloadURL);
+//                Log.d("Upload", "Download URL: "+downloadURL);
+                linkToQRCode();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -129,5 +132,14 @@ public class PhotoFragment extends Fragment {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void linkToQRCode() {
+        //get the hash code from the bundle
+        String hashCode = requireArguments().getString("hash code id");
+
+        //update the QR doc with the new information
+        FirebaseFirestore.getInstance().collection("QR").document(hashCode)
+                .update("Images", FieldValue.arrayUnion(downloadURL));
     }
 }

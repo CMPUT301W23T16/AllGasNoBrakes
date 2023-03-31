@@ -178,7 +178,6 @@ public class ScannerFragment extends Fragment {
                 confirm.setOnClickListener(new View.OnClickListener() {
                     HashMap<String, Object> QRData = new HashMap<>();
 
-
                     @Override
                     public void onClick(View v) {
                         if (location.isChecked()) {
@@ -263,13 +262,16 @@ public class ScannerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (qrScanned == true) {  //QR code has already been scanned
+                    Bundle photo_bundle = new Bundle();
+                    photo_bundle.putString("hash code id", sha256hex);
+                    
                     parentFragment.beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.split_container, PhotoFragment.class, requireArguments())
+                            .replace(R.id.split_container, PhotoFragment.class, photo_bundle)
                             .commit();
                 } else {  //A QR code has not been scanned yet
                     Context context = getActivity();
-                    CharSequence text = "No QR Code scanned. Please try again";
+                    CharSequence text = "Please click CONFIRM first to save the QR code";
                     int duration = Toast.LENGTH_LONG;
 
                     Toast toast = Toast.makeText(context, text, duration);
