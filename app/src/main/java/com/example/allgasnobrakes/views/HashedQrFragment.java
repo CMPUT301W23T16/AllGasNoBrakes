@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.allgasnobrakes.models.HashedQR;
+import com.example.allgasnobrakes.R;
 
 /**
  * HashedQrFragment, displays all information about QRfragment

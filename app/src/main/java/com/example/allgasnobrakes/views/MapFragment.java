@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -8,19 +8,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.allgasnobrakes.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,9 +30,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.SphericalUtil;
 
-public class mapFragment extends Fragment {
+
+public class MapFragment extends Fragment {
     private GoogleMap mMap;
-    public mapFragment() {
+    private SupportMapFragment supportMapFragment;
+
+    public MapFragment() {
         super(R.layout.scanner);
     }
     FusedLocationProviderClient client;
@@ -41,9 +44,20 @@ public class mapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.map, container, false);
-        client = LocationServices.getFusedLocationProviderClient(getActivity());
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
+        return root;
+    }
 
+    @Override
+    public void onPause() {
+        mMap.clear();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -75,8 +89,6 @@ public class mapFragment extends Fragment {
                                         if (SphericalUtil.computeDistanceBetween(yourLatLang, mMap.addMarker(markerOptions).getPosition()) < 1200) {
                                             mMap.addMarker(markerOptions).setVisible(true);
                                         }
-
-
                                     }
                                 }
                             });
@@ -84,13 +96,7 @@ public class mapFragment extends Fragment {
                     }
                 });
                 googleMap.setMyLocationEnabled(true);
-
-
-
-
             }
         });
-        return root;
     }
-
 }

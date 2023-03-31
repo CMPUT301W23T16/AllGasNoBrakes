@@ -7,7 +7,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/split_container"
-        android:name="com.example.allgasnobrakes.BlankFragment"
+        android:name="com.example.allgasnobrakes.views.BlankFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/split"
@@ -25,7 +25,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/menu_bar_container"
-        android:name="com.example.allgasnobrakes.BlankFragment"
+        android:name="com.example.allgasnobrakes.views.BlankFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

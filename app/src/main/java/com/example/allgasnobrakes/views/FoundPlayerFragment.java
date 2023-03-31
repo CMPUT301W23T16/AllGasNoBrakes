@@ -1,24 +1,22 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.allgasnobrakes.models.HashedQR;
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.adapters.QrArrayAdapter;
+import com.example.allgasnobrakes.R;
+
 /**
  * foundplayerfragment, displays searched player profile
  * @author zhaoyu5 zhaoyu4

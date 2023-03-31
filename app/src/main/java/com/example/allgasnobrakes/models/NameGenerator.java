@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.models;
 /**
  * generates a unique name
  * - 16 to the power of 6 unique possible names
