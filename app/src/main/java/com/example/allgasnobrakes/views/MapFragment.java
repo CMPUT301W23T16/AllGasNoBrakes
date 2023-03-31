@@ -78,7 +78,6 @@ public class MapFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.clear();
                 LatLng location = new LatLng(Double.parseDouble(lat.getText().toString()),Double.parseDouble(lon.getText().toString()));
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(location).visible(true).icon(getMarkerIcon("#2243ff"));
