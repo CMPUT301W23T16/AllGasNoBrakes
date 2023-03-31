@@ -1,4 +1,4 @@
-name: Android CI
+name: BlitzWrecker CI
 
 on:
   push:

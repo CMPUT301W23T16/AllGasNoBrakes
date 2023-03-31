@@ -37,26 +37,28 @@
         android:id="@+id/comment"
         android:layout_width="226dp"
         android:layout_height="58dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="28dp"
         android:layout_marginBottom="60dp"
         android:ems="10"
         android:fontFamily="serif-monospace"
-        android:hint="Comment"
+        android:hint="@string/comment_hint"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/photo_taking_btn"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_button"
+        app:layout_constraintVertical_bias="0.98" />
 
     <Button
         android:id="@+id/confirm_button"
-        android:layout_width="145dp"
-        android:layout_height="59dp"
+        android:layout_width="134dp"
+        android:layout_height="57dp"
         android:layout_marginBottom="60dp"
         android:backgroundTint="@color/purple"
         android:fontFamily="serif-monospace"
-        android:text="Confirm"
+        android:text="@string/confirm_btn_text"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/photo_taking_btn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,23 +66,30 @@
         app:layout_constraintStart_toEndOf="@+id/comment" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_width="178dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="36dp"
         android:fontFamily="serif-monospace"
-        android:text="location"
+        android:text="@string/location_label"
         android:textColor="@color/white"
-        android:textSize="30dp"
+        android:textSize="35dp"
         app:layout_constraintBottom_toTopOf="@+id/comment"
         app:layout_constraintEnd_toStartOf="@+id/location_button"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_textView"
+        app:layout_constraintVertical_bias="0.879" />
 
     <ToggleButton
         android:id="@+id/location_button"
-        android:layout_width="102dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
+        android:layout_width="109dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/purple"
         android:fontFamily="serif-monospace"
@@ -88,7 +97,10 @@
         android:textColor="@color/white"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/confirm_button"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/tv_textView"
+        app:layout_constraintVertical_bias="0.809" />
 
     <TextView
         android:id="@+id/scannedView"
@@ -105,14 +117,15 @@
 
     <Button
         android:id="@+id/photo_taking_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="180dp"
+        android:layout_width="129dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="120dp"
         android:backgroundTint="@color/purple"
         android:fontFamily="serif-monospace"
         android:text="@string/taking_photo_txt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
