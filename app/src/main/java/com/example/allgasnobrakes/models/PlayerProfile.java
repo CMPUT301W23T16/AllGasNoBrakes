@@ -159,7 +159,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                             QRList.add(newQR);
                             QrAdapter.notifyDataSetChanged();
                         }
-                        // Notify the recycler view to update
+                        // Notify the views to update
                         setChanged();
                         notifyObservers();
                     }
