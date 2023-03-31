@@ -10,8 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.allgasnobrakes.FoundPlayerFragment;
-import com.example.allgasnobrakes.PlayerProfile;
+import com.example.allgasnobrakes.models.PlayerProfile;
 import com.example.allgasnobrakes.R;
 import com.example.allgasnobrakes.adapters.PlayerListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;

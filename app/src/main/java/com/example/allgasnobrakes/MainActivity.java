@@ -3,16 +3,23 @@ package com.example.allgasnobrakes;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.allgasnobrakes.adapters.MenuBarAdapter;
+import com.example.allgasnobrakes.models.PPFViewModel;
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.views.RegisterFragment;
+import com.example.allgasnobrakes.views.SignInFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,9 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
     private PlayerProfile currentUser;
     private final FragmentManager fm = getSupportFragmentManager();
-//    private final int CAMERA_PERMISSION_CODE = 101;
-
     private PPFViewModel viewModel;
+    private MenuBarAdapter menuBarAdapter;
+    private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,18 +89,36 @@ public class MainActivity extends AppCompatActivity {
         We have received player information, load into the homepage
          */
         viewModel.getSelectedPlayer().observe(this, item -> {
-            setContentView(R.layout.split_fragment);
+            setContentView(R.layout.menu_bar);
             currentUser = item;
+
+            menuBarAdapter = new MenuBarAdapter(this);
+            viewPager = findViewById(R.id.menu_pager);
+            viewPager.setAdapter(menuBarAdapter);
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("User", currentUser);
             bundle.putString("SortOrder", "Highest Score");
+            menuBarAdapter.setBundle(bundle);
 
-            fm.beginTransaction()
-                    .setReorderingAllowed(true)
-                    .replace(R.id.split_container, QRListFragment.class, bundle)
-                    .replace(R.id.menu_bar_container, MenuBarFragment.class, bundle)
-                    .commit();
+            TabLayout tabLayout = findViewById(R.id.menu_bar_tab_layout);
+            new TabLayoutMediator(tabLayout, viewPager,
+                    new TabLayoutMediator.TabConfigurationStrategy() {
+                        @Override
+                        public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                            if (position == 0) {
+                                tab.setText("Home");
+                            } else if (position == 1) {
+                                tab.setText("Map");
+                            } else if (position == 2) {
+                                tab.setText("Camera");
+                            } else if (position == 3) {
+                                tab.setText("Leaderboard");
+                            } else if (position == 4) {
+                                tab.setText("Profile");
+                            }
+                        }
+                    }).attach();
         });
 
     }

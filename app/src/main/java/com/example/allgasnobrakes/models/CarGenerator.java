@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.models;
 
 /**
 * generates a unique visual representation

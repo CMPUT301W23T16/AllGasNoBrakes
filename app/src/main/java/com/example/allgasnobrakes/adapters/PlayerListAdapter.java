@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.allgasnobrakes.PlayerProfile;
+import com.example.allgasnobrakes.models.PlayerProfile;
 import com.example.allgasnobrakes.R;
 
 import java.util.ArrayList;

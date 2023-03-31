@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -13,6 +13,8 @@ import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.allgasnobrakes.R;
 
 
 /**

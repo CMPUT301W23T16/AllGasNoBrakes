@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -27,6 +27,11 @@ import androidx.fragment.app.FragmentManager;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.example.allgasnobrakes.models.CarGenerator;
+import com.example.allgasnobrakes.models.HashedQR;
+import com.example.allgasnobrakes.models.NameGenerator;
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -40,7 +45,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -90,7 +94,6 @@ public class ScannerFragment extends Fragment {
 
         CodeScannerView scannerView = root.findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(activity, scannerView);
-        mCodeScanner.startPreview();
 
         TextView scannedView = root.findViewById(R.id.scannedView);
         client = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -214,6 +217,12 @@ public class ScannerFragment extends Fragment {
     public void onPause() {
         mCodeScanner.releaseResources();
         super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
     }
 
     public void setConfBtn() {

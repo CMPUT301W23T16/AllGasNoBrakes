@@ -1,56 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/vertical_mid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/menu_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/camera_button"
-        android:layout_width="100dp"
-        android:layout_height="58dp"
-        android:backgroundTint="@color/purple"
-        android:fontFamily="monospace"
-        android:text="@string/camera_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/vertical_mid"
-        app:layout_constraintStart_toEndOf="@+id/home_button" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/menu_bar_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/home_button"
-        android:layout_width="100dp"
-        android:layout_height="58dp"
-        android:backgroundTint="@color/purple"
-        android:fontFamily="monospace"
-        android:text="@string/home_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/profile_button"
-        android:layout_width="100dp"
-        android:layout_height="58dp"
-        android:backgroundTint="@color/purple"
-        android:fontFamily="monospace"
-        android:text="@string/profile_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/leaderboard_button"
-        android:layout_width="100dp"
-        android:layout_height="58dp"
-        android:backgroundTint="@color/purple"
-        android:fontFamily="monospace"
-        android:text="@string/leaderboard_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profile_button"
-        app:layout_constraintStart_toStartOf="@+id/vertical_mid" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
