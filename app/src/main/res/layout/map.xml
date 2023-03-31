@@ -12,21 +12,23 @@
         android:layout_height="550dp"
         tools:context=".mapFragment" />
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/lat"
         android:layout_width="131dp"
         android:layout_height="47dp"
         android:hint="Latitude"
-        app:layout_constraintEnd_toStartOf="@+id/editText2"
+        app:layout_constraintEnd_toStartOf="@+id/lon"
         app:layout_constraintHorizontal_bias="0.271"
+        android:inputType="numberSigned|numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/map1"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="505dp" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/lon"
         android:layout_width="111dp"
         android:layout_height="47dp"
         android:layout_marginEnd="24dp"
+        android:inputType="numberSigned|numberDecimal"
         android:hint="Longitude"
         app:layout_constraintTop_toBottomOf="@+id/map1"
         app:layout_constraintEnd_toStartOf="@+id/button"
@@ -36,7 +38,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Search"
         app:layout_constraintTop_toBottomOf="@+id/map1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constrainedHeight="@+id/map1"
