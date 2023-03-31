@@ -58,6 +58,7 @@ import java.util.Locale;
  * @version 3.0
  */
 public class ScannerFragment extends Fragment {
+    private Activity activity;
     private CodeScanner mCodeScanner;
     private CodeScannerView scannerView;
     private TextView scannedView;
@@ -93,7 +94,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final Activity activity = getActivity();
+        activity = getActivity();
         View root = inflater.inflate(R.layout.scanner, container, false);
 
         scannerView = root.findViewById(R.id.scanner_view);
@@ -106,8 +107,14 @@ public class ScannerFragment extends Fragment {
         confirm = root.findViewById(R.id.confirm_button);
         comment = root.findViewById(R.id.comment);
 
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         //The button will take the user to fragment to take photo of surrounding area
-        Button photo = root.findViewById(R.id.photo_taking_btn);
+        Button photo = view.findViewById(R.id.photo_taking_btn);
         FragmentManager parentFragment = getParentFragmentManager();
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -213,8 +220,6 @@ public class ScannerFragment extends Fragment {
                         .commit();
             }
         });
-
-        return root;
     }
 
     @Override
