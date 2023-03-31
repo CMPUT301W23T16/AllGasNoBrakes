@@ -102,7 +102,6 @@ public class ProfileFragment extends Fragment {
 
         //Searching for other players
         searching.setOnClickListener(v -> {
-            final CollectionReference collectionReference = db.collection("Users");
             final String friend_name = search_friend.getText().toString();
 
             if (search_friend.length() > 0) {  //Should I check if the username entered is the same as profile??

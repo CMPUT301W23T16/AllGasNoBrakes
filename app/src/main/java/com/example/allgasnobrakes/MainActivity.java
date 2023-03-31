@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             viewPager = findViewById(R.id.menu_pager);
             viewPager.setAdapter(menuBarAdapter);
             viewPager.setUserInputEnabled(false);
+            viewPager.setOffscreenPageLimit(1);
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("User", currentUser);
