@@ -1,6 +1,8 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.allgasnobrakes.R;
 
 /**
  * A blank fragment for fragment container initialization

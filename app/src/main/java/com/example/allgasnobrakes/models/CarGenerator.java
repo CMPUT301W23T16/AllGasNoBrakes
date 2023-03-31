@@ -1,14 +1,12 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.models;
 
-
+/**
+* generates a unique visual representation
+* @author zhaoyu4
+* @version 2.0
+*/
 public class CarGenerator {
-    private String hashedQR;
-
-    public CarGenerator(String hashedQR) {
-        this.hashedQR = hashedQR;
-    }
-    
-    public String Generate(){
+    public static String Generate(String hashedQR) {
       String line1;
       String line2;
       String line3;

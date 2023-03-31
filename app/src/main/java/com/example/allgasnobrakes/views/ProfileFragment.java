@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,8 +17,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.Sets;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -78,6 +81,12 @@ public class ProfileFragment extends Fragment {
 
         //Get instance of the database
         db = FirebaseFirestore.getInstance();
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         //Sets the text for the username and email
         PlayerProfile currentUser = (PlayerProfile) requireArguments().getSerializable("User");
@@ -93,7 +102,6 @@ public class ProfileFragment extends Fragment {
 
         //Searching for other players
         searching.setOnClickListener(v -> {
-            final CollectionReference collectionReference = db.collection("Users");
             final String friend_name = search_friend.getText().toString();
 
             if (search_friend.length() > 0) {  //Should I check if the username entered is the same as profile??
@@ -153,6 +161,5 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
-        return view;
     }
 }

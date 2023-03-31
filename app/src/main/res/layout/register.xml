@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/agnb_back_pattern"
+    android:background="@drawable/agnb_bk4"
     android:padding="10dp"
     tools:context=".MainActivity">
     <!--https://stackoverflow.com/questions/15304481/setting-background-for-a-fragment
@@ -81,7 +81,7 @@
         android:layout_below="@+id/password_edittext_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:backgroundTint="@color/button_color"
+        android:backgroundTint="@color/purple"
         android:fontFamily="monospace"
         android:text="@string/register_button_text"
         android:textStyle="bold" />

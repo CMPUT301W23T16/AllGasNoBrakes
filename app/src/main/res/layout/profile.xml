@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/agnb_back_pattern">
+    android:background="@drawable/agnb_bk4">
 
     <TextView
         android:id="@+id/username_text"
         android:layout_width="232dp"
         android:layout_height="46dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="serif-monospace"
         android:gravity="center"
         android:text="@string/username_string"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/button_color"
+        android:backgroundTint="@color/purple"
         android:fontFamily="monospace"
         android:text="@string/edit_button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,26 +48,30 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/search_friends"
-        android:layout_width="277dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="214dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/bright_pink"
         android:backgroundTintMode="add"
+        android:drawablePadding="10dp"
         android:fontFamily="monospace"
         android:hint="@string/player_search_hint"
-        android:textColorHint="@color/white"
+        android:includeFontPadding="true"
         android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/friend_fragment"
         app:layout_constraintEnd_toStartOf="@+id/search_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_btn"
-        app:layout_constraintVertical_bias="0.454" />
+        app:layout_constraintVertical_bias="0.46" />
 
     <TextView
         android:id="@+id/player_profile"
         android:layout_width="309dp"
         android:layout_height="56dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="monospace"
         android:gravity="center"
         android:text="@string/contact_info_header"
@@ -83,24 +87,27 @@
         android:id="@+id/search_btn"
         android:layout_width="109dp"
         android:layout_height="56dp"
-        android:layout_marginTop="256dp"
-        android:layout_marginBottom="26dp"
-        android:backgroundTint="@color/button_color"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/purple"
         android:fontFamily="monospace"
+        android:includeFontPadding="true"
         android:text="@string/search_text"
         app:layout_constraintBottom_toTopOf="@+id/friend_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_friends"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_btn"
+        app:layout_constraintVertical_bias="0.397" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/friend_fragment"
-        android:name="com.example.allgasnobrakes.BlankFragment"
+        android:name="com.example.allgasnobrakes.views.BlankFragment"
         android:layout_width="0dp"
-        android:layout_height="260dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_friends"
         tools:layout="@layout/player_profile" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.allgasnobrakes.models.PPFViewModel;
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Map;
 
 /**
  * Handles returning user (sign in) operations
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 public class SignInFragment extends Fragment {
     private FirebaseFirestore db;
-    private Leaderboard viewModel;
+    private PPFViewModel viewModel;
     private TextView username;
     private Button rollOutButton;
 
@@ -36,10 +37,22 @@ public class SignInFragment extends Fragment {
         super(R.layout.sign_in);
     }
 
+    /**
+     * Overridden to allow return user to confirm sign in with device ID
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return The created view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(requireActivity()).get(Leaderboard.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(PPFViewModel.class);
         View view = inflater.inflate(R.layout.sign_in, container, false);
         String lastUser = requireArguments().getString("LastUser");
 

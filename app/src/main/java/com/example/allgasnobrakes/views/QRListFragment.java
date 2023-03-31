@@ -1,10 +1,11 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.allgasnobrakes.models.HashedQR;
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.adapters.QrArrayAdapter;
+import com.example.allgasnobrakes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,7 +42,7 @@ public class QRListFragment extends Fragment  {
     private QRCountView totalCount;
     private ScoreView score;
 
-    PlayerProfile user;
+    private PlayerProfile user;
 
     public QRListFragment() {
         super(R.layout.homepage);
@@ -45,7 +50,8 @@ public class QRListFragment extends Fragment  {
 
     /**
      * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
-     * resort in ascending order
+     * resort in ascending order. Displays player profile summary information (QRCounter). Allows
+     * user to delete QR codes from their account
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -60,15 +66,16 @@ public class QRListFragment extends Fragment  {
             @Override
             public void onItemClick(HashedQR hashedQR) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference docRef = db.collection("Users").document(user.getUsername()).collection("QRRef").document(hashedQR.getHashedQR());
+                DocumentReference docRef = db.collection("QR").document(hashedQR.getHashedQR()).collection("Players").document(user.getUsername());
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             // Document found in the offline cache
                             final String comment = (String) task.getResult().get("Comment");
-                            final String longitude = (String) task.getResult().get("Longitude");
-                            final String latitude = (String) task.getResult().get("Latitude");
+                            final String longitude = (String) task.getResult().get("Lon");
+                            final String latitude = (String) task.getResult().get("Lat");
+
                             HashedQrFragment ADSF1 = new HashedQrFragment();
                             ADSF1.main(hashedQR,comment,longitude,latitude);
                             ADSF1.show(getActivity().getSupportFragmentManager(), "finding");
@@ -88,17 +95,8 @@ public class QRListFragment extends Fragment  {
         score = view.findViewById(R.id.player_score);
         score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
 
-        user.addObserver(totalCount);
-        user.addObserver(score);
-
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
-
-        if (currentSortOrder.getText().toString().equals("Highest Score")) {
-            user.getQRList().sort(new HashedQR().reversed());
-        } else {
-            user.getQRList().sort(new HashedQR());
-        }
 
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,11 +173,17 @@ public class QRListFragment extends Fragment  {
         user.deleteObservers();
     }
 
+    /**
+     * Overridden to update the user's QR code list everytime we switch back to this page
+     */
     @Override
     public void onResume() {
         super.onResume();
-        user.retrieveQR(QrAdapter);
+        user.addObserver(totalCount);
+        user.addObserver(score);
+        user.retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        Log.d("resume", requireArguments().getString("SortOrder"));
     }
 }

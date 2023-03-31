@@ -6,6 +6,7 @@
     <string name="home_text">Home</string>
     <string name="profile_text">Profile</string>
     <string name="camera_text">Camera</string>
+    <string name="leaderboard_text">Leaderboard</string>
     <string name="username_text">Username</string>
     <string name="email_text">Email</string>
     <string name="password_text">Password</string>
@@ -35,4 +36,14 @@
     <string name="save_changes_txt">Save</string>
     <string name="cancel_changes_txt">Cancel</string>
     <string name="username_holder">Username</string>
+    <string name="location_label">LOCATION</string>
+    <string name="comment_hint">Comment</string>
+    <string name="confirm_btn_text">Confirm</string>
+
+    <!--For taking a photo-->
+    <string name="photo_text_btn">Photo Button</string>
+    <string name="taking_photo_txt">Take Photo</string>
+    <string name="image_description">picture taken by user\'s camera</string>
+
+
 </resources>

@@ -2,6 +2,8 @@ package com.example.allgasnobrakes;
 
 import static org.junit.Assert.*;
 
+import com.example.allgasnobrakes.models.QRCounter;
+
 import org.junit.Test;
 /**
  * Test cases for QRCounter
@@ -47,7 +49,7 @@ public class QRCounterTest {
     @Test
     public void update() {
         QRCounter qrCounter = new QRCounter(45, 3);
-        qrCounter.update(2, 55);
+        qrCounter.update("", 2, 55);
         assertEquals(5, qrCounter.getTotalQR());
         assertEquals(100, qrCounter.getTotalScore());
     }

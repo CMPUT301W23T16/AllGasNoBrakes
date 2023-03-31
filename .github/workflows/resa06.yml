@@ -1,10 +1,10 @@
-name: BlitzWrecker CI
+name: Android CI
 
 on:
   push:
-    branches: [ "BlitzWrecker" ]
+    branches: [ "resa06" ]
   pull_request:
-    branches: [ "BlitzWrecker" ]
+    branches: [ "resa06" ]
 
 jobs:
   build:
