@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -54,7 +55,7 @@ import java.util.Locale;
 
 /**
  * Handles operations with code scanner
- * @author zhaoyu4 zhaoyu5
+ * @author zhaoyu4 zhaoyu5 theresag
  * @version 3.0
  */
 public class ScannerFragment extends Fragment {
@@ -72,6 +73,8 @@ public class ScannerFragment extends Fragment {
     private String lastPlace;
     private boolean owned = false;
     FusedLocationProviderClient client;
+
+    private Boolean qrScanned = false;
 
     public ScannerFragment() {
         super(R.layout.scanner);
@@ -214,10 +217,22 @@ public class ScannerFragment extends Fragment {
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentFragment.beginTransaction()
-                        .setReorderingAllowed(true)
-                        .replace(R.id.split_container, PhotoFragment.class, requireArguments())
-                        .commit();
+                if (qrScanned == true) {  //QR code has already been scanned
+                    Bundle photo_bundle = new Bundle();
+                    photo_bundle.putString("hash code id", sha256hex);
+                    
+                    parentFragment.beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.split_container, PhotoFragment.class, photo_bundle)
+                            .commit();
+                } else {  //A QR code has not been scanned yet
+                    Context context = getActivity();
+                    CharSequence text = "Please click CONFIRM first to save the QR code";
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
             }
         });
     }
@@ -314,6 +329,7 @@ public class ScannerFragment extends Fragment {
                             QRData.get("Latitude"), QRData.get("Longitude"));
 
                     playerProfile.addQR(newQR);
+                    qrScanned = true;  //boolean variable for if-statement about QR code being scanned
                 }
             }
         });

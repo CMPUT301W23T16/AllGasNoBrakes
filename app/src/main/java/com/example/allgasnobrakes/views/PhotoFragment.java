@@ -1,8 +1,10 @@
 package com.example.allgasnobrakes.views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -10,12 +12,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.allgasnobrakes.R;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Handles the camera fragment for taking a photo.
@@ -26,6 +45,11 @@ import com.example.allgasnobrakes.R;
 public class PhotoFragment extends Fragment {
 
     static final int REQUEST_IMAGE_CAPTURE = 246;
+    private ImageView imgCamera;
+    private ProgressDialog progressDialog;
+    private Bitmap img;
+
+    private String downloadURL;
 
     public PhotoFragment() {
         super(R.layout.take_photo);
@@ -46,28 +70,78 @@ public class PhotoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final Activity activity = getActivity();
+        //final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.take_photo, container, false);
 
-        Button camera_id = root.findViewById(R.id.taking_photo);
+        Button btnCamera = root.findViewById(R.id.taking_photo);
+        imgCamera = root.findViewById(R.id.captured_image);
 
-        //https://www.geeksforgeeks.org/how-to-open-camera-through-intent-and-display-captured-image-in-android/
-        //How to connect the xml and java file for taking a photo using the camera intent in Android Studio
-        camera_id.setOnClickListener(new View.OnClickListener() {
+        progressDialog = new ProgressDialog(getActivity());
+
+        btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //https://developer.android.com/training/camera/camera-intents
-                //Official android developer page about using camera intents
-
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                assert activity != null;
-                try {
-                    activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                } catch (ActivityNotFoundException e) {
-                    Log.d("Camera", "onClick: "+e);
-                }
+                Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                someActivityResultLauncher.launch(iCamera);
             }
         });
         return root;
+    }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        assert data != null;
+                        img = (Bitmap)(data.getExtras().get("data"));
+                        imgCamera.setImageBitmap(img);
+                        compressImages();
+                    }
+                }
+            });
+
+    private void compressImages() {
+        progressDialog.setMessage("Images Uploading...");
+        progressDialog.show();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+        byte[] imgByte = stream.toByteArray();
+        uploadImages(imgByte);
+    }
+
+    private void uploadImages(byte[] imgByte){
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                .child("images")
+                .child("images"+System.currentTimeMillis()+"jpg");
+        storageReference.putBytes(imgByte).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.cancel();
+                Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+
+                downloadURL = storageReference.getDownloadUrl().toString();
+//                Log.d("Upload", "Download URL: "+downloadURL);
+                linkToQRCode();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.cancel();
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void linkToQRCode() {
+        //get the hash code from the bundle
+        String hashCode = requireArguments().getString("hash code id");
+
+        //update the QR doc with the new information
+        FirebaseFirestore.getInstance().collection("QR").document(hashCode)
+                .update("Images", FieldValue.arrayUnion(downloadURL));
     }
 }
