@@ -152,12 +152,11 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                                             newQR.setComment(meta.get("Comment", String.class));
                                             newQR.setLat(meta.get("Lat"));
                                             newQR.setLat(meta.get("Lon"));
-
-                                            QRList.add(newQR);
-
-                                            QrAdapter.notifyDataSetChanged();
                                         }
                                     });
+
+                            QRList.add(newQR);
+                            QrAdapter.notifyDataSetChanged();
                         }
                         // Notify the recycler view to update
                         setChanged();
