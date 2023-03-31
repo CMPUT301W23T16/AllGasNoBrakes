@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
@@ -46,7 +49,7 @@ import java.util.Locale;
 
 /**
  * Handles operations with code scanner
- * @author zhaoyu4 zhaoyu5
+ * @author zhaoyu4 zhaoyu5 theresag
  * @version 3.0
  */
 public class ScannerFragment extends Fragment {
@@ -57,6 +60,8 @@ public class ScannerFragment extends Fragment {
     private String car;
     private String lastPlace;
     FusedLocationProviderClient client;
+
+    private Boolean qrScanned = false;
 
     public ScannerFragment() {
         super(R.layout.scanner);
@@ -94,6 +99,10 @@ public class ScannerFragment extends Fragment {
         ToggleButton location = root.findViewById(R.id.location_button);
         Button confirm = root.findViewById(R.id.confirm_button);
         EditText comment = root.findViewById(R.id.comment);
+
+        //The button will take the user to fragment to take photo of surrounding area
+        Button photo = root.findViewById(R.id.photo_taking_btn);
+        FragmentManager parentFragment = getParentFragmentManager();
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -168,6 +177,7 @@ public class ScannerFragment extends Fragment {
 
                 confirm.setOnClickListener(new View.OnClickListener() {
                     HashMap<String, Object> QRData = new HashMap<>();
+
                     @Override
                     public void onClick(View v) {
                         if (location.isChecked()) {
@@ -234,6 +244,7 @@ public class ScannerFragment extends Fragment {
                                     QRData.get("Latitude"), QRData.get("Longitude"));
 
                             playerProfile.addQR(newQR);
+                            qrScanned = true;  //boolean variable for if-statement about QR code being scanned
                         }
                     }
                 });
@@ -246,6 +257,34 @@ public class ScannerFragment extends Fragment {
             }
         });
 
+        //when the user clicks on the button, app will switch PhotoFragment.java
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (qrScanned == true) {  //QR code has already been scanned
+                    Bundle photo_bundle = new Bundle();
+                    photo_bundle.putString("hash code id", sha256hex);
+                    
+                    parentFragment.beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.split_container, PhotoFragment.class, photo_bundle)
+                            .commit();
+                } else {  //A QR code has not been scanned yet
+                    Context context = getActivity();
+                    CharSequence text = "Please click CONFIRM first to save the QR code";
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+        });
         return root;
+    }
+
+    @Override
+    public void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
     }
 }

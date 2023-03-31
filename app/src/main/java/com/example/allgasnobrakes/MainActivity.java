@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
     private PlayerProfile currentUser;
     private final FragmentManager fm = getSupportFragmentManager();
-    private final int CAMERA_PERMISSION_CODE = 101;
+//    private final int CAMERA_PERMISSION_CODE = 101;
 
     private Leaderboard viewModel;
 

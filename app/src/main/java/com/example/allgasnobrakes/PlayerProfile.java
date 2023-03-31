@@ -31,7 +31,6 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     private String password;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
      * Constructor without password, for searching for friends account
@@ -125,7 +124,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
             order = Query.Direction.ASCENDING;
         }
 
-        db.collection("QR")
+        FirebaseFirestore.getInstance().collection("QR")
                 .whereArrayContains("OwnedBy", username)
                 .orderBy("Score", order)
                 .orderBy("Name", Query.Direction.ASCENDING)
@@ -139,7 +138,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                             HashedQR newQR = new HashedQR(QR.getId(), QR.get("Score", int.class),
                                     QR.get("Name", String.class), QR.get("Face", String.class));
 
-                            db.document("/QR/" + QR.getId() + "/Players/" + username).get()
+                            FirebaseFirestore.getInstance().document("/QR/" + QR.getId() + "/Players/" + username).get()
                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -166,8 +165,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      * @param QR The QR code to be deleted
      */
     public void deleteQR(HashedQR QR) {
-        db.document("/QR/" + QR.getHashedQR() + "/Players/" + username).delete();
-        db.document("/QR/" + QR.getHashedQR())
+        FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR() + "/Players/" + username).delete();
+        FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR())
                 .update("OwnedBy", FieldValue.arrayRemove(username));
 
         profileSummary.update(getUsername(), -1, -QR.getScore());
@@ -190,11 +189,11 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         meta.put("Lat", QR.getLat());
         meta.put("Lon", QR.getLon());
 
-        db.collection("QR").document(QR.getHashedQR())
+        FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
                 .collection("Players").document(username)
                 .set(meta);
 
-        db.collection("QR").document(QR.getHashedQR())
+        FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
                 .update("OwnedBy", FieldValue.arrayUnion(username));
 
         Log.d("update", "2");
