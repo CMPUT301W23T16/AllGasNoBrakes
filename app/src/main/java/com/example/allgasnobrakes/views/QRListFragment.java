@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,13 +36,13 @@ import java.util.Locale;
  */
 
 public class QRListFragment extends Fragment  {
-
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
     private QRCountView totalCount;
     private ScoreView score;
-
+    private TextView uniqueRank;
+    private TextView collectorRank;
     private PlayerProfile user;
 
     public QRListFragment() {
@@ -97,6 +98,9 @@ public class QRListFragment extends Fragment  {
 
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
+
+        uniqueRank = view.findViewById(R.id.one_and_only_rank);
+        collectorRank = view.findViewById(R.id.collector_rank);
 
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
