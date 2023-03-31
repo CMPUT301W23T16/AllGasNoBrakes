@@ -1,4 +1,4 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.views;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.allgasnobrakes.models.PPFViewModel;
+import com.example.allgasnobrakes.models.PlayerProfile;
+import com.example.allgasnobrakes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +43,7 @@ public class RegisterFragment extends Fragment {
     private EditText passwordEdittext;
 
     private FirebaseFirestore db;
-    private Leaderboard viewModel;
+    private PPFViewModel viewModel;
 
     public RegisterFragment() {
         super(R.layout.register);
@@ -64,7 +67,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(requireActivity()).get(Leaderboard.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(PPFViewModel.class);
         View view = inflater.inflate(R.layout.register, container, false);
         String deviceID = requireArguments().getString("deviceID");
 

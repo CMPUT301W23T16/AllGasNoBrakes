@@ -1,6 +1,7 @@
-package com.example.allgasnobrakes;
+package com.example.allgasnobrakes.models;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Timer;
 
 /**
  * Contains player profile information
@@ -29,6 +31,7 @@ public class PlayerProfile extends Observable implements Serializable, EventList
     private String username;
     private String email;
     private String password;
+    private int displayMetric;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final QRCounter profileSummary = new QRCounter(0, 0);
 
@@ -93,6 +96,14 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         return profileSummary;
     }
 
+    public int getTotalScore() {
+        return profileSummary.getTotalScore();
+    }
+
+    public int getDisplayMetric() {
+        return displayMetric;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -101,12 +112,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setQRList(ArrayList<HashedQR> QRList) {
-        this.QRList = QRList;
+    public void setDisplayMetric(Number displayMetric) {
+        this.displayMetric = displayMetric.intValue();
     }
 
     /**
@@ -146,14 +153,13 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                                             newQR.setComment(meta.get("Comment", String.class));
                                             newQR.setLat(meta.get("Lat"));
                                             newQR.setLat(meta.get("Lon"));
-
-                                            QRList.add(newQR);
-
-                                            QrAdapter.notifyDataSetChanged();
                                         }
                                     });
+
+                            QRList.add(newQR);
+                            QrAdapter.notifyDataSetChanged();
                         }
-                        // Notify the recycler view to update
+                        // Notify the views to update
                         setChanged();
                         notifyObservers();
                     }
@@ -186,16 +192,33 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         HashMap<String, Object> meta = new HashMap<>();
 
         meta.put("Comment", QR.getComment());
-        meta.put("Lat", QR.getLat());
-        meta.put("Lon", QR.getLon());
-
+        meta.put("Lat", QR.getLat().toString());
+        meta.put("Lon", QR.getLon().toString());
         FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
                 .collection("Players").document(username)
                 .set(meta);
 
         FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
-                .update("OwnedBy", FieldValue.arrayUnion(username));
-
+                .update("OwnedBy", FieldValue.arrayUnion(username))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updatePlayerCount(QR.getHashedQR());
+                    }
+                });
         Log.d("update", "2");
+    }
+
+    private void updatePlayerCount(String hash) {
+        FirebaseFirestore.getInstance().collection("QR").document(hash)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot qr = task.getResult();
+                        int arraySize = ((ArrayList<String>) qr.get("OwnedBy")).size();
+                        FirebaseFirestore.getInstance().collection("QR").document(hash)
+                                .update("PlayerCount", arraySize);
+                    }
+                });
     }
 }

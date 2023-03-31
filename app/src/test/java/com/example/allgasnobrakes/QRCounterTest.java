@@ -2,6 +2,8 @@ package com.example.allgasnobrakes;
 
 import static org.junit.Assert.*;
 
+import com.example.allgasnobrakes.models.QRCounter;
+
 import org.junit.Test;
 /**
  * Test cases for QRCounter

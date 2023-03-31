@@ -2,6 +2,8 @@ package com.example.allgasnobrakes;
 
 import static org.junit.Assert.assertEquals;
 
+import com.example.allgasnobrakes.models.QRCounter;
+
 import org.junit.Test;
 
 public class QRCounterTest {
