@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,24 +80,28 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mMap.clear();
-                LatLng location = new LatLng(Double.parseDouble(lat.getText().toString()),Double.parseDouble(lon.getText().toString()));
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(location).visible(true).icon(getMarkerIcon("#2243ff"));
-                mMap.addMarker(markerOptions);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-                FirebaseFirestore.getInstance().collection("Geo").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot QR : task.getResult()) {
-                            LatLng allLatLang = new LatLng(Double.parseDouble(QR.get("Lat").toString()),Double.parseDouble(QR.get("Lon").toString()));
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            mMap.addMarker(markerOptions.position(allLatLang).visible(false));
-                            if (SphericalUtil.computeDistanceBetween(location, mMap.addMarker(markerOptions).getPosition()) < 1200) {
-                                mMap.addMarker(markerOptions).setVisible(true);
+                if (lat.getText().toString().matches("") || lon.getText().toString().matches("")) {
+                    Toast.makeText(getContext(), "Fill out Geopoint", Toast.LENGTH_SHORT).show();
+                }else {
+                    LatLng location = new LatLng(Double.parseDouble(lat.getText().toString()), Double.parseDouble(lon.getText().toString()));
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(location).visible(true).icon(getMarkerIcon("#2243ff"));
+                    mMap.addMarker(markerOptions);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+                    FirebaseFirestore.getInstance().collection("Geo").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (QueryDocumentSnapshot QR : task.getResult()) {
+                                LatLng allLatLang = new LatLng(Double.parseDouble(QR.get("Lat").toString()), Double.parseDouble(QR.get("Lon").toString()));
+                                MarkerOptions markerOptions = new MarkerOptions();
+                                mMap.addMarker(markerOptions.position(allLatLang).visible(false));
+                                if (SphericalUtil.computeDistanceBetween(location, mMap.addMarker(markerOptions).getPosition()) < 1200) {
+                                    mMap.addMarker(markerOptions).setVisible(true);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
