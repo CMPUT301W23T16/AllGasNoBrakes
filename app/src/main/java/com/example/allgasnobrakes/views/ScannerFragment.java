@@ -251,6 +251,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onPause() {
         mCodeScanner.releaseResources();
+        imgCamera.setImageResource(android.R.color.transparent);
         super.onPause();
     }
 

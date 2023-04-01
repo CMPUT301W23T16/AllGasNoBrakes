@@ -94,7 +94,7 @@ public class MapFragment extends Fragment {
                             for (QueryDocumentSnapshot QR : task.getResult()) {
                                 LatLng allLatLang = new LatLng(Double.parseDouble(QR.get("Lat").toString()), Double.parseDouble(QR.get("Lon").toString()));
                                 MarkerOptions markerOptions = new MarkerOptions();
-                                mMap.addMarker(markerOptions.position(allLatLang).visible(false));
+                                markerOptions.position(allLatLang).visible(false);
                                 if (SphericalUtil.computeDistanceBetween(location, mMap.addMarker(markerOptions).getPosition()) < 1200) {
                                     mMap.addMarker(markerOptions).setVisible(true);
                                 }
@@ -131,7 +131,7 @@ public class MapFragment extends Fragment {
                                         Log.d("test1231231",  QR.get("Lon").toString());
                                         LatLng allLatLang = new LatLng(Double.parseDouble(QR.get("Lat").toString()),Double.parseDouble(QR.get("Lon").toString()));
                                         MarkerOptions markerOptions = new MarkerOptions();
-                                        mMap.addMarker(markerOptions.position(allLatLang).visible(false));
+                                        markerOptions.position(allLatLang).visible(false);
                                         if (SphericalUtil.computeDistanceBetween(yourLatLang, mMap.addMarker(markerOptions).getPosition()) < 1200) {
                                             mMap.addMarker(markerOptions).setVisible(true);
                                         }
@@ -142,7 +142,6 @@ public class MapFragment extends Fragment {
                     }
                 });
                 googleMap.setMyLocationEnabled(true);
-
             }
         });
     }
