@@ -154,7 +154,7 @@ public class ScannerFragment extends Fragment {
 
                                         String scannedContent;
                                         if (! owned) {
-                                            scannedContent = String.format(Locale.CANADA, "%s\n%s\n%s other players own this car.", name, car, lastPlace);
+                                            scannedContent = String.format(Locale.CANADA, "%s\n%s\n%s others own this car.", name, car, lastPlace);
                                             setConfBtn();
                                         } else {
                                             scannedContent = name + "\n" + car + "\nLooks like you own this car already.";
