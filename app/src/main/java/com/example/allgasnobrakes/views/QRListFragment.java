@@ -130,34 +130,26 @@ public class QRListFragment extends Fragment  {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 // this method is called when we swipe our item to right direction.
-                // on below line we are getting the item at a particular position.
-                HashedQR deletedQR = user.getQRList().get(viewHolder.getAdapterPosition());
-
-                // below line is to get the position
-                // of the item at that position.
+                // below line is to get the position of the item at that position.
                 int position = viewHolder.getAdapterPosition();
 
-                // this method is called when item is swiped.
-                // below line is to remove item from our array list.
-                user.getQRList().remove(viewHolder.getAdapterPosition());
+                // on below line we are getting the item at a particular position.
+                HashedQR deletedQR = user.getQR(position);
 
                 // Then we remove it from the cloud database
                 user.deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
-                QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
+                QrAdapter.notifyItemRemoved(position);
 
                 // below line is to display our snackbar with action.
                 Snackbar.make(QRList, deletedQR.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // adding on click listener to our action of snack bar.
-                        // below line is to add our item to array list with a position.
-                        user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR);
+                        user.addQR(position, deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.

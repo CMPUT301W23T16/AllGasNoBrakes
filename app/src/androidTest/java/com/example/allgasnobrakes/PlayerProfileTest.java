@@ -52,7 +52,7 @@ public class PlayerProfileTest {
 
     @Test
     public void testAddQR() throws InterruptedException {
-        playerProfile.addQR(dummyQR);
+        playerProfile.addQR(0, dummyQR);
         Thread.sleep(3000);
 
         firestore.collection("Users").document(playerProfile.getUsername())
@@ -71,7 +71,7 @@ public class PlayerProfileTest {
 
     @Test
     public void testDeleteQR() throws InterruptedException {
-        playerProfile.addQR(dummyQR);
+        playerProfile.addQR(0, dummyQR);
         playerProfile.deleteQR(dummyQR);
 
         firestore.collection("Users").document(playerProfile.getUsername())

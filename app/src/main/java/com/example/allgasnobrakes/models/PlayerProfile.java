@@ -38,6 +38,12 @@ public class PlayerProfile implements Serializable {
     private int displayMetric;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
     private final ProfileSummary profileSummary = new ProfileSummary(0, 0);
+    private boolean test = false;
+
+    public PlayerProfile() {
+        username = "testUser";
+        test = true;
+    }
 
     /**
      * Constructor without password, for searching for friends account
@@ -97,8 +103,8 @@ public class PlayerProfile implements Serializable {
         return profileSummary;
     }
 
-    public int getTotalScore() {
-        return profileSummary.getTotalScore();
+    public HashedQR getQR(int position) {
+        return QRList.get(position);
     }
 
     public int getDisplayMetric() {
@@ -191,6 +197,8 @@ public class PlayerProfile implements Serializable {
      * @param QR The QR code to be deleted
      */
     public void deleteQR(HashedQR QR) {
+        QRList.remove(QR);
+
         FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR() + "/Players/" + username).delete();
         FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR())
                 .update("OwnedBy", FieldValue.arrayRemove(username))
@@ -208,7 +216,8 @@ public class PlayerProfile implements Serializable {
      * Implementation of the UNDO function in case the user deleted a QR code by accident
      * @param QR The QR code to be re-added
      */
-    public void addQR(HashedQR QR) {
+    public void addQR(int position, HashedQR QR) {
+        QRList.add(position, QR);
         profileSummary.update(getUsername(), 1, QR.getScore());
 
         HashMap<String, Object> meta = new HashMap<>();
