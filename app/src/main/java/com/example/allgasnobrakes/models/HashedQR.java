@@ -116,11 +116,11 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         return comment;
     }
 
-    public Object getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public Object getLon() {
+    public String getLon() {
         return lon;
     }
 
