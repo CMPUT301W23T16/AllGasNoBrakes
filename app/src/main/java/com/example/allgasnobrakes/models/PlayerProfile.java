@@ -165,8 +165,8 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             DocumentSnapshot meta = task.getResult();
                                             newQR.setComment(meta.get("Comment", String.class));
-                                            newQR.setLat(meta.get("Lat"));
-                                            newQR.setLat(meta.get("Lon"));
+                                            newQR.setLat(meta.getString("Lat"));
+                                            newQR.setLon(meta.getString("Lon"));
                                         }
                                     });
 
@@ -237,12 +237,12 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot qr = task.getResult();
                         int arraySize = ((ArrayList<String>) qr.get("OwnedBy")).size();
-                        Log.d("arr size", String.format(Locale.CANADA, "%d", arraySize));
                         FirebaseFirestore.getInstance().collection("QR").document(hash)
                                 .update("PlayerCount", arraySize)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d("arr size", String.format(Locale.CANADA, "%d", arraySize));
                                         getRank();
                                     }
                                 });
@@ -264,16 +264,25 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         int rank = 1;
+                        boolean found = false;
+
                         for (DocumentSnapshot doc: task.getResult()) {
                             String playerName = ((ArrayList<String>) doc.get("OwnedBy")).get(0);
                             if (username.equals(playerName)) {
+                                found = true;
                                 break;
                             }
                             rank++;
                         }
-                        int oldRank = uniqueHighestRank;
-                        uniqueHighestRank = rank;
-                        pcs.firePropertyChange(UNIQUE_HIGHEST_RANK, oldRank, rank);
+
+                        if (found) {
+                            int oldRank = uniqueHighestRank;
+                            uniqueHighestRank = rank;
+                            pcs.firePropertyChange(UNIQUE_HIGHEST_RANK, oldRank, rank);
+                        } else {
+                            uniqueHighestRank = -1;
+                            pcs.firePropertyChange(UNIQUE_HIGHEST_RANK, 0, -1);
+                        }
                     }
                 });
     }
@@ -286,16 +295,25 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         int rank = 1;
+                        boolean found = false;
+
                         for (DocumentSnapshot doc: task.getResult()) {
                             String playerName = doc.getId();
                             if(username.equals(playerName)) {
+                                found = true;
                                 break;
                             }
                             rank++;
                         }
-                        int oldRank = collectorRank;
-                        collectorRank = rank;
-                        pcs.firePropertyChange(COLLECTOR_RANK, oldRank, rank);
+
+                        if (found) {
+                            int oldRank = collectorRank;
+                            collectorRank = rank;
+                            pcs.firePropertyChange(COLLECTOR_RANK, oldRank, rank);
+                        } else {
+                            uniqueHighestRank = -1;
+                            pcs.firePropertyChange(COLLECTOR_RANK, 0, -1);
+                        }
                     }
                 });
     }

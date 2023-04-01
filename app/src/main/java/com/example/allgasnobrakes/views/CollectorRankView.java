@@ -7,6 +7,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.allgasnobrakes.R;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Locale;
@@ -27,9 +29,14 @@ public class CollectorRankView extends androidx.appcompat.widget.AppCompatTextVi
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Number rank = (Number) evt.getNewValue();
-        String rankText = String.format(Locale.CANADA,
-                "No. %d in The Hardcore Collectors", rank.intValue());
-        Log.d("collector", rankText);
-        setText(rankText);
+        if (rank.intValue() <= 0) {
+            setText(R.string.not_on_collector_message);
+        } else {
+            String rankText = String.format(Locale.CANADA,
+                    "No. %d in The Hardcore Collectors", rank.intValue());
+            Log.d("collector", rankText);
+            setText(rankText);
+        }
+
     }
 }

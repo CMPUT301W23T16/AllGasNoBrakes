@@ -67,7 +67,7 @@ public class PlayerListFragment extends Fragment {
         FirebaseFirestore.getInstance().collection("QR")
                 .whereEqualTo("PlayerCount", 1)
                 .orderBy("Score", Query.Direction.DESCENDING)
-                .limit(10)
+                .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -86,7 +86,7 @@ public class PlayerListFragment extends Fragment {
         playersList.clear();
         FirebaseFirestore.getInstance().collection("Users")
                 .orderBy("Total Score", Query.Direction.DESCENDING)
-                .limit(10)
+                .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

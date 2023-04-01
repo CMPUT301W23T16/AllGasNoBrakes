@@ -15,6 +15,8 @@
     <string name="roll_out_message_text">ROLL OUT</string>
     <string name="highest_score_text">Highest Score</string>
     <string name="lowest_score_text">Lowest Score</string>
+    <string name="not_on_collector_message">Not on The Hardcore Collectors yet</string>
+    <string name="not_on_unique_highest_message">Not on The One and Only yet</string>
 
     <!--These are all for the profile pages-->
     <string name="username_string">Username</string>

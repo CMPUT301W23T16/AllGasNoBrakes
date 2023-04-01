@@ -27,8 +27,8 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     private String name;
     private String face;
     private String comment;
-    private Object lat;
-    private Object lon;
+    private String lat;
+    private String lon;
 
     /**
      * Sort QR code by increasing score first, then alphabetically by name
@@ -54,7 +54,7 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.name = "name";
     }
 
-    public HashedQR(String hashedQR, String comment, Object lat, Object lon) {
+    public HashedQR(String hashedQR, String comment, String lat, String lon) {
         this.hashedQR = hashedQR;
         this.comment = comment;
         this.lat = lat;
@@ -90,7 +90,7 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
     }
 
     public HashedQR(String hashedQR, int score, String name, String face,
-                    String comment, Object lat, Object lon) {
+                    String comment, String lat, String lon) {
 
         this.hashedQR = hashedQR;
         this.score = score;
@@ -144,11 +144,11 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.comment = comment;
     }
 
-    public void setLat(Object lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public void setLon(Object lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 }
