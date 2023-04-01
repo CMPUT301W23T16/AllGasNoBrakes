@@ -7,18 +7,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.allgasnobrakes.models.PlayerProfile;
-
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Java Observer TextView for total QR score
  * @author zhaoyu4
- * @version 1.0
+ * @version 2.0
  */
-public class ScoreView extends androidx.appcompat.widget.AppCompatTextView implements Observer {
+public class ScoreView extends androidx.appcompat.widget.AppCompatTextView implements PropertyChangeListener {
     public ScoreView(@NonNull Context context) {
         super(context);
     }
@@ -31,15 +29,10 @@ public class ScoreView extends androidx.appcompat.widget.AppCompatTextView imple
         super(context, attrs, defStyleAttr);
     }
 
-    /**
-     * Updates the view with the new score
-     * @param o     the observable object.
-     * @param arg   an argument passed to the {@code notifyObservers}
-     *                 method.
-     */
     @Override
-    public void update(Observable o, Object arg) {
-        setText(String.format(Locale.CANADA, "%d", ((PlayerProfile) o).getProfileSummary().getTotalScore()));
-        Log.d("ScoreUpdate", String.format(Locale.CANADA, "%d", ((PlayerProfile) o).getProfileSummary().getTotalScore()));
+    public void propertyChange(PropertyChangeEvent evt) {
+        Number score = (Number) evt.getNewValue();
+        setText(String.format(Locale.CANADA, "%d", score.intValue()));
+        Log.d("ScoreUpdate", String.format(Locale.CANADA, "%d", score.intValue()));
     }
 }

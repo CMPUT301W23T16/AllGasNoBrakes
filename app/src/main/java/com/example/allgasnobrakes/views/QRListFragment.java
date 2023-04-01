@@ -17,6 +17,7 @@ import com.example.allgasnobrakes.models.HashedQR;
 import com.example.allgasnobrakes.models.PlayerProfile;
 import com.example.allgasnobrakes.adapters.QrArrayAdapter;
 import com.example.allgasnobrakes.R;
+import com.example.allgasnobrakes.models.ProfileSummary;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,7 +31,7 @@ import java.util.Locale;
 /**
  * Handles operations with QR code list
  * @author zhaoyu4 zhaoyu5
- * @version 3.0
+ * @version 5.0
  */
 
 public class QRListFragment extends Fragment  {
@@ -90,17 +91,19 @@ public class QRListFragment extends Fragment  {
         QRList.setAdapter(QrAdapter);
 
         totalCount = view.findViewById(R.id.total_codes);
-        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         score = view.findViewById(R.id.player_score);
-        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
 
         currentSortOrder = view.findViewById(R.id.sort_order);
-        currentSortOrder.setText(requireArguments().getString("SortOrder"));
 
         uniqueRankView = view.findViewById(R.id.one_and_only_rank);
         collectorRankView = view.findViewById(R.id.collector_rank);
+
+        user.addScorePropertyChangeListener(ProfileSummary.TOTAL_QR, ProfileSummary.TOTAL_SCORE,
+                totalCount, score);
         user.addPropertyChangeListener(PlayerProfile.UNIQUE_HIGHEST_RANK, uniqueRankView);
         user.addPropertyChangeListener(PlayerProfile.COLLECTOR_RANK, collectorRankView);
+
+        setAllTexts();
 
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +177,6 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
-        user.deleteObservers();
     }
 
     /**
@@ -183,11 +185,30 @@ public class QRListFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-        user.addObserver(totalCount);
-        user.addObserver(score);
         user.retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
         Log.d("resume", requireArguments().getString("SortOrder"));
+    }
+
+    private void setAllTexts() {
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        currentSortOrder.setText(requireArguments().getString("SortOrder"));
+
+        if (user.getUniqueHighestRank() > 0) {
+            uniqueRankView.setText(String.format(Locale.CANADA, "No. %d in The One and Only",
+                    user.getUniqueHighestRank()));
+        } else {
+            uniqueRankView.setText(R.string.not_on_unique_highest_message);
+        }
+
+        if (user.getCollectorRank() > 0) {
+            collectorRankView.setText(String.format(Locale.CANADA, "No. %d in The Hardcore Collectors",
+                    user.getCollectorRank()));
+        } else {
+            collectorRankView.setText(R.string.not_on_collector_message);
+        }
+
     }
 }

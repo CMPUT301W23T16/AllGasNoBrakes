@@ -32,6 +32,7 @@ public class UniqueHighestRankView extends androidx.appcompat.widget.AppCompatTe
 
         if (rank.intValue() <= 0) {
             setText(R.string.not_on_unique_highest_message);
+            Log.d("unique highest", "not updated");
         } else {
             String rankText = String.format(Locale.CANADA,
                     "No. %d in The One and Only", rank.intValue());

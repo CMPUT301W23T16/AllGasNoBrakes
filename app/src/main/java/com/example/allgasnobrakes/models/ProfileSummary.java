@@ -8,16 +8,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
 /**
  * A class that stores player profile summary information. Displays total QR codes and total score
  * @author fartar zhaoyu4
- * @version 3.0
+ * @version 4.0
  */
 public class ProfileSummary implements Serializable {
+    public static final String TOTAL_QR = "totalQR";
+    public static final String TOTAL_SCORE = "totalScore";
     private int totalQR;
     private int totalScore;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     /**
      *
@@ -29,12 +34,20 @@ public class ProfileSummary implements Serializable {
         totalScore = score;
     }
 
+    public void addPropertyChangeListener(String field, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(field, listener);
+    }
+
     public int getTotalQR() {
         return totalQR;
     }
 
     public int getTotalScore() {
         return totalScore;
+    }
+
+    public PropertyChangeSupport getPcs() {
+        return pcs;
     }
 
     public void setTotalQR(int totalQR) {
@@ -61,8 +74,12 @@ public class ProfileSummary implements Serializable {
      * @param score The total score will change by this amount
      */
     public void update(String username, int QR, int score) {
+        int oldTotalQR = totalQR;
+        int oldTotalScore = totalScore;
         totalQR += QR;
         totalScore += score;
+        pcs.firePropertyChange(TOTAL_QR, oldTotalQR, totalQR);
+        pcs.firePropertyChange(TOTAL_SCORE, oldTotalScore, totalScore);
 
         DocumentReference documentReference =
                 FirebaseFirestore.getInstance().collection("Users").document(username);

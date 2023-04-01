@@ -31,6 +31,7 @@ public class CollectorRankView extends androidx.appcompat.widget.AppCompatTextVi
         Number rank = (Number) evt.getNewValue();
         if (rank.intValue() <= 0) {
             setText(R.string.not_on_collector_message);
+            Log.d("collector", "not updated");
         } else {
             String rankText = String.format(Locale.CANADA,
                     "No. %d in The Hardcore Collectors", rank.intValue());

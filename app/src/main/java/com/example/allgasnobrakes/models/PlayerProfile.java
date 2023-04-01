@@ -18,17 +18,15 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Observable;
 
 /**
  * Contains player profile information
  * @author zhaoyu4 zhaoyu5
- * @version 3.0
+ * @version 5.0
  */
-public class PlayerProfile extends Observable implements Serializable, EventListener {
+public class PlayerProfile implements Serializable {
     public static final String UNIQUE_HIGHEST_RANK = "uniqueHighestRank";
     public static final String COLLECTOR_RANK = "collectorRank";
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -110,6 +108,14 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         return displayMetric;
     }
 
+    public int getUniqueHighestRank() {
+        return uniqueHighestRank;
+    }
+
+    public int getCollectorRank() {
+        return collectorRank;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -126,8 +132,11 @@ public class PlayerProfile extends Observable implements Serializable, EventList
         pcs.addPropertyChangeListener(field, listener);
     }
 
-    public void removePropertyChangeListener(String field, PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(field, listener);
+    public void addScorePropertyChangeListener(String field1, String field2,
+                                               PropertyChangeListener listener1,
+                                               PropertyChangeListener listener2) {
+        profileSummary.addPropertyChangeListener(field1, listener1);
+        profileSummary.addPropertyChangeListener(field2, listener2);
     }
 
     /**
@@ -137,6 +146,9 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      * @param sortOrder - the order by which to sort the QR code
      */
     public void retrieveQR(RecyclerView.Adapter QrAdapter, String sortOrder) {
+        // Notify the views to update
+        setRank();
+
         Query.Direction order;
 
         if (sortOrder.equals("Highest Score")) {
@@ -173,10 +185,6 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                             QRList.add(newQR);
                             QrAdapter.notifyDataSetChanged();
                         }
-                        // Notify the views to update
-                        getRank();
-                        setChanged();
-                        notifyObservers();
                     }
                 });
     }
@@ -197,8 +205,6 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                 });
 
         profileSummary.update(getUsername(), -1, -QR.getScore());
-        setChanged();
-        notifyObservers();
     }
 
     /**
@@ -207,8 +213,6 @@ public class PlayerProfile extends Observable implements Serializable, EventList
      */
     public void addQR(HashedQR QR) {
         profileSummary.update(getUsername(), 1, QR.getScore());
-        setChanged();
-        notifyObservers();
 
         HashMap<String, Object> meta = new HashMap<>();
 
@@ -243,14 +247,14 @@ public class PlayerProfile extends Observable implements Serializable, EventList
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         Log.d("arr size", String.format(Locale.CANADA, "%d", arraySize));
-                                        getRank();
+                                        setRank();
                                     }
                                 });
                     }
                 });
     }
 
-    public void getRank() {
+    public void setRank() {
         setUniqueHighestRank();
         setCollectorRank();
     }
