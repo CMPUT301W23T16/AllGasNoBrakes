@@ -22,7 +22,14 @@ public class ProfileSummary implements Serializable {
     public static final String TOTAL_SCORE = "totalScore";
     private int totalQR;
     private int totalScore;
+    private boolean test = false;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    public ProfileSummary() {
+        totalQR = 1;
+        totalScore = 10;
+        test = true;
+    }
 
     /**
      *
@@ -78,20 +85,23 @@ public class ProfileSummary implements Serializable {
         int oldTotalScore = totalScore;
         totalQR += QR;
         totalScore += score;
-        pcs.firePropertyChange(TOTAL_QR, oldTotalQR, totalQR);
-        pcs.firePropertyChange(TOTAL_SCORE, oldTotalScore, totalScore);
 
-        DocumentReference documentReference =
-                FirebaseFirestore.getInstance().collection("Users").document(username);
+        if (! test) {
+            pcs.firePropertyChange(TOTAL_QR, oldTotalQR, totalQR);
+            pcs.firePropertyChange(TOTAL_SCORE, oldTotalScore, totalScore);
 
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                int totalCount = ((Number) task.getResult().get("QR Count")).intValue();
-                int totalScore = ((Number) task.getResult().get("Total Score")).intValue();
-                documentReference.update("Total Score", totalScore + score);
-                documentReference.update("QR Count", totalCount + QR);
-            }
-        });
+            DocumentReference documentReference =
+                    FirebaseFirestore.getInstance().collection("Users").document(username);
+
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    int totalCount = ((Number) task.getResult().get("QR Count")).intValue();
+                    int totalScore = ((Number) task.getResult().get("Total Score")).intValue();
+                    documentReference.update("Total Score", totalScore + score);
+                    documentReference.update("QR Count", totalCount + QR);
+                }
+            });
+        }
     }
 }

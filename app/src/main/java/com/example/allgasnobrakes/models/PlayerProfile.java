@@ -45,7 +45,6 @@ public class PlayerProfile implements Serializable {
      * @param email The email of the account
      */
     public PlayerProfile(String username, String email) {
-        super();
         this.username = username;
         this.email = email;
     }
@@ -57,7 +56,6 @@ public class PlayerProfile implements Serializable {
      * @param password The password of the account
      */
     public PlayerProfile(String username, String email, String password) {
-        super();
         this.username = username;
         this.email = email;
         this.password = password;
@@ -73,7 +71,6 @@ public class PlayerProfile implements Serializable {
      * @param count The total number of the QR codes that account has
      */
     public PlayerProfile(String username, String email, String password, int score, int count) {
-        super();
         this.username = username;
         this.email = email;
         this.password = password;
