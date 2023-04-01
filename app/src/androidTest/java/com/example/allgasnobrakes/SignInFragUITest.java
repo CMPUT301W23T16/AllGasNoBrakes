@@ -4,8 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -22,15 +26,17 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class SignInFragUITest {
     private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     private static final PlayerProfile testUser =
-            new PlayerProfile("Test User", "test@gmail.com", "1234",
+            new PlayerProfile("Test User2", "test2@gmail.com", "1234",
                     0, 0);
 
     private static String id;
@@ -47,7 +53,7 @@ public class SignInFragUITest {
      */
     @BeforeClass
     public static void registerUser() {
-        id = "ec7df04b91ff8c69";
+        id = "abcd1231230";
 
         firestore.collection("Users").document(testUser.getUsername())
                 .set(new HashMap<String, Object>(){{
@@ -67,9 +73,11 @@ public class SignInFragUITest {
                     put("Score", dummyQR.getScore());
                     put("Name", dummyQR.getName());
                     put("Hash", dummyQR.getHashedQR());
+                    put("Face", dummyQR.getHashedQR());
+                    put("OwnedBy", dummyQR.getHashedQR());
                 }});
 
-        testUser.addQR(0, dummyQR);
+        //testUser.addQR(dummyQR);
     }
 
     @Before
@@ -98,19 +106,50 @@ public class SignInFragUITest {
         assertTrue("button not shown", (solo.getView(R.id.sort_order)).isShown());
     }
 
+    @Test
+    public void HomeQRTest() {
+        signInTest();
+
+
+
+        solo.clickOnMenuItem("Home");
+        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.homepage);
+
+        TextView totalScore = (TextView) solo.getView(R.id.player_score);
+        int initialTotalScore = Integer.parseInt(totalScore.getText().toString());
+        assertEquals(53, initialTotalScore);
+
+        TextView totalTextView = (TextView) solo.getView(R.id.total_codes);
+        int initialTotalCount = Integer.parseInt(totalTextView.getText().toString());
+        assertEquals(1, initialTotalCount);
+
+
+    }
+
     /**
      * Test for switching to different fragments using the menu bar
      */
     @Test
     public void menuBarTest() {
         signInTest();
-        solo.clickOnButton("Camera");
+
+        solo.clickOnMenuItem("Home");
+        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.homepage);
+
+        solo.clickOnMenuItem("Map");
+        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.map);
+
+        solo.clickOnMenuItem("Camera");
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.scanner);
         assertTrue("button not shown", (solo.getView(R.id.confirm_button)).isShown());
 
-        solo.clickOnButton("Profile");
+        solo.clickOnMenuItem("Leaderboard");
+        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.leaderboard);
+
+        solo.clickOnMenuItem("Profile");
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.profile);
         assertTrue("button not shown", (solo.getView(R.id.search_btn)).isShown());
+
     }
 
     @Test
