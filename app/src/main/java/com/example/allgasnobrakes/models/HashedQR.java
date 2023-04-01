@@ -54,25 +54,9 @@ public class HashedQR implements Comparator<HashedQR>, Serializable {
         this.name = "name";
     }
 
-    public HashedQR(String hashedQR, String comment, String lat, String lon) {
+    public HashedQR(String hashedQR, int score) {
         this.hashedQR = hashedQR;
-        this.comment = comment;
-        this.lat = lat;
-        this.lon = lon;
-
-        FirebaseFirestore.getInstance().collection("QR").document(hashedQR)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot QRCode = task.getResult();
-                            name = QRCode.get("Name", String.class);
-                            face = QRCode.get("Face", String.class);
-                            score = QRCode.get("Score", int.class);
-                            Log.d("Score", String.format(Locale.CANADA, "%s" , QRCode.get("Score")));
-                        }
-                    }
-                });
+        this.score = score;
     }
 
     /**
