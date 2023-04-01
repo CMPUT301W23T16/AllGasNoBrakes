@@ -3,6 +3,7 @@ package com.example.allgasnobrakes.views;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -121,7 +122,8 @@ public class PhotoFragment extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.cancel();
-                Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+                Context context = getActivity();
+                Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show();
 
                 downloadURL = storageReference.getDownloadUrl().toString();
 //                Log.d("Upload", "Download URL: "+downloadURL);
@@ -130,8 +132,9 @@ public class PhotoFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Context context = getActivity();
                 progressDialog.cancel();
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

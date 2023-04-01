@@ -3,10 +3,12 @@ package com.example.allgasnobrakes;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -40,15 +42,20 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        //Setting Day/Night Mode for the app (hopefully)
+        //nirav kalola and Bruno Bieri on how your app can handle Day/Night mode for system default
+        //https://stackoverflow.com/questions/18001551/day-night-theme-for-android-app#:~:text=For%20Setting%20Default%20Day,Mode%20use%20AppCompatDelegate.setDefaultNightMode%20%28AppCompatDelegate.MODE_NIGHT_NO%29%3B
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
         /*
         We check if there has been a previous log in on the device. If the is, we log in the last
         user on the device, and ask for confirmation. If there isn't one, we prompt the new user
         to register
          */
         if (savedInstanceState == null) {
-//            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 //            String id = "DAJ101";
-            String id = "MH415";
+//            String id = "MH415";
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 //            db.useEmulator("10.0.2.2", 8080);

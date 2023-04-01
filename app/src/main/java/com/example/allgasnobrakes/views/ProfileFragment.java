@@ -73,7 +73,6 @@ public class ProfileFragment extends Fragment {
         //For display and editing user's own profile
         username = view.findViewById(R.id.username_text);
         email = view.findViewById(R.id.email_text);
-        editing = view.findViewById(R.id.edit_btn);
         searchedplayer = view.findViewById(R.id.friend_fragment);
         //For searching for other players
         search_friend = view.findViewById(R.id.search_friends);
