@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class PlayerListFragment extends Fragment {
     private RecyclerView playerRecyclerView;
-    private ArrayList<PlayerProfile> playersList;
+    private final ArrayList<PlayerProfile> playersList = new ArrayList<>();
     private PlayerListAdapter playerListAdapter;
 
     public PlayerListFragment() {
@@ -38,7 +38,6 @@ public class PlayerListFragment extends Fragment {
 
         playerRecyclerView = view.findViewById(R.id.player_list);
         playerRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        getPlayersList(requireArguments().getInt("type"));
 
         playerListAdapter = new PlayerListAdapter(playersList, activity,
                 new PlayerListAdapter.ItemClickListener() {
@@ -55,20 +54,20 @@ public class PlayerListFragment extends Fragment {
 
     private void getPlayersList(int type) {
         if (type == 0) {
-            playersList = getHighestUnique();
+            getHighestUnique();
         } else if (type == 1) {
-            playersList = getHighestTotal();
+            getHighestTotal();
         }
 
     }
 
-    private ArrayList<PlayerProfile> getHighestUnique() {
-        ArrayList<PlayerProfile> players = new ArrayList<>();
+    private void getHighestUnique() {
+        playersList.clear();
 
         FirebaseFirestore.getInstance().collection("QR")
                 .whereEqualTo("PlayerCount", 1)
                 .orderBy("Score", Query.Direction.DESCENDING)
-                .limit(10)
+                .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -76,19 +75,18 @@ public class PlayerListFragment extends Fragment {
                             String playerName = ((ArrayList<String>) doc.get("OwnedBy")).get(0);
                             PlayerProfile player = new PlayerProfile(playerName, "");
                             player.setDisplayMetric((Number) doc.get("Score"));
-                            players.add(player);
-                            playerListAdapter.notifyItemInserted(players.size() - 1);
+                            playersList.add(player);
+                            playerListAdapter.notifyDataSetChanged();
                         }
                     }
                 });
-        return players;
     }
 
-    private ArrayList<PlayerProfile> getHighestTotal() {
-        ArrayList<PlayerProfile> players = new ArrayList<>();
+    private void getHighestTotal() {
+        playersList.clear();
         FirebaseFirestore.getInstance().collection("Users")
                 .orderBy("Total Score", Query.Direction.DESCENDING)
-                .limit(10)
+                .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -96,12 +94,16 @@ public class PlayerListFragment extends Fragment {
                             String playerName = doc.getId();
                             PlayerProfile player = new PlayerProfile(playerName, "");
                             player.setDisplayMetric((Number) doc.get("Total Score"));
-                            players.add(player);
-                            playerListAdapter.notifyItemInserted(players.size() - 1);
+                            playersList.add(player);
+                            playerListAdapter.notifyDataSetChanged();
                         }
                     }
                 });
-        return players;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPlayersList(requireArguments().getInt("type"));
+    }
 }

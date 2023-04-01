@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +17,7 @@ import com.example.allgasnobrakes.models.HashedQR;
 import com.example.allgasnobrakes.models.PlayerProfile;
 import com.example.allgasnobrakes.adapters.QrArrayAdapter;
 import com.example.allgasnobrakes.R;
+import com.example.allgasnobrakes.models.ProfileSummary;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,17 +31,17 @@ import java.util.Locale;
 /**
  * Handles operations with QR code list
  * @author zhaoyu4 zhaoyu5
- * @version 3.0
+ * @version 5.0
  */
 
 public class QRListFragment extends Fragment  {
-
     private Button currentSortOrder;
     private RecyclerView QRList;
     private RecyclerView.Adapter QrAdapter;
     private QRCountView totalCount;
     private ScoreView score;
-
+    private UniqueHighestRankView uniqueRankView;
+    private CollectorRankView collectorRankView;
     private PlayerProfile user;
 
     public QRListFragment() {
@@ -50,7 +50,7 @@ public class QRListFragment extends Fragment  {
 
     /**
      * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
-     * resort in ascending order. Displays player profile summary information (QRCounter). Allows
+     * resort in ascending order. Displays player profile summary information (ProfileSummary). Allows
      * user to delete QR codes from their account
      */
     @Override
@@ -91,12 +91,19 @@ public class QRListFragment extends Fragment  {
         QRList.setAdapter(QrAdapter);
 
         totalCount = view.findViewById(R.id.total_codes);
-        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         score = view.findViewById(R.id.player_score);
-        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
 
         currentSortOrder = view.findViewById(R.id.sort_order);
-        currentSortOrder.setText(requireArguments().getString("SortOrder"));
+
+        uniqueRankView = view.findViewById(R.id.one_and_only_rank);
+        collectorRankView = view.findViewById(R.id.collector_rank);
+
+        user.addScorePropertyChangeListener(ProfileSummary.TOTAL_QR, ProfileSummary.TOTAL_SCORE,
+                totalCount, score);
+        user.addPropertyChangeListener(PlayerProfile.UNIQUE_HIGHEST_RANK, uniqueRankView);
+        user.addPropertyChangeListener(PlayerProfile.COLLECTOR_RANK, collectorRankView);
+
+        setAllTexts();
 
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,34 +130,26 @@ public class QRListFragment extends Fragment  {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 // this method is called when we swipe our item to right direction.
-                // on below line we are getting the item at a particular position.
-                HashedQR deletedQR = user.getQRList().get(viewHolder.getAdapterPosition());
-
-                // below line is to get the position
-                // of the item at that position.
+                // below line is to get the position of the item at that position.
                 int position = viewHolder.getAdapterPosition();
 
-                // this method is called when item is swiped.
-                // below line is to remove item from our array list.
-                user.getQRList().remove(viewHolder.getAdapterPosition());
+                // on below line we are getting the item at a particular position.
+                HashedQR deletedQR = user.getQR(position);
 
                 // Then we remove it from the cloud database
                 user.deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
-                QrAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
+                QrAdapter.notifyItemRemoved(position);
 
                 // below line is to display our snackbar with action.
                 Snackbar.make(QRList, deletedQR.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // adding on click listener to our action of snack bar.
-                        // below line is to add our item to array list with a position.
-                        user.getQRList().add(position, deletedQR);
 
                         // Add it back to cloud database
-                        user.addQR(deletedQR);
+                        user.addQR(position, deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.
@@ -170,7 +169,6 @@ public class QRListFragment extends Fragment  {
         super.onPause();
         requireArguments().putString("SortOrder", currentSortOrder.getText().toString());
         requireArguments().putSerializable("User", user);
-        user.deleteObservers();
     }
 
     /**
@@ -179,11 +177,30 @@ public class QRListFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-        user.addObserver(totalCount);
-        user.addObserver(score);
         user.retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         Log.d("resume", String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
         Log.d("resume", requireArguments().getString("SortOrder"));
+    }
+
+    private void setAllTexts() {
+        totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
+        score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
+        currentSortOrder.setText(requireArguments().getString("SortOrder"));
+
+        if (user.getUniqueHighestRank() > 0) {
+            uniqueRankView.setText(String.format(Locale.CANADA, "No. %d in The One and Only",
+                    user.getUniqueHighestRank()));
+        } else {
+            uniqueRankView.setText(R.string.not_on_unique_highest_message);
+        }
+
+        if (user.getCollectorRank() > 0) {
+            collectorRankView.setText(String.format(Locale.CANADA, "No. %d in The Hardcore Collectors",
+                    user.getCollectorRank()));
+        } else {
+            collectorRankView.setText(R.string.not_on_collector_message);
+        }
+
     }
 }
