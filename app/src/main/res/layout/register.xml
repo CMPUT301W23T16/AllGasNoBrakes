@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:fontFamily="monospace"
+        android:fontFamily="serif-monospace"
         android:text="All Gas No Brakes"
         android:textColor="@color/white"
 
@@ -82,7 +82,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:backgroundTint="@color/purple"
-        android:fontFamily="monospace"
+
         android:text="@string/register_button_text"
         android:textStyle="bold" />
 

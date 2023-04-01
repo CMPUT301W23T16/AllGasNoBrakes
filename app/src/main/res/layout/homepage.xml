@@ -74,22 +74,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
+        <com.example.allgasnobrakes.views.UniqueHighestRankView
             android:id="@+id/one_and_only_rank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TextView"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textColor="@color/white" />
 
-        <TextView
+        <com.example.allgasnobrakes.views.CollectorRankView
             android:id="@+id/collector_rank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TextView"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textColor="@color/white" />
     </LinearLayout>
 

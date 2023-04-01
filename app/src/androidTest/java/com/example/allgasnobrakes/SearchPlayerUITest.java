@@ -44,7 +44,7 @@ public class SearchPlayerUITest {
 
             //Register this user
             solo.clickOnButton("Register");
-        } else {
+        } else {  //DeviceID is already in our system
             //Signs into the app
             solo.clickOnButton("ROLL OUT");
         }
