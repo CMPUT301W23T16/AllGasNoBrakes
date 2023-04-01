@@ -46,6 +46,7 @@
     <string name="photo_text_btn">Photo Button</string>
     <string name="taking_photo_txt">Take Photo</string>
     <string name="image_description">picture taken by user\'s camera</string>
+    <string name="photo_prompt_text">Please click the button above to photograph the area where the QR code was found.</string>
 
 
 </resources>
