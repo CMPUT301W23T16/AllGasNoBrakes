@@ -33,12 +33,15 @@
         android:id="@+id/roll_out_button"
         android:layout_width="match_parent"
         android:layout_height="89dp"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="?attr/colorPrimary"
         android:ems="10"
         android:fontFamily="monospace"
         android:text="@string/roll_out_message_text"
         android:textColor="@color/white"
         android:textSize="36sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+
+
+        />
 
 </LinearLayout>
