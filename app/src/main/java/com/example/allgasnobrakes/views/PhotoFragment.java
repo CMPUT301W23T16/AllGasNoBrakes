@@ -37,6 +37,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
+//https://www.youtube.com/watch?v=M-sIL8OL18o
+//https://www.youtube.com/watch?v=kIgpSokJgzY
+//How To Compress And Upload Images In Firebase Storage
+
 /**
  * Handles the camera fragment for taking a photo, compressing the image,
  * and uploading the image to storage.
@@ -56,6 +60,7 @@ public class PhotoFragment extends Fragment {
     private Bitmap img;
 
     private String downloadURL;
+
     private Activity activity;
 
     public PhotoFragment() {
@@ -83,8 +88,6 @@ public class PhotoFragment extends Fragment {
         imgCamera = root.findViewById(R.id.captured_image);
 
         progressDialog = new ProgressDialog(getActivity());
-
-        activity = getActivity();
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,19 +132,17 @@ public class PhotoFragment extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.cancel();
-                //Context context = requireContext();
-                //Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show();
+                Log.d("Upload", "Image uploaded");
 
                 downloadURL = storageReference.getDownloadUrl().toString();
-//                Log.d("Upload", "Download URL: "+downloadURL);
+                Log.d("Upload", "Download URL: "+downloadURL);
                 linkToQRCode();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                //Context context = getContext();
                 progressDialog.cancel();
-                //Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("Upload", "Upload failure: "+e);
             }
         });
     }
@@ -153,5 +154,7 @@ public class PhotoFragment extends Fragment {
         //update the QR doc with the new information
         FirebaseFirestore.getInstance().collection("QR").document(hashCode)
                 .update("Images", FieldValue.arrayUnion(downloadURL));
+
+        Log.d("Upload", "Photo URL added to QR code");
     }
 }
