@@ -37,6 +37,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
+//https://www.youtube.com/watch?v=M-sIL8OL18o
+//https://www.youtube.com/watch?v=kIgpSokJgzY
+//How To Compress And Upload Images In Firebase Storage
+
 /**
  * Handles the camera fragment for taking a photo.
  * @author theresag
