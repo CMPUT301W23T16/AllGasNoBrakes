@@ -4,21 +4,30 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -41,13 +50,19 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.zxing.Result;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -74,7 +89,9 @@ public class ScannerFragment extends Fragment {
     private boolean owned = false;
     FusedLocationProviderClient client;
 
-    private Boolean qrScanned = false;
+    private ImageView imgCamera;
+    private ProgressDialog progressDialog;
+    private Bitmap img;
 
     public ScannerFragment() {
         super(R.layout.scanner);
@@ -116,9 +133,6 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //The button will take the user to fragment to take photo of surrounding area
-        Button photo = view.findViewById(R.id.photo_taking_btn);
-        FragmentManager parentFragment = getParentFragmentManager();
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -154,7 +168,7 @@ public class ScannerFragment extends Fragment {
 
                                         String scannedContent;
                                         if (! owned) {
-                                            scannedContent = String.format(Locale.CANADA, "%s\n%s\n%s other players own this car.", name, car, lastPlace);
+                                            scannedContent = String.format(Locale.CANADA, "%s\n%s\n%s others own this car.", name, car, lastPlace);
                                             setConfBtn();
                                         } else {
                                             scannedContent = name + "\n" + car + "\nLooks like you own this car already.";
@@ -213,28 +227,25 @@ public class ScannerFragment extends Fragment {
             }
         });
 
-        //when the user clicks on the button, app will switch PhotoFragment.java
-        photo.setOnClickListener(new View.OnClickListener() {
+        //The button will take the user to fragment to take photo of surrounding area
+        Button btnCamera = view.findViewById(R.id.photo_taking_btn);
+        imgCamera = view.findViewById(R.id.imgSurround);
+
+        progressDialog = new ProgressDialog(getActivity());
+
+        btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (qrScanned == true) {  //QR code has already been scanned
-                    Bundle photo_bundle = new Bundle();
-                    photo_bundle.putString("hash code id", sha256hex);
-                    
-                    parentFragment.beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.split_container, PhotoFragment.class, photo_bundle)
-                            .commit();
-                } else {  //A QR code has not been scanned yet
-                    Context context = getActivity();
-                    CharSequence text = "Please click CONFIRM first to save the QR code";
-                    int duration = Toast.LENGTH_LONG;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                if (sha256hex == null) {
+                    Toast.makeText(activity, "Scan QR First", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    someActivityResultLauncher.launch(iCamera);
                 }
             }
         });
+
     }
 
     @Override
@@ -246,6 +257,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        total = 0;
         scannedView.setAlpha(0f);
         scannerView.setVisibility(View.VISIBLE);
         scannerView.setAlpha(1f);
@@ -255,7 +267,7 @@ public class ScannerFragment extends Fragment {
     public void setConfBtn() {
         PlayerProfile playerProfile = (PlayerProfile) requireArguments().get("User");
         confirm.setOnClickListener(new View.OnClickListener() {
-            HashMap<String, Object> QRData = new HashMap<>();
+            HashMap<String, String> QRData = new HashMap<>();
             @Override
             public void onClick(View v) {
                 if (location.isChecked()&& sha256hex != null) {
@@ -329,8 +341,51 @@ public class ScannerFragment extends Fragment {
                             QRData.get("Latitude"), QRData.get("Longitude"));
 
                     playerProfile.addQR(newQR);
-                    qrScanned = true;  //boolean variable for if-statement about QR code being scanned
                 }
+            }
+        });
+    }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        img = (Bitmap)(data.getExtras().get("data"));
+                        imgCamera.setImageBitmap(img);
+                        compressImages();
+                    }
+                }
+            });
+
+    private void compressImages() {
+        progressDialog.setMessage("Images Uploading...");
+        progressDialog.show();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+        byte[] imgByte = stream.toByteArray();
+        uploadImages(imgByte);
+    }
+
+    private void uploadImages(byte[] imgByte){
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                .child("images")
+                .child(((PlayerProfile) requireArguments().get("User")).getUsername()
+                        +sha256hex+".jpg");
+        storageReference.putBytes(imgByte).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.cancel();
+                Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.cancel();
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

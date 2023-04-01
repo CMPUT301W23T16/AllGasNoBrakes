@@ -3,6 +3,7 @@ package com.example.allgasnobrakes.views;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -37,10 +38,15 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Handles the camera fragment for taking a photo.
- * @author theresag
+ * Handles the camera fragment for taking a photo, compressing the image,
+ * and uploading the image to storage.
+ * @author theresag dek
  * @version 1.0
  */
+
+//https://www.youtube.com/watch?v=M-sIL8OL18o
+//https://www.youtube.com/watch?v=kIgpSokJgzY
+//How To Compress And Upload Images In Firebase Storage
 
 public class PhotoFragment extends Fragment {
 
@@ -50,6 +56,7 @@ public class PhotoFragment extends Fragment {
     private Bitmap img;
 
     private String downloadURL;
+    private Activity activity;
 
     public PhotoFragment() {
         super(R.layout.take_photo);
@@ -70,13 +77,14 @@ public class PhotoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.take_photo, container, false);
 
         Button btnCamera = root.findViewById(R.id.taking_photo);
         imgCamera = root.findViewById(R.id.captured_image);
 
         progressDialog = new ProgressDialog(getActivity());
+
+        activity = getActivity();
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +129,8 @@ public class PhotoFragment extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.cancel();
-                Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+                //Context context = requireContext();
+                //Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show();
 
                 downloadURL = storageReference.getDownloadUrl().toString();
 //                Log.d("Upload", "Download URL: "+downloadURL);
@@ -130,8 +139,9 @@ public class PhotoFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                //Context context = getContext();
                 progressDialog.cancel();
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
