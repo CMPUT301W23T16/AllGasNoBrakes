@@ -251,6 +251,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onPause() {
         mCodeScanner.releaseResources();
+        imgCamera.setImageResource(android.R.color.transparent);
         super.onPause();
     }
 
@@ -321,7 +322,7 @@ public class ScannerFragment extends Fragment {
                                         comment.getText().toString(),
                                         QRData.get("Latitude"), QRData.get("Longitude"));
 
-                                playerProfile.addQR(newQR);
+                                playerProfile.addQR(0, newQR);
                                 HashMap<String, Object> meta = new HashMap<>();
                                 meta.put("Lat",QRData.get("Latitude"));
                                 meta.put("Lon",QRData.get("Longitude"));
@@ -340,7 +341,7 @@ public class ScannerFragment extends Fragment {
                             comment.getText().toString(),
                             QRData.get("Latitude"), QRData.get("Longitude"));
 
-                    playerProfile.addQR(newQR);
+                    playerProfile.addQR(0, newQR);
                 }
             }
         });

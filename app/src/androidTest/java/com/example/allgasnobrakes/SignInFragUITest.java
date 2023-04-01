@@ -69,7 +69,7 @@ public class SignInFragUITest {
                     put("Hash", dummyQR.getHashedQR());
                 }});
 
-        testUser.addQR(dummyQR);
+        testUser.addQR(0, dummyQR);
     }
 
     @Before

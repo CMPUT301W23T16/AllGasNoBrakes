@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
  */
 // will not work with current version of the app
 public class ProfileSummaryTest {
-
     private ProfileSummary profileSummary;
 
     @BeforeEach
@@ -22,7 +21,7 @@ public class ProfileSummaryTest {
     }
 
     @Test
-    public void assign() {
+    public void testAssign() {
         assertEquals(1, profileSummary.getTotalQR());
         assertEquals(10, profileSummary.getTotalScore());
 
@@ -33,7 +32,7 @@ public class ProfileSummaryTest {
     }
 
     @Test
-    public void update() {
+    public void testUpdate() {
         assertEquals(1, profileSummary.getTotalQR());
         assertEquals(10, profileSummary.getTotalScore());
 
