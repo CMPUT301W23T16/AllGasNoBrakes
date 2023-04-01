@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(PPFViewModel.class);
         requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA }, 101);
-
-
         setContentView(R.layout.activity_main);
 
         //Setting Day/Night Mode for the app (hopefully)

@@ -42,10 +42,15 @@ import java.io.ByteArrayOutputStream;
 //How To Compress And Upload Images In Firebase Storage
 
 /**
- * Handles the camera fragment for taking a photo.
+ * Handles the camera fragment for taking a photo, compressing the image,
+ * and uploading the image to storage.
  * @author theresag dek
  * @version 1.0
  */
+
+//https://www.youtube.com/watch?v=M-sIL8OL18o
+//https://www.youtube.com/watch?v=kIgpSokJgzY
+//How To Compress And Upload Images In Firebase Storage
 
 public class PhotoFragment extends Fragment {
 

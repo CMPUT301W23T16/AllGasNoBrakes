@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.allgasnobrakes.views.BlankFragment;
-import com.example.allgasnobrakes.views.CameraFragment;
 import com.example.allgasnobrakes.views.MapFragment;
 import com.example.allgasnobrakes.views.ProfileFragment;
 import com.example.allgasnobrakes.views.QRListFragment;
@@ -38,9 +37,9 @@ public class MenuBarAdapter extends FragmentStateAdapter {
             return mapFragment;
 
         } else if (position == 2) {
-            CameraFragment cameraFragment = new CameraFragment();
-            cameraFragment.setArguments(bundle);
-            return cameraFragment;
+            ScannerFragment scannerFragment = new ScannerFragment();
+            scannerFragment.setArguments(bundle);
+            return scannerFragment;
 
         } else if (position == 3) {
             LeaderboardFragment leaderboardFragment = new LeaderboardFragment();

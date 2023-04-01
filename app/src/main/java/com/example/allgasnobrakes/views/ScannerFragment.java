@@ -267,7 +267,7 @@ public class ScannerFragment extends Fragment {
     public void setConfBtn() {
         PlayerProfile playerProfile = (PlayerProfile) requireArguments().get("User");
         confirm.setOnClickListener(new View.OnClickListener() {
-            HashMap<String, Object> QRData = new HashMap<>();
+            HashMap<String, String> QRData = new HashMap<>();
             @Override
             public void onClick(View v) {
                 if (location.isChecked()&& sha256hex != null) {
