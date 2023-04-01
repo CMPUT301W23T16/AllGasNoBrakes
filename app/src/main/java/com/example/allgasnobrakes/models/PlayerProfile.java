@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * Contains player profile information
  * @author zhaoyu4 zhaoyu5
- * @version 5.0
+ * @version 5.1
  */
 public class PlayerProfile implements Serializable {
     public static final String UNIQUE_HIGHEST_RANK = "uniqueHighestRank";
@@ -37,12 +37,14 @@ public class PlayerProfile implements Serializable {
     private int collectorRank = 0;
     private int displayMetric;
     private ArrayList<HashedQR> QRList = new ArrayList<>();
-    private final ProfileSummary profileSummary = new ProfileSummary(0, 0);
+    private ProfileSummary profileSummary = new ProfileSummary(0, 0);
     private boolean test = false;
 
     public PlayerProfile() {
         username = "testUser";
         test = true;
+        profileSummary = new ProfileSummary();
+        QRList.add(new HashedQR());
     }
 
     /**
@@ -117,6 +119,18 @@ public class PlayerProfile implements Serializable {
 
     public int getCollectorRank() {
         return collectorRank;
+    }
+
+    public int getNumberOfQR() {
+        return QRList.size();
+    }
+
+    public int getScore() {
+        return profileSummary.getTotalScore();
+    }
+
+    public int getCount() {
+        return profileSummary.getTotalQR();
     }
 
     public void setUsername(String username) {
@@ -199,15 +213,17 @@ public class PlayerProfile implements Serializable {
     public void deleteQR(HashedQR QR) {
         QRList.remove(QR);
 
-        FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR() + "/Players/" + username).delete();
-        FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR())
-                .update("OwnedBy", FieldValue.arrayRemove(username))
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updatePlayerCount(QR.getHashedQR());
-                    }
-                });
+        if (! test) {
+            FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR() + "/Players/" + username).delete();
+            FirebaseFirestore.getInstance().document("/QR/" + QR.getHashedQR())
+                    .update("OwnedBy", FieldValue.arrayRemove(username))
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            updatePlayerCount(QR.getHashedQR());
+                        }
+                    });
+        }
 
         profileSummary.update(getUsername(), -1, -QR.getScore());
     }
@@ -220,24 +236,26 @@ public class PlayerProfile implements Serializable {
         QRList.add(position, QR);
         profileSummary.update(getUsername(), 1, QR.getScore());
 
-        HashMap<String, Object> meta = new HashMap<>();
+        if (! test) {
+            HashMap<String, Object> meta = new HashMap<>();
 
-        meta.put("Comment", QR.getComment());
-        meta.put("Lat", QR.getLat().toString());
-        meta.put("Lon", QR.getLon().toString());
-        FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
-                .collection("Players").document(username)
-                .set(meta);
+            meta.put("Comment", QR.getComment());
+            meta.put("Lat", QR.getLat().toString());
+            meta.put("Lon", QR.getLon().toString());
+            FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
+                    .collection("Players").document(username)
+                    .set(meta);
 
-        FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
-                .update("OwnedBy", FieldValue.arrayUnion(username))
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updatePlayerCount(QR.getHashedQR());
-                    }
-                });
-        Log.d("update", "2");
+            FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
+                    .update("OwnedBy", FieldValue.arrayUnion(username))
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            updatePlayerCount(QR.getHashedQR());
+                        }
+                    });
+            Log.d("update", "2");
+        }
     }
 
     private void updatePlayerCount(String hash) {
