@@ -246,6 +246,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        total = 0;
         scannedView.setAlpha(0f);
         scannerView.setVisibility(View.VISIBLE);
         scannerView.setAlpha(1f);
