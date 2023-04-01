@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.budiyev.android.codescanner.CodeScanner;
 import com.example.allgasnobrakes.R;
 
 public class CameraFragment extends Fragment {
@@ -32,8 +30,7 @@ public class CameraFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentManager fm = getParentFragmentManager();
-        fm.beginTransaction()
+        getParentFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.split_container, ScannerFragment.class, requireArguments())
                 .commit();

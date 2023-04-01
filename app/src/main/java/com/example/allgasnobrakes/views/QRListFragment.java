@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,8 +39,8 @@ public class QRListFragment extends Fragment  {
     private RecyclerView.Adapter QrAdapter;
     private QRCountView totalCount;
     private ScoreView score;
-    private TextView uniqueRank;
-    private TextView collectorRank;
+    private UniqueHighestRankView uniqueRankView;
+    private CollectorRankView collectorRankView;
     private PlayerProfile user;
 
     public QRListFragment() {
@@ -51,7 +49,7 @@ public class QRListFragment extends Fragment  {
 
     /**
      * Overridden to display a list of QR codes sorted by score in descending order. Also allows to
-     * resort in ascending order. Displays player profile summary information (QRCounter). Allows
+     * resort in ascending order. Displays player profile summary information (ProfileSummary). Allows
      * user to delete QR codes from their account
      */
     @Override
@@ -99,8 +97,10 @@ public class QRListFragment extends Fragment  {
         currentSortOrder = view.findViewById(R.id.sort_order);
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
 
-        uniqueRank = view.findViewById(R.id.one_and_only_rank);
-        collectorRank = view.findViewById(R.id.collector_rank);
+        uniqueRankView = view.findViewById(R.id.one_and_only_rank);
+        collectorRankView = view.findViewById(R.id.collector_rank);
+        user.addPropertyChangeListener(PlayerProfile.UNIQUE_HIGHEST_RANK, uniqueRankView);
+        user.addPropertyChangeListener(PlayerProfile.COLLECTOR_RANK, collectorRankView);
 
         currentSortOrder.setOnClickListener(new View.OnClickListener() {
             @Override

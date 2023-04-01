@@ -1,7 +1,5 @@
 package com.example.allgasnobrakes.models;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -11,14 +9,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 /**
  * A class that stores player profile summary information. Displays total QR codes and total score
  * @author fartar zhaoyu4
  * @version 3.0
  */
-public class QRCounter implements Serializable {
+public class ProfileSummary implements Serializable {
     private int totalQR;
     private int totalScore;
 
@@ -27,7 +24,7 @@ public class QRCounter implements Serializable {
      * @param score The total QR score of the player account
      * @param count The total number of the QR codes that account has
      */
-    public QRCounter(int score, int  count) {
+    public ProfileSummary(int score, int  count) {
         totalQR = count;
         totalScore = score;
     }
