@@ -92,6 +92,7 @@ public class PlayerListFragment extends Fragment {
     private void getHighestTotal() {
         playersList.clear();
         FirebaseFirestore.getInstance().collection("Users")
+                .whereGreaterThan("Total Score", 0)
                 .orderBy("Total Score", Query.Direction.DESCENDING)
                 .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

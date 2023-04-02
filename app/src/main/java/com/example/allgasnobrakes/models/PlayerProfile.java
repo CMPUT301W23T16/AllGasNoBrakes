@@ -330,6 +330,7 @@ public class PlayerProfile implements Serializable {
      */
     private void setCollectorRank() {
         FirebaseFirestore.getInstance().collection("Users")
+                .whereGreaterThan("Total Score", 0)
                 .orderBy("Total Score", Query.Direction.DESCENDING)
                 .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
