@@ -348,6 +348,10 @@ public class ScannerFragment extends Fragment {
             }
         });
     }
+    
+    //https://www.youtube.com/watch?v=M-sIL8OL18o
+    //https://www.youtube.com/watch?v=kIgpSokJgzY
+    //How To Compress And Upload Images In Firebase Storage
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
