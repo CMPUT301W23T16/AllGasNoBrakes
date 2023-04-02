@@ -56,6 +56,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -70,7 +71,7 @@ import java.util.Locale;
 
 /**
  * Handles operations with code scanner
- * @author zhaoyu4 zhaoyu5 theresag
+ * @author zhaoyu4 zhaoyu5 dek theresag
  * @version 3.0
  */
 public class ScannerFragment extends Fragment {
@@ -92,6 +93,7 @@ public class ScannerFragment extends Fragment {
     private ImageView imgCamera;
     private ProgressDialog progressDialog;
     private Bitmap img;
+    private String downloadURL;
 
     public ScannerFragment() {
         super(R.layout.scanner);
@@ -133,7 +135,7 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Button btnCamera = view.findViewById(R.id.photo_taking_btn);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -175,6 +177,7 @@ public class ScannerFragment extends Fragment {
                                         }
 
                                         scannedView.setText(scannedContent);
+                                        btnCamera.setVisibility(View.VISIBLE);
                                     }
                                 });
 
@@ -228,7 +231,6 @@ public class ScannerFragment extends Fragment {
         });
 
         //The button will take the user to fragment to take photo of surrounding area
-        Button btnCamera = view.findViewById(R.id.photo_taking_btn);
         imgCamera = view.findViewById(R.id.imgSurround);
 
         progressDialog = new ProgressDialog(getActivity());
@@ -380,6 +382,10 @@ public class ScannerFragment extends Fragment {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.cancel();
                 Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+
+                downloadURL = storageReference.getDownloadUrl().toString();
+                Log.d("Upload", "Download URL: "+downloadURL);
+                linkToQRCode();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -388,5 +394,13 @@ public class ScannerFragment extends Fragment {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    //Add a download link of the photo to the QR code
+    private void linkToQRCode() {
+        //update the QR doc with the new information
+        FirebaseFirestore.getInstance().collection("QR").document(sha256hex)
+                .update("Images", FieldValue.arrayUnion(downloadURL));
+
+        Log.d("Upload", "Photo URL added to QR code");
     }
 }
