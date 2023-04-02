@@ -10,10 +10,15 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.HashMap;
 
 /**
  * UI test cases for in-app paging
@@ -25,20 +30,27 @@ public class PagingTest {
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
+    private static String id;
 
     @Before
     public void setUp() throws InterruptedException {
-        onView(withId(R.id.fragment_container)).check(matches(isDisplayed()));
-        Thread.sleep(2000);
-        try {
-            onView(withId(R.id.username_edittext)).perform(typeText("Test User"));
-            onView(withId(R.id.email_edittext)).perform(typeText("user@test.com"));
-            onView(withId(R.id.password_edittext)).perform(typeText("test"));
-            Espresso.closeSoftKeyboard();
-            onView(withId(R.id.registerbutton)).perform(click());
-        } catch (NoMatchingViewException e) {
-            onView(withId(R.id.roll_out_button)).perform(click());
-        }
+        id = MainActivity.getId();
+        FirebaseFirestore.getInstance().collection("DeviceID").document(id)
+                .set(new HashMap<String, Object>() {{
+                    put("LastUser", "/Users/Test User");
+                }});
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document("Test User")
+                .set(new HashMap<String, Object>() {{
+                    put("Email", "test");
+                    put("Password", "test");
+                    put("Total Score", 0);
+                    put("QR Count", 0);
+                }});
+
+        Thread.sleep(3000);
+        onView(withText("ROLL OUT")).perform(click());
     }
 
     @Test
@@ -72,5 +84,13 @@ public class PagingTest {
         onView(withText("The Hardcore Collectors")).check(matches(isDisplayed()));
         onView(withText("The Hardcore Collectors")).perform(click());
         onView(withText("The Hardcore Collectors")).check(matches(isSelected()));
+    }
+
+    @AfterClass
+    public static void deleteTestUser() throws InterruptedException {
+        FirebaseFirestore.getInstance().collection("Users")
+                .document("Test User").delete();
+        FirebaseFirestore.getInstance().collection("DeviceID").document(id).delete();
+        Thread.sleep(3000);
     }
 }
