@@ -32,10 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private PPFViewModel viewModel;
     private MenuBarAdapter menuBarAdapter;
     private ViewPager2 viewPager;
-
-    public static String getUserName() {
-        return currentUser.getUsername();
-    }
+    private static String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
         to register
          */
         if (savedInstanceState == null) {
-            String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//            String id = "DAJ101";
-//            String id = "MH415";
+            id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+//            id = "DAJ101";
+//            id = "MH415";
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 //            db.useEmulator("10.0.2.2", 8080);
@@ -136,5 +133,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static PlayerProfile getCurrentUser() {
         return currentUser;
+    }
+
+    public static String getId() {
+        return id;
     }
 }

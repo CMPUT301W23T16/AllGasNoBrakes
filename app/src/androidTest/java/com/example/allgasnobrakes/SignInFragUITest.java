@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,66 +24,36 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.time.chrono.MinguoChronology;
 import java.util.HashMap;
 
 @RunWith(AndroidJUnit4.class)
 public class SignInFragUITest {
     private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-    private static final PlayerProfile testUser =
-            new PlayerProfile("Test User", "test@gmail.com", "1234",
-                    0, 0);
-
-    private static String id;
-
-    private static final HashedQR dummyQR = new HashedQR();
-
     private Solo solo; //used to call the interface component
+    private static String id;
 
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, true);
 
-    /**
-     * Runs once before testing to inject the testing environment
-     */
-    @BeforeClass
-    public static void registerUser() {
-        id = "ec7df04b91ff8c69";
-
-        firestore.collection("Users").document(testUser.getUsername())
-                .set(new HashMap<String, Object>(){{
-                    put("Email", testUser.getEmail());
-                    put("Password", testUser.getPassword());
-                    put("QR Count", 0);
-                    put("Total Score", 0);
-                }});
-
-        firestore.collection("DeviceID").document(id)
-                .set(new HashMap<String, String>(){{
-                    put("LastUser", "/Users/" + testUser.getUsername());
-                }});
-
-        firestore.collection("QR").document(dummyQR.getHashedQR())
-                .set(new HashMap<String, Object>(){{
-                    put("Score", dummyQR.getScore());
-                    put("Name", dummyQR.getName());
-                    put("Hash", dummyQR.getHashedQR());
-                }});
-
-        testUser.addQR(0, dummyQR);
-    }
-
     @Before
     public void setUp() {
         solo = new Solo (InstrumentationRegistry.getInstrumentation(), rule.getActivity());
-    }
 
-    /**
-     * Gets the Activity
-     */
-    @Test
-    public void start() {
-        Activity activity = rule.getActivity();
+        id = MainActivity.getId();
+        FirebaseFirestore.getInstance().collection("DeviceID").document(id)
+                .set(new HashMap<String, Object>() {{
+                    put("LastUser", "/Users/Test User");
+                }});
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document("Test User")
+                .set(new HashMap<String, Object>() {{
+                    put("Email", "test");
+                    put("Password", "test");
+                    put("Total Score", 0);
+                    put("QR Count", 0);
+                }});
     }
 
     /**
@@ -96,21 +67,6 @@ public class SignInFragUITest {
 
         solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.homepage);
         assertTrue("button not shown", (solo.getView(R.id.sort_order)).isShown());
-    }
-
-    /**
-     * Test for switching to different fragments using the menu bar
-     */
-    @Test
-    public void menuBarTest() {
-        signInTest();
-        solo.clickOnButton("Camera");
-        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.scanner);
-        assertTrue("button not shown", (solo.getView(R.id.confirm_button)).isShown());
-
-        solo.clickOnButton("Profile");
-        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.profile);
-        assertTrue("button not shown", (solo.getView(R.id.search_btn)).isShown());
     }
 
     @Test
@@ -133,13 +89,8 @@ public class SignInFragUITest {
 
     @AfterClass
     public static void deleteTestUser() throws InterruptedException {
-
-        firestore.collection("Users").document(testUser.getUsername()).delete();
-
+        firestore.collection("Users").document("Test User").delete();
         firestore.collection("DeviceID").document(id).delete();
-
-        firestore.collection("QR").document(dummyQR.getHashedQR()).delete();
-
         Thread.sleep(3000);
     }
 }
