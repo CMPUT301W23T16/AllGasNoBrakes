@@ -28,8 +28,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class QRListFragmentTest {
-    private PlayerProfile playerProfile;
-
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
@@ -39,9 +37,6 @@ public class QRListFragmentTest {
         onView(withId(R.id.fragment_container)).check(matches(isDisplayed()));
         Thread.sleep(2000);
         try {
-            playerProfile = new PlayerProfile("Test User", "user@test.com",
-                    "test", 0, 0);
-
             onView(withId(R.id.username_edittext)).perform(typeText("Test User"));
             onView(withId(R.id.email_edittext)).perform(typeText("user@test.com"));
             onView(withId(R.id.password_edittext)).perform(typeText("test"));
@@ -62,9 +57,6 @@ public class QRListFragmentTest {
                             String password = ds.getString("Password");
                             Number score = (Number) ds.get("Total Score");
                             Number QRCount = (Number) ds.get("QR Count");
-
-                            playerProfile = new PlayerProfile(playerName, email, password,
-                                    score.intValue(), QRCount.intValue());
                         }
                     });
         }
@@ -72,6 +64,6 @@ public class QRListFragmentTest {
 
     @Test
     public void testAddQrUiChanges() {
-
+//        MainActivity.getCurrentUser().addQR();
     }
 }
