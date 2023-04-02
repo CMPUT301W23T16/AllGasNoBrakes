@@ -14,7 +14,14 @@ import com.example.allgasnobrakes.views.QRListFragment;
 import com.example.allgasnobrakes.views.ScannerFragment;
 import com.example.allgasnobrakes.views.LeaderboardFragment;
 
+// Android Developers Documentation
 // https://developer.android.com/guide/navigation/navigation-swipe-view-2
+
+/**
+ * Instantiate the different pages (fragments) based on the selected tab in the menu bar
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class MenuBarAdapter extends FragmentStateAdapter {
     private Bundle bundle;
 

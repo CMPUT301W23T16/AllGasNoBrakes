@@ -15,6 +15,11 @@ import com.example.allgasnobrakes.adapters.LeaderBoardAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+/**
+ * Hosts the leaderboards and provide the tabs for switching between different leaderboards
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class LeaderboardFragment extends Fragment {
     public LeaderboardFragment() {
         super(R.layout.leaderboard);
@@ -33,6 +38,8 @@ public class LeaderboardFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // Android Developers Documentation
+        // https://developer.android.com/guide/navigation/navigation-swipe-view-2
         leaderBoardAdapter = new LeaderBoardAdapter(this);
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(leaderBoardAdapter);

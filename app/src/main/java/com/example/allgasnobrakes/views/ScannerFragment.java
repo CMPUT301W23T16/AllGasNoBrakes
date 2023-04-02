@@ -265,6 +265,9 @@ public class ScannerFragment extends Fragment {
         mCodeScanner.startPreview();
     }
 
+    /**
+     * Sets the on click listener for the confirm button
+     */
     public void setConfBtn() {
         PlayerProfile playerProfile = (PlayerProfile) requireArguments().get("User");
         confirm.setOnClickListener(new View.OnClickListener() {

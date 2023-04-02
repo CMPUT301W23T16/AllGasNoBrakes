@@ -14,6 +14,11 @@ import com.example.allgasnobrakes.R;
 
 import java.util.ArrayList;
 
+/**
+ * Adapts a list of PlayerProfile's to a RecyclerView
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder> {
     private final ArrayList<PlayerProfile> players;
     private final Context context;

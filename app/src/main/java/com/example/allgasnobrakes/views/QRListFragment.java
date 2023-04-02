@@ -27,7 +27,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
 
-
 /**
  * Handles operations with QR code list
  * @author zhaoyu4 zhaoyu5
@@ -120,7 +119,11 @@ public class QRListFragment extends Fragment  {
             }
         });
 
-        // https://www.geeksforgeeks.org/swipe-to-delete-and-undo-in-android-recyclerview/
+        /*
+        Contributor: chaitanyamunje
+        Accessed: 2023-04-01
+        URL: https://www.geeksforgeeks.org/swipe-to-delete-and-undo-in-android-recyclerview/
+         */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -183,6 +186,9 @@ public class QRListFragment extends Fragment  {
         Log.d("resume", requireArguments().getString("SortOrder"));
     }
 
+    /**
+     * Sets the text for all PropertyChangeListeners TextViews
+     */
     private void setAllTexts() {
         totalCount.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalQR()));
         score.setText(String.format(Locale.CANADA, "%d", user.getProfileSummary().getTotalScore()));
