@@ -49,8 +49,8 @@ public class QRListFragmentTest {
             onView(withId(R.id.registerbutton)).perform(click());
 
         } catch (NoMatchingViewException e) {
-            String username = ((TextView) withId(R.id.name_textview)).getText().toString();
-
+            onView(withId(R.id.roll_out_button)).perform(click());
+            String username = MainActivity.getUserName();
             FirebaseFirestore.getInstance().collection("Users").document(username)
                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
                         @Override
@@ -65,8 +65,6 @@ public class QRListFragmentTest {
 
                             playerProfile = new PlayerProfile(playerName, email, password,
                                     score.intValue(), QRCount.intValue());
-
-                            onView(withId(R.id.roll_out_button)).perform(click());
                         }
                     });
         }
