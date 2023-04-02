@@ -240,7 +240,7 @@ public class PlayerProfile implements Serializable {
             HashMap<String, Object> meta = new HashMap<>();
 
             meta.put("Comment", QR.getComment());
-            meta.put("Lat", QR.getLat().toString());
+             meta.put("Lat", QR.getLat().toString());
             meta.put("Lon", QR.getLon().toString());
             FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
                     .collection("Players").document(username)
