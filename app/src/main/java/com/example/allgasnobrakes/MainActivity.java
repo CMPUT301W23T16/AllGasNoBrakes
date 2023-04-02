@@ -27,11 +27,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
-    private PlayerProfile currentUser;
+    private static PlayerProfile currentUser;
     private final FragmentManager fm = getSupportFragmentManager();
     private PPFViewModel viewModel;
     private MenuBarAdapter menuBarAdapter;
     private ViewPager2 viewPager;
+
+    public static String getUserName() {
+        return currentUser.getUsername();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 //            String id = "DAJ101";
- //           String id = "MH415";
+//            String id = "MH415";
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 //            db.useEmulator("10.0.2.2", 8080);
@@ -130,4 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static PlayerProfile getCurrentUser() {
+        return currentUser;
+    }
 }
