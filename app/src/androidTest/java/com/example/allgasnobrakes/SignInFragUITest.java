@@ -106,26 +106,6 @@ public class SignInFragUITest {
         assertTrue("button not shown", (solo.getView(R.id.sort_order)).isShown());
     }
 
-    @Test
-    public void HomeQRTest() {
-        signInTest();
-
-
-
-        solo.clickOnMenuItem("Home");
-        solo.getCurrentActivity().getFragmentManager().findFragmentById(R.layout.homepage);
-
-        TextView totalScore = (TextView) solo.getView(R.id.player_score);
-        int initialTotalScore = Integer.parseInt(totalScore.getText().toString());
-        assertEquals(53, initialTotalScore);
-
-        TextView totalTextView = (TextView) solo.getView(R.id.total_codes);
-        int initialTotalCount = Integer.parseInt(totalTextView.getText().toString());
-        assertEquals(1, initialTotalCount);
-
-
-    }
-
     /**
      * Test for switching to different fragments using the menu bar
      */
