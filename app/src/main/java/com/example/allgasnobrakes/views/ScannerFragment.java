@@ -5,7 +5,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -33,12 +32,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
-import com.example.allgasnobrakes.adapters.PlayerListAdapter;
+import com.example.allgasnobrakes.MainActivity;
 import com.example.allgasnobrakes.models.CarGenerator;
 import com.example.allgasnobrakes.models.HashedQR;
 import com.example.allgasnobrakes.models.NameGenerator;
@@ -151,7 +149,7 @@ public class ScannerFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         DocumentSnapshot ds = task.getResult();
-                                        String playerName = ((PlayerProfile) requireArguments().get("User")).getUsername();
+                                        String playerName = currentUser().getUsername();
 
                                         if (ds.exists()) {
                                             ArrayList<String> ownedBy = (ArrayList<String>) (ds.get("OwnedBy"));
@@ -259,6 +257,7 @@ public class ScannerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         total = 0;
+        owned = false;
         scannedView.setAlpha(0f);
         scannerView.setVisibility(View.VISIBLE);
         scannerView.setAlpha(1f);
@@ -269,7 +268,6 @@ public class ScannerFragment extends Fragment {
      * Sets the on click listener for the confirm button
      */
     public void setConfBtn() {
-        PlayerProfile playerProfile = (PlayerProfile) requireArguments().get("User");
         confirm.setOnClickListener(new View.OnClickListener() {
             HashMap<String, String> QRData = new HashMap<>();
             @Override
@@ -325,7 +323,7 @@ public class ScannerFragment extends Fragment {
                                         comment.getText().toString(),
                                         QRData.get("Latitude"), QRData.get("Longitude"));
 
-                                playerProfile.addQR(0, newQR);
+                                currentUser().addQR(0, newQR);
                                 HashMap<String, Object> meta = new HashMap<>();
                                 meta.put("Lat",QRData.get("Latitude"));
                                 meta.put("Lon",QRData.get("Longitude"));
@@ -344,7 +342,7 @@ public class ScannerFragment extends Fragment {
                             comment.getText().toString(),
                             QRData.get("Latitude"), QRData.get("Longitude"));
 
-                    playerProfile.addQR(0, newQR);
+                    currentUser().addQR(0, newQR);
                 }
             }
         });
@@ -377,7 +375,7 @@ public class ScannerFragment extends Fragment {
     private void uploadImages(byte[] imgByte){
         StorageReference storageReference = FirebaseStorage.getInstance().getReference()
                 .child("images")
-                .child(((PlayerProfile) requireArguments().get("User")).getUsername()
+                .child(currentUser().getUsername()
                         +sha256hex+".jpg");
         storageReference.putBytes(imgByte).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -392,5 +390,9 @@ public class ScannerFragment extends Fragment {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private PlayerProfile currentUser() {
+        return MainActivity.getCurrentUser();
     }
 }

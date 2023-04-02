@@ -55,16 +55,16 @@ public class QRListFragment extends Fragment  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d("Current User", getCurrentUser().getUsername());
+        Log.d("Current User", currentUser().getUsername());
         final Activity activity = getActivity();
 
         QRList = view.findViewById(R.id.codes_list);
         QRList.setLayoutManager(new LinearLayoutManager(activity));
-        QrAdapter = new QrArrayAdapter(getCurrentUser().getQRList(), activity, new QrArrayAdapter.ItemClickListener() {
+        QrAdapter = new QrArrayAdapter(currentUser().getQRList(), activity, new QrArrayAdapter.ItemClickListener() {
             @Override
             public void onItemClick(HashedQR hashedQR) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference docRef = db.collection("QR").document(hashedQR.getHashedQR()).collection("Players").document(getCurrentUser().getUsername());
+                DocumentReference docRef = db.collection("QR").document(hashedQR.getHashedQR()).collection("Players").document(currentUser().getUsername());
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -96,10 +96,10 @@ public class QRListFragment extends Fragment  {
         uniqueRankView = view.findViewById(R.id.one_and_only_rank);
         collectorRankView = view.findViewById(R.id.collector_rank);
 
-        getCurrentUser().addScorePropertyChangeListener(ProfileSummary.TOTAL_QR, ProfileSummary.TOTAL_SCORE,
+        currentUser().addScorePropertyChangeListener(ProfileSummary.TOTAL_QR, ProfileSummary.TOTAL_SCORE,
                 totalCount, score);
-        getCurrentUser().addPropertyChangeListener(PlayerProfile.UNIQUE_HIGHEST_RANK, uniqueRankView);
-        getCurrentUser().addPropertyChangeListener(PlayerProfile.COLLECTOR_RANK, collectorRankView);
+        currentUser().addPropertyChangeListener(PlayerProfile.UNIQUE_HIGHEST_RANK, uniqueRankView);
+        currentUser().addPropertyChangeListener(PlayerProfile.COLLECTOR_RANK, collectorRankView);
 
         setAllTexts();
 
@@ -107,11 +107,11 @@ public class QRListFragment extends Fragment  {
             @Override
             public void onClick(View v) {
                 if (currentSortOrder.getText().toString().equals("Highest Score")) {
-                    getCurrentUser().getQRList().sort(new HashedQR());
+                    currentUser().getQRList().sort(new HashedQR());
                     QrAdapter.notifyDataSetChanged();
                     currentSortOrder.setText(R.string.lowest_score_text);
                 } else {
-                    getCurrentUser().getQRList().sort(new HashedQR().reversed());
+                    currentUser().getQRList().sort(new HashedQR().reversed());
                     currentSortOrder.setText(R.string.highest_score_text);
                     QrAdapter.notifyDataSetChanged();
                 }
@@ -136,10 +136,10 @@ public class QRListFragment extends Fragment  {
                 int position = viewHolder.getAdapterPosition();
 
                 // on below line we are getting the item at a particular position.
-                HashedQR deletedQR = getCurrentUser().getQR(position);
+                HashedQR deletedQR = currentUser().getQR(position);
 
                 // Then we remove it from the cloud database
-                getCurrentUser().deleteQR(deletedQR);
+                currentUser().deleteQR(deletedQR);
 
                 // below line is to notify our item is removed from adapter.
                 QrAdapter.notifyItemRemoved(position);
@@ -151,7 +151,7 @@ public class QRListFragment extends Fragment  {
                         // adding on click listener to our action of snack bar.
 
                         // Add it back to cloud database
-                        getCurrentUser().addQR(position, deletedQR);
+                        currentUser().addQR(position, deletedQR);
 
                         // below line is to notify item is
                         // added to our adapter class.
@@ -178,9 +178,9 @@ public class QRListFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-        getCurrentUser().retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
-        Log.d("resume", String.format(Locale.CANADA, "%d", getCurrentUser().getProfileSummary().getTotalQR()));
-        Log.d("resume", String.format(Locale.CANADA, "%d", getCurrentUser().getProfileSummary().getTotalScore()));
+        currentUser().retrieveQR(QrAdapter, requireArguments().getString("SortOrder"));
+        Log.d("resume", String.format(Locale.CANADA, "%d", currentUser().getProfileSummary().getTotalQR()));
+        Log.d("resume", String.format(Locale.CANADA, "%d", currentUser().getProfileSummary().getTotalScore()));
         Log.d("resume", requireArguments().getString("SortOrder"));
     }
 
@@ -188,26 +188,26 @@ public class QRListFragment extends Fragment  {
      * Sets the text for all PropertyChangeListeners TextViews
      */
     private void setAllTexts() {
-        totalCount.setText(String.format(Locale.CANADA, "%d", getCurrentUser().getProfileSummary().getTotalQR()));
-        score.setText(String.format(Locale.CANADA, "%d", getCurrentUser().getProfileSummary().getTotalScore()));
+        totalCount.setText(String.format(Locale.CANADA, "%d", currentUser().getProfileSummary().getTotalQR()));
+        score.setText(String.format(Locale.CANADA, "%d", currentUser().getProfileSummary().getTotalScore()));
         currentSortOrder.setText(requireArguments().getString("SortOrder"));
 
-        if (getCurrentUser().getUniqueHighestRank() > 0) {
+        if (currentUser().getUniqueHighestRank() > 0) {
             uniqueRankView.setText(String.format(Locale.CANADA, "No. %d in The One and Only",
-                    getCurrentUser().getUniqueHighestRank()));
+                    currentUser().getUniqueHighestRank()));
         } else {
             uniqueRankView.setText(R.string.not_on_unique_highest_message);
         }
 
-        if (getCurrentUser().getCollectorRank() > 0) {
+        if (currentUser().getCollectorRank() > 0) {
             collectorRankView.setText(String.format(Locale.CANADA, "No. %d in The Hardcore Collectors",
-                    getCurrentUser().getCollectorRank()));
+                    currentUser().getCollectorRank()));
         } else {
             collectorRankView.setText(R.string.not_on_collector_message);
         }
     }
 
-    private PlayerProfile getCurrentUser() {
+    private PlayerProfile currentUser() {
         return MainActivity.getCurrentUser();
     }
 }

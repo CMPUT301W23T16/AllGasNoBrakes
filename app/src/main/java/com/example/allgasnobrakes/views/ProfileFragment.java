@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.allgasnobrakes.MainActivity;
 import com.example.allgasnobrakes.models.PlayerProfile;
 import com.example.allgasnobrakes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -88,15 +89,14 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Sets the text for the username and email
-        PlayerProfile currentUser = (PlayerProfile) requireArguments().getSerializable("User");
-        username.setText(currentUser.getUsername());
-        email.setText(currentUser.getEmail());
+        username.setText(currentUser().getUsername());
+        email.setText(currentUser().getEmail());
 
         //For opening a another profile fragment for the other player
         FragmentManager other = getParentFragmentManager();
         other.beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.friend_fragment, FriendFragment.class, requireArguments())
+                .replace(R.id.friend_fragment, FriendFragment.class, new Bundle())
                 .commit();
 
         //Searching for other players
@@ -160,5 +160,9 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+    }
+
+    private PlayerProfile currentUser() {
+        return MainActivity.getCurrentUser();
     }
 }
