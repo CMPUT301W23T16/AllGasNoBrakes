@@ -5,8 +5,6 @@ import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
-import android.util.Log;
-
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -33,14 +31,12 @@ public class PagingTest {
         onView(withId(R.id.fragment_container)).check(matches(isDisplayed()));
         Thread.sleep(2000);
         try {
-            Log.d("test", "displayed");
             onView(withId(R.id.username_edittext)).perform(typeText("Test User"));
             onView(withId(R.id.email_edittext)).perform(typeText("user@test.com"));
             onView(withId(R.id.password_edittext)).perform(typeText("test"));
             Espresso.closeSoftKeyboard();
             onView(withId(R.id.registerbutton)).perform(click());
         } catch (NoMatchingViewException e) {
-            Log.d("test", "not displayed");
             onView(withId(R.id.roll_out_button)).perform(click());
         }
     }
