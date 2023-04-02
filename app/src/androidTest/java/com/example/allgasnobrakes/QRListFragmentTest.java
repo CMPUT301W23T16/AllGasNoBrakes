@@ -45,20 +45,6 @@ public class QRListFragmentTest {
 
         } catch (NoMatchingViewException e) {
             onView(withId(R.id.roll_out_button)).perform(click());
-            String username = MainActivity.getUserName();
-            FirebaseFirestore.getInstance().collection("Users").document(username)
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            DocumentSnapshot ds = task.getResult();
-
-                            String playerName = ds.getId();
-                            String email = ds.getString("Email");
-                            String password = ds.getString("Password");
-                            Number score = (Number) ds.get("Total Score");
-                            Number QRCount = (Number) ds.get("QR Count");
-                        }
-                    });
         }
     }
 
