@@ -70,7 +70,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * Handles operations with code scanner
+ * Handles operations with code scanner. Also for taking and uploading photos
  * @author zhaoyu4 zhaoyu5 dek theresag
  * @version 3.0
  */
@@ -99,9 +99,26 @@ public class ScannerFragment extends Fragment {
         super(R.layout.scanner);
     }
 
+//    /**
+//     * Overridden to add functionality for scanning a QR code, obtaining the sha256 hash, calling
+//     * other classes to build a QR code, and storing the QR appropriately to the cloud
+//     * @param inflater The LayoutInflater object that can be used to inflate
+//     * any views in the fragment,
+//     * @param container If non-null, this is the parent view that the fragment's
+//     * UI should be attached to.  The fragment should not add the view itself,
+//     * but this can be used to generate the LayoutParams of the view.
+//     * @param savedInstanceState If non-null, this fragment is being re-constructed
+//     * from a previous saved state as given here.
+//     *
+//     * @return The created view
+//     */
+
     /**
-     * Overridden to add functionality for scanning a QR code, obtaining the sha256 hash, calling
-     * other classes to build a QR code, and storing the QR appropriately to the cloud
+     * Allow user to scan QR codes and take a picture of the surrounding areas
+     *
+     * Overridden to aadd functionality for scanning a QR code, obtaining the sha256 hash,
+     * calling other classes to build QR code, taking a photo, and storing the QR and photograph
+     * appropriately to the cloud.
      * @param inflater The LayoutInflater object that can be used to inflate
      * any views in the fragment,
      * @param container If non-null, this is the parent view that the fragment's
@@ -110,7 +127,7 @@ public class ScannerFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return The created view
+     * @return the created view
      */
     @Nullable
     @Override
