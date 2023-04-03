@@ -207,7 +207,7 @@ public class PlayerProfile implements Serializable {
     }
 
     /**
-     * Removed the QR code from the user's account
+     * Removes the QR code from the user's account
      * @param QR The QR code to be deleted
      */
     public void deleteQR(HashedQR QR) {
@@ -240,8 +240,8 @@ public class PlayerProfile implements Serializable {
             HashMap<String, Object> meta = new HashMap<>();
 
             meta.put("Comment", QR.getComment());
-            meta.put("Lat", QR.getLat().toString());
-            meta.put("Lon", QR.getLon().toString());
+            meta.put("Lat", QR.getLat());
+            meta.put("Lon", QR.getLon());
             FirebaseFirestore.getInstance().collection("QR").document(QR.getHashedQR())
                     .collection("Players").document(username)
                     .set(meta);
@@ -258,6 +258,10 @@ public class PlayerProfile implements Serializable {
         }
     }
 
+    /**
+     * Given the SHA256 hash of a QR code, updates the number of players who owns this QR code in Firestore
+     * @param hash SHA256 hash of a QR code
+     */
     private void updatePlayerCount(String hash) {
         FirebaseFirestore.getInstance().collection("QR").document(hash)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -278,11 +282,17 @@ public class PlayerProfile implements Serializable {
                 });
     }
 
+    /**
+     * Updates the player's ranking for both leaderboards
+     */
     public void setRank() {
         setUniqueHighestRank();
         setCollectorRank();
     }
 
+    /**
+     * Updates the player's ranking for the highest scoring unique QR code leaderboard
+     */
     private void setUniqueHighestRank() {
         FirebaseFirestore.getInstance().collection("QR")
                 .whereEqualTo("PlayerCount", 1)
@@ -315,8 +325,12 @@ public class PlayerProfile implements Serializable {
                 });
     }
 
+    /**
+     * Updates the player's ranking for the total QR code score leaderboard
+     */
     private void setCollectorRank() {
         FirebaseFirestore.getInstance().collection("Users")
+                .whereGreaterThan("Total Score", 0)
                 .orderBy("Total Score", Query.Direction.DESCENDING)
                 .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

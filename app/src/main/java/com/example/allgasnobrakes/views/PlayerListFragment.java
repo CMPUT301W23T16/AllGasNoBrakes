@@ -22,6 +22,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Displays and updates the leaderboard. Currently implements two types of leaderboard
+ *  1. Highest scoring QR code that is unique
+ *  2. Total QR code score
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class PlayerListFragment extends Fragment {
     private RecyclerView playerRecyclerView;
     private final ArrayList<PlayerProfile> playersList = new ArrayList<>();
@@ -85,6 +92,7 @@ public class PlayerListFragment extends Fragment {
     private void getHighestTotal() {
         playersList.clear();
         FirebaseFirestore.getInstance().collection("Users")
+                .whereGreaterThan("Total Score", 0)
                 .orderBy("Total Score", Query.Direction.DESCENDING)
                 .limit(100)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

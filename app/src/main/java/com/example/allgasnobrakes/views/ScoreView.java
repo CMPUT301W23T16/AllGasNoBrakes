@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Locale;
 
 /**
- * Java Observer TextView for total QR score
+ * Java PropertyChangeListener TextView for total QR score
  * @author zhaoyu4
  * @version 2.0
  */
