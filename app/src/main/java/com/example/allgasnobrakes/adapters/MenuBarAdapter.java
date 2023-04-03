@@ -14,7 +14,14 @@ import com.example.allgasnobrakes.views.QRListFragment;
 import com.example.allgasnobrakes.views.ScannerFragment;
 import com.example.allgasnobrakes.views.LeaderboardFragment;
 
+// Android Developers Documentation
 // https://developer.android.com/guide/navigation/navigation-swipe-view-2
+
+/**
+ * Instantiate the different pages (fragments) based on the selected tab in the menu bar
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class MenuBarAdapter extends FragmentStateAdapter {
     private Bundle bundle;
 
@@ -32,24 +39,16 @@ public class MenuBarAdapter extends FragmentStateAdapter {
             return qrListFragment;
 
         } else if (position == 1) {
-            MapFragment mapFragment = new MapFragment();
-            mapFragment.setArguments(bundle);
-            return mapFragment;
+            return new MapFragment();
 
         } else if (position == 2) {
-            ScannerFragment scannerFragment = new ScannerFragment();
-            scannerFragment.setArguments(bundle);
-            return scannerFragment;
+            return new ScannerFragment();
 
         } else if (position == 3) {
-            LeaderboardFragment leaderboardFragment = new LeaderboardFragment();
-            leaderboardFragment.setArguments(bundle);
-            return leaderboardFragment;
+            return new LeaderboardFragment();
 
         } else if (position == 4) {
-            ProfileFragment profileFragment = new ProfileFragment();
-            profileFragment.setArguments(bundle);
-            return profileFragment;
+            return new ProfileFragment();
 
         } else {
             return new BlankFragment();

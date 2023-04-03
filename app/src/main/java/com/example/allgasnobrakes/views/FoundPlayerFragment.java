@@ -26,7 +26,7 @@ public class FoundPlayerFragment extends DialogFragment {
     private String username1;
     private String email;
     private RecyclerView QRList;
-    private RecyclerView.Adapter QrAdapter;
+    private QrArrayAdapter QrAdapter;
     public void main(String username, String email) {
         // Get information from the selected city to be edited
         this.username1  = username;

@@ -1,5 +1,6 @@
 package com.example.allgasnobrakes;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;

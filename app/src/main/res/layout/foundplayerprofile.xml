@@ -13,6 +13,7 @@
         android:paddingHorizontal="20dp"
         android:textSize="20dp"
         android:maxLength="30"
+        android:textColor="@color/black"
         android:text="username" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:paddingHorizontal="20dp"
         android:paddingTop="10dp"
         android:text="Email"
+        android:textColor="@color/black"
         android:textSize="14sp" />
 
     <androidx.recyclerview.widget.RecyclerView

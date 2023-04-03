@@ -13,6 +13,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Locale;
 
+/**
+ * Java PropertyChangeListener TextView for the unique highest scoring QR code leaderboard
+ * @author zhaoyu4
+ * @version 1.0
+ */
 public class UniqueHighestRankView extends androidx.appcompat.widget.AppCompatTextView implements PropertyChangeListener {
     public UniqueHighestRankView(@NonNull Context context) {
         super(context);
