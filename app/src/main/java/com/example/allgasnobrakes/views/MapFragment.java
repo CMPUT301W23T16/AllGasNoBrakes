@@ -38,7 +38,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.SphericalUtil;
 
-
+/**
+ * handles the map view and searching by geolocation
+ * @author zhaoyu5 
+ * @version 1.0
+ */
 public class MapFragment extends Fragment {
     private GoogleMap mMap;
     private SupportMapFragment supportMapFragment;
