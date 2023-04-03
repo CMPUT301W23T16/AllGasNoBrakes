@@ -98,8 +98,11 @@ public class ScannerFragment extends Fragment {
     }
 
 //    /**
-//     * Overridden to add functionality for scanning a QR code, obtaining the sha256 hash, calling
-//     * other classes to build a QR code, and storing the QR appropriately to the cloud
+//     * Allow user to scan QR codes and take a picture of the surrounding areas
+//     *
+//     * Overridden to aadd functionality for scanning a QR code, obtaining the sha256 hash,
+//     * calling other classes to build QR code, taking a photo, and storing the QR and photograph
+//     * appropriately to the cloud.
 //     * @param inflater The LayoutInflater object that can be used to inflate
 //     * any views in the fragment,
 //     * @param container If non-null, this is the parent view that the fragment's
@@ -108,15 +111,15 @@ public class ScannerFragment extends Fragment {
 //     * @param savedInstanceState If non-null, this fragment is being re-constructed
 //     * from a previous saved state as given here.
 //     *
-//     * @return The created view
+//     * @return the created view
 //     */
 
     /**
-     * Allow user to scan QR codes and take a picture of the surrounding areas
+     *  Allow user to scan QR codes and take a picture of the surrounding areas
      *
-     * Overridden to aadd functionality for scanning a QR code, obtaining the sha256 hash,
-     * calling other classes to build QR code, taking a photo, and storing the QR and photograph
-     * appropriately to the cloud.
+     *  Overridden to add functionality for scanning a QR code, obtaining the sha256 hash,
+     *  calling other classes to build QR code, taking a photo, and storing the QR and photograph
+     *  appropriately to the cloud.
      * @param inflater The LayoutInflater object that can be used to inflate
      * any views in the fragment,
      * @param container If non-null, this is the parent view that the fragment's
