@@ -29,6 +29,10 @@ import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 
+/**
+ * UI tests for the QRListFragment. Test on whether the listener views update when adding and
+ * deleting QR codes
+ */
 @RunWith(AndroidJUnit4.class)
 public class QRListFragmentTest {
     private static HashedQR dummyQR;
