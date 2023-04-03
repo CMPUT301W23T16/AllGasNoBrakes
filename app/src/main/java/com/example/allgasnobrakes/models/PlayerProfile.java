@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * Contains player profile information
+ * Contains player profile information and provides methods to update them
  * @author zhaoyu4 zhaoyu5
  * @version 5.1
  */
