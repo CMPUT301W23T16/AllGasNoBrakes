@@ -413,6 +413,10 @@ public class ScannerFragment extends Fragment {
         Log.d("Upload", "Photo URL added to QR code");
     }
 
+    /**
+     * Returns the current user
+     * @return The PlayerProfile object of the current user
+     */
     private PlayerProfile currentUser() {
         return MainActivity.getCurrentUser();
     }

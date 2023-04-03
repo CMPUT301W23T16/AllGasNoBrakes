@@ -31,9 +31,16 @@ public class CollectorRankView extends androidx.appcompat.widget.AppCompatTextVi
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Updates player rank on the total QR code score leaderboard
+     * @param evt A PropertyChangeEvent object describing the event source
+     *          and the property that has changed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Number rank = (Number) evt.getNewValue();
+
+        // If the rank is less than 0, that means we are not on the leaderboard
         if (rank.intValue() <= 0) {
             setText(R.string.not_on_collector_message);
             Log.d("collector", "not updated");

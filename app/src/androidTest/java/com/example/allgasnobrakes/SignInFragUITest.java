@@ -27,6 +27,9 @@ import org.junit.runner.RunWith;
 import java.time.chrono.MinguoChronology;
 import java.util.HashMap;
 
+/**
+ * Test user sign in procedures
+ */
 @RunWith(AndroidJUnit4.class)
 public class SignInFragUITest {
     private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();

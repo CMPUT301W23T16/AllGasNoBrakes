@@ -31,10 +31,16 @@ public class UniqueHighestRankView extends androidx.appcompat.widget.AppCompatTe
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Updates player rank on the unique highest-scoring QR code leaderboard
+     * @param evt A PropertyChangeEvent object describing the event source
+     *          and the property that has changed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Number rank = (Number) evt.getNewValue();
 
+        // If the rank is less than 0, that means we are not on the leaderboard
         if (rank.intValue() <= 0) {
             setText(R.string.not_on_unique_highest_message);
             Log.d("unique highest", "not updated");

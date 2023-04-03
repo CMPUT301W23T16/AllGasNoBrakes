@@ -25,6 +25,10 @@ public class ProfileSummary implements Serializable {
     private boolean test = false;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
+    /**
+     * Initializes a QR code for unit testing. Sets the test flag to true to indicated that we are
+     * not using Firestore operations
+     */
     public ProfileSummary() {
         totalQR = 1;
         totalScore = 10;
@@ -32,17 +36,12 @@ public class ProfileSummary implements Serializable {
     }
 
     /**
-     *
      * @param score The total QR score of the player account
      * @param count The total number of the QR codes that account has
      */
     public ProfileSummary(int score, int  count) {
         totalQR = count;
         totalScore = score;
-    }
-
-    public void addPropertyChangeListener(String field, PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(field, listener);
     }
 
     public int getTotalQR() {
@@ -103,5 +102,14 @@ public class ProfileSummary implements Serializable {
                 }
             });
         }
+    }
+
+    /**
+     * Adds a PropertyChangeListener to itself
+     * @param field The field to be listened for property change
+     * @param listener The listener
+     */
+    public void addPropertyChangeListener(String field, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(field, listener);
     }
 }

@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString("SortOrder", "Highest Score");
             menuBarAdapter.setBundle(bundle);
 
+            // Sets the menu bar tabs
             TabLayout tabLayout = findViewById(R.id.menu_bar_tab_layout);
             new TabLayoutMediator(tabLayout, viewPager,
                     new TabLayoutMediator.TabConfigurationStrategy() {
@@ -131,10 +132,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Returns the current user
+     * @return The PlayerProfile object of the current user
+     */
     public static PlayerProfile getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Returns the device ID (for testing purposes)
+     * @return The device ID
+     */
     public static String getId() {
         return id;
     }

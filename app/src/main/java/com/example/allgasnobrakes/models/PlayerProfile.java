@@ -40,6 +40,9 @@ public class PlayerProfile implements Serializable {
     private ProfileSummary profileSummary = new ProfileSummary(0, 0);
     private boolean test = false;
 
+    /**
+     * For testing purposes
+     */
     public PlayerProfile() {
         username = "testUser";
         test = true;
@@ -145,10 +148,22 @@ public class PlayerProfile implements Serializable {
         this.displayMetric = displayMetric.intValue();
     }
 
+    /**
+     * Adds a PropertyChangeListener to itself
+     * @param field The field to be listened for property change
+     * @param listener The listener
+     */
     public void addPropertyChangeListener(String field, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(field, listener);
     }
 
+    /**
+     * Adds PropertyChangeListeners to ProfileSummary
+     * @param field1 The first field to be listened for property change
+     * @param field2 The second field to be listened for property change
+     * @param listener1 The listener corresponding to field 2
+     * @param listener2 The listener corresponding to field 1
+     */
     public void addScorePropertyChangeListener(String field1, String field2,
                                                PropertyChangeListener listener1,
                                                PropertyChangeListener listener2) {
