@@ -59,6 +59,11 @@ public class PlayerListFragment extends Fragment {
         playerRecyclerView.setAdapter(playerListAdapter);
     }
 
+    /**
+     * Determines which leaderboard we are getting
+     * @param type The type of leaderboard. 0: unique highest-scoring QR code leaderboard; 1: total
+     *             QR code score leaderboard
+     */
     private void getPlayersList(int type) {
         if (type == 0) {
             getHighestUnique();
@@ -68,6 +73,9 @@ public class PlayerListFragment extends Fragment {
 
     }
 
+    /**
+     * Gets the unique highest-scoring QR code leaderboard
+     */
     private void getHighestUnique() {
         playersList.clear();
 
@@ -89,6 +97,9 @@ public class PlayerListFragment extends Fragment {
                 });
     }
 
+    /**
+     * Gets the total QR code score leaderboard
+     */
     private void getHighestTotal() {
         playersList.clear();
         FirebaseFirestore.getInstance().collection("Users")

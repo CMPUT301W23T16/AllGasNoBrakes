@@ -29,6 +29,11 @@ public class ScoreView extends androidx.appcompat.widget.AppCompatTextView imple
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Updates total QR code score
+     * @param evt A PropertyChangeEvent object describing the event source
+     *          and the property that has changed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Number score = (Number) evt.getNewValue();

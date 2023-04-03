@@ -36,6 +36,12 @@ public class LeaderboardFragment extends Fragment {
         return inflater.inflate(R.layout.leaderboard, container, false);
     }
 
+    /**
+     * Sets up the tabs for leaderboard.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // Android Developers Documentation

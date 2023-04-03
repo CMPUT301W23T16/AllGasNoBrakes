@@ -8,6 +8,10 @@ import com.example.allgasnobrakes.models.PlayerProfile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for non-Firestore related methods in PlayerProfile
+ * @author zhaoyu4
+ */
 public class PlayerProfileTest {
     private PlayerProfile playerProfile;
 

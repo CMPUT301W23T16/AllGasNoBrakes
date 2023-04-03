@@ -162,6 +162,10 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Returns the current user
+     * @return The PlayerProfile object of the current user
+     */
     private PlayerProfile currentUser() {
         return MainActivity.getCurrentUser();
     }

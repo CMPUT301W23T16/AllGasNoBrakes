@@ -29,6 +29,11 @@ public class QRCountView extends androidx.appcompat.widget.AppCompatTextView imp
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * Updates QR code count
+     * @param evt A PropertyChangeEvent object describing the event source
+     *          and the property that has changed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Number score = (Number) evt.getNewValue();
