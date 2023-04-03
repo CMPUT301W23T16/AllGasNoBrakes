@@ -37,7 +37,7 @@ import java.util.Locale;
 public class QRListFragment extends Fragment  {
     private Button currentSortOrder;
     private RecyclerView QRList;
-    private RecyclerView.Adapter QrAdapter;
+    private QrArrayAdapter QrAdapter;
     private QRCountView totalCount;
     private ScoreView score;
     private UniqueHighestRankView uniqueRankView;
