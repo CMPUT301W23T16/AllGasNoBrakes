@@ -61,35 +61,35 @@ public class QRListFragmentTest {
     }
 
     @Test
-    public void testAddAndDeleteQrUiChanges() throws InterruptedException {
-        MainActivity.getCurrentUser().addQR(0, dummyQR);
-        Thread.sleep(2000);
-        assertTrue(MainActivity.getCurrentUser().getQRList().contains(dummyQR));
-
-        MainActivity.getCurrentUser().deleteQR(dummyQR);
-        Thread.sleep(2000);
-        assertFalse(MainActivity.getCurrentUser().getQRList().contains(dummyQR));
-    }
-
-    @Test
     public void testHomeScreenUiChanges() throws InterruptedException {
         MainActivity.getCurrentUser().addQR(0, dummyQR);
         Thread.sleep(2000);
 
         // test for player score matching with app displayed score
-        String userScoretxt = String.valueOf(MainActivity.getCurrentUser().getScore());
-        onView(withId(R.id.player_score)).check(matches(withText(userScoretxt)));
-        Thread.sleep(2000);
+        onView(withId(R.id.player_score)).check(matches(withText("100")));
 
         // test for scanned codes matching with app displayed scanned codes
-        String userCounttxt = String.valueOf(MainActivity.getCurrentUser().getCount());
-        onView(withId(R.id.total_codes)).check(matches(withText(userCounttxt)));
+        onView(withId(R.id.total_codes)).check(matches(withText("1")));
+
+        onView(withText("Map")).perform(click());
+        onView(withText("Home")).perform(click());
+        Thread.sleep(1000);
+
+        onView(withText("testName")).perform(click());
+        Thread.sleep(1000);
+        onView(withText("Exit")).perform(click());
 
         // test for sort order button click changing displayed text
-        Thread.sleep(2000);
         onView(withId(R.id.sort_order)).perform(click());
         Thread.sleep(2000);
         onView(withId(R.id.sort_order)).check(matches(withText("Lowest Score")));
+
+        MainActivity.getCurrentUser().deleteQR(dummyQR);
+        Thread.sleep(2000);
+
+        assertFalse(MainActivity.getCurrentUser().getQRList().contains(dummyQR));
+        onView(withId(R.id.player_score)).check(matches(withText("0")));
+        onView(withId(R.id.total_codes)).check(matches(withText("0")));
     }
 
     @AfterClass
