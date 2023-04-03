@@ -14,7 +14,7 @@ import com.example.allgasnobrakes.models.HashedQR;
 
 import java.util.ArrayList;
 /**
- * Recycleview adapeter
+ * RecycleView adapter
  * @author zhaoyu5
  * @version 1.0
  */
